@@ -7,7 +7,10 @@ const path=require('path')
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
 const port=process.env.PORT || 4000
 const fs=require('fs');
-const { db } = require('./models/campus','./models/comment');
+const {db} = require('./models/comment');
+
+
+
 const Comment = require('./models/comment');
 const Campus = require('./models/campus');
 
@@ -40,8 +43,14 @@ app.get('/read',(req,res)=>{
     
     })
 
+app.get('/campus',(req,res)=>{
+  
+        res.sendFile(path.join(__dirname,'/build/index.html'))
+      
+        
+        })
 
-app.get('/comments',(req,res)=>{
+app.get('/readComments',(req,res)=>{
    let data=""
 db.collection('comments').find().forEach(comment=>{
     data+=comment.contact+"-"+comment.body+" "+"|| "
@@ -52,12 +61,16 @@ db.collection('comments').find().forEach(comment=>{
 
 })
 
-app.get('/campus',(req,res)=>{
+
+
+
+
+
+app.get('/campusComments',(req,res)=>{
     let data=""
- db.collection('campus').find().forEach(campus=>{
-     data+=campus.contact+"-"+campus.date+"-"+campus.body+" "+"|| "
+ db.collection('campus').find().forEach(comment=>{
+     data+=comment.contact+"-"+comment.date+"-"+comment.body+" "+"|| "
  
-     
      }).then(()=>{res.send(data)})
  
  
