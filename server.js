@@ -50,6 +50,7 @@ app.get('/campus',(req,res)=>{
         
         })
 
+
 app.get('/readComments',(req,res)=>{
    let data=""
 db.collection('comments').find().forEach(comment=>{
@@ -59,7 +60,7 @@ db.collection('comments').find().forEach(comment=>{
     }).then(()=>{res.send(data)})
 
 
-})
+}) 
 
 
 
