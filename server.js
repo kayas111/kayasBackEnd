@@ -52,13 +52,19 @@ app.get('/campus',(req,res)=>{
 
 
 app.get('/readComments',(req,res)=>{
-   let data=""
-db.collection('comments').find().forEach(comment=>{
+  
+
+/* original db.collection('comments').find().forEach(comment=>{
     data+=comment.contact+"-"+comment.body+" "+"|| "
 
     
-    }).then(()=>{res.send(data)})
+    }).then(()=>{res.send(data)}) update starts from here */
+     db.collection('comments').find().toArray().then((array)=>{
 
+    res.send(array)
+   
+  
+})
 
 }) 
 
@@ -68,12 +74,17 @@ db.collection('comments').find().forEach(comment=>{
 
 
 app.get('/campusComments',(req,res)=>{
-    let data=""
+/*original    let data=""
  db.collection('campus').find().forEach(comment=>{
      data+=comment.contact+"-"+comment.date+"-"+comment.body+" "+"|| "
  
-     }).then(()=>{res.send(data)})
- 
+     }).then(()=>{res.send(data)}) updat starts here*/
+     db.collection('campus').find().toArray().then((array)=>{
+
+        res.send(array)
+       
+      
+    })
  
  })
 
