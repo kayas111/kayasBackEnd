@@ -8,6 +8,10 @@ const Schema=new Func({
     date:{
         type:String,
         required:true
+    }, 
+    name:{
+        type:String,
+        required:true
     },
     body:{
         type:String,

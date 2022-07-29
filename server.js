@@ -94,7 +94,7 @@ app.post('/campus',(req,res)=>{
 
     form.parse(req, function (err, fields, files){
    
-        let msg={contact:fields.tel,body:fields.msg,date:fields.date}
+        let msg={contact:fields.tel,body:fields.msg,date:fields.date,name:fields.name}
       
         const campus=new Campus(msg)
             
