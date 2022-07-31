@@ -6,7 +6,7 @@ var formidable = require('formidable');
 const path=require('path')
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
 const port=process.env.PORT || 4000
-const fs=require('fs');
+
 const {db} = require('./models/comment');
 
 
@@ -29,21 +29,21 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 app.use(express.static(path.join(__dirname,'/build')))
 
 
-app.get('/guildps',(req,res)=>{
+app.get('/guildps',async (req,res)=>{
    
     res.sendFile(path.join(__dirname,'/build/index.html'))
   
     
     })
 
-app.get('/read',(req,res)=>{
+app.get('/read', async (req,res)=>{
   
     res.sendFile(path.join(__dirname,'/build/index.html'))
   
     
     })
 
-app.get('/campus',(req,res)=>{
+app.get('/campus',async (req,res)=>{
   
         res.sendFile(path.join(__dirname,'/build/index.html'))
       
@@ -51,7 +51,7 @@ app.get('/campus',(req,res)=>{
         })
 
 
-app.get('/readComments',(req,res)=>{
+app.get('/readComments',async (req,res)=>{
   
 
 /* original db.collection('comments').find().forEach(comment=>{
@@ -73,7 +73,7 @@ app.get('/readComments',(req,res)=>{
 
 
 
-app.get('/campusComments',(req,res)=>{
+app.get('/campusComments',async (req,res)=>{
 /*original    let data=""
  db.collection('campus').find().forEach(comment=>{
      data+=comment.contact+"-"+comment.date+"-"+comment.body+" "+"|| "
@@ -89,7 +89,7 @@ app.get('/campusComments',(req,res)=>{
  })
 
 
-app.post('/campus',(req,res)=>{
+app.post('/campus',async (req,res)=>{
     var form = new formidable.IncomingForm();
 
     form.parse(req, function (err, fields, files){
@@ -99,7 +99,7 @@ app.post('/campus',(req,res)=>{
         const campus=new Campus(msg)
             
                campus.save().then(res=>console.log("Submitted"))
-               
+            
             
         res.redirect('/campus')
         res.end()
@@ -113,7 +113,7 @@ app.post('/campus',(req,res)=>{
 
 
 
-app.post('/comment',(req,res)=>{
+app.post('/comment',async (req,res)=>{
     var form = new formidable.IncomingForm();
 
     form.parse(req, function (err, fields, files){
