@@ -79,7 +79,7 @@ app.get('/campusComments',(req,res)=>{
      data+=comment.contact+"-"+comment.date+"-"+comment.body+" "+"|| "
  
      }).then(()=>{res.send(data)}) updat starts here*/
-     db.collection('campus').find().toArray().then((array)=>{
+     db.collection('cus').find().toArray().then((array)=>{
 
         res.send(array)
        
