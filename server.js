@@ -54,11 +54,7 @@ app.get('/campus',async (req,res)=>{
 app.get('/readComments',async (req,res)=>{
   
 
-/* original db.collection('comments').find().forEach(comment=>{
-    data+=comment.contact+"-"+comment.body+" "+"|| "
 
-    
-    }).then(()=>{res.send(data)}) update starts from here */
      db.collection('comments').find().toArray().then((array)=>{
 
     res.send(array)
@@ -74,11 +70,7 @@ app.get('/readComments',async (req,res)=>{
 
 
 app.get('/campusComments',async (req,res)=>{
-/*original    let data=""
- db.collection('campus').find().forEach(comment=>{
-     data+=comment.contact+"-"+comment.date+"-"+comment.body+" "+"|| "
- 
-     }).then(()=>{res.send(data)}) updat starts here*/
+
      db.collection('cus').find().toArray().then((array)=>{
 
         res.send(array)
