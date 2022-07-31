@@ -18,6 +18,6 @@ const Schema=new Func({
         required:true
     }
 },{timestamps:true})
-const model=mongoose.model('cus',Schema)
+const model=mongoose.model('campus',Schema)
 module.exports=model;
 

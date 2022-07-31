@@ -64,22 +64,22 @@ app.get('/readComments',async (req,res)=>{
 
 }) 
 
-
+ 
 
 
 
 
 app.get('/campusComments',async (req,res)=>{
 
-     db.collection('cus').find().toArray().then((array)=>{
+     db.collection('campus').find().toArray().then((array)=>{
 
         res.send(array)
        
-      
+       
     })
  
  })
-
+ 
 
 app.post('/campus',async (req,res)=>{
     var form = new formidable.IncomingForm();
