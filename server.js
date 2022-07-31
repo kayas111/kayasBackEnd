@@ -13,6 +13,7 @@ const {db} = require('./models/comment');
 
 const Comment = require('./models/comment');
 const Campus = require('./models/campus');
+const { ObjectId } = require('mongodb');
 
 
 
@@ -64,7 +65,18 @@ app.get('/readComments',async (req,res)=>{
 
 }) 
 
- 
+app.get('/visits',async (req,res)=>{
+
+db.collection('counts').find({"_id":ObjectId("62e6994c1ad04843511ddb42")}).toArray().then((array)=>{
+    let no=array[0].noOfVisits+1;
+    db.collection('counts').updateOne({"_id":ObjectId("62e6994c1ad04843511ddb42")},{$set:{noOfVisits:no}})
+
+    res.send(array)
+
+    })
+   
+
+}) 
 
 
 
