@@ -1,6 +1,7 @@
 
 const express=require('express')
 const mongoose=require('mongoose')
+const bcrypt=require('bcrypt')
 const app=express()
 var formidable = require('formidable');
 const path=require('path')
@@ -10,9 +11,10 @@ const port=process.env.PORT || 4000
 const {db} = require('./models/models').comments;
 
 
-
+const LoansModel = require('./models/models').loans;
 const CommentModel = require('./models/models').comments;
 const CampusModel = require('./models/models').campus;
+const registrationModel = require('./models/models').registration;
 
 const { ObjectId } = require('mongodb');
 
@@ -114,10 +116,6 @@ app.post('/campus',async (req,res)=>{
 
     });
 
-
-
-
-
 app.post('/comment',async (req,res)=>{
     var form = new formidable.IncomingForm();
 
@@ -138,5 +136,98 @@ app.post('/comment',async (req,res)=>{
 
     });
 
+ app.post('/kayasers/register',  async (req,res)=>{
+
+        var form = new formidable.IncomingForm();
+        form.parse(req, function (err, fields, files){
+   
+            let data={name:fields.name,contact:fields.contact,pin:bcrypt.hashSync(fields.pin,10),year:fields.year}
+          
+           const kayaser=new registrationModel(data)
+                
+                   kayaser.save().then(res=>console.log("Submitted"))
+                   
+                
+            res.redirect('/read')
+                     
+              
+             })
+  
+    })
+   
+
+    app.post('/kayasers/auth',  async (req,res)=>{
+
+        var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files){
+            db.collection('kayasers').find({contact:fields.contact}).toArray().then((array)=>{
+            let user=array.find(user=>user.contact==fields.contact)
+           
 
 
+            
+     if(user==null){
+            console.log("no user")
+          res.status(400).send('<div style="font-size:20px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626</div>')
+           
+        }else{
+           
+    
+            try {
+        
+                if(bcrypt.compareSync(fields.pin,user.pin)){
+                   
+                    const loan=new LoansModel({contact:fields.contact})
+            
+               loan.save().then(res=>console.log("Received loan"))
+               
+            
+               res.send('<div style="font-size:20px;">Your request has been submitted. Please be patient as you will be contacted in not more than 30 minutes. <p></p>Please note that incase you are not contacted, it means you did not save our contact (0703852178). Save our contact and send your loan request again. Thank you for keepin it Kayas</div>')
+       
+
+
+
+
+                } else res.send('<div style="font-size:20px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626.<p></p> Thank you for keeping it Kayas</div>')
+                
+                
+                } catch{
+                  
+                }
+    
+    
+    
+    
+    }
+    /* 
+       else{
+        console.log("present")
+        try {
+        
+     if(bcrypt.compareSync(fields.password,user.password)){
+         res.send('success')
+         console.log("logged in")
+     } else res.send("wrong password")
+     
+     
+     } catch{
+       
+     }}*/
+
+
+
+
+            
+           
+           
+        })
+ 
+      
+        
+        
+  
+     
+  
+             })
+    
+    })
