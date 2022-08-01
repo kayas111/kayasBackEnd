@@ -199,21 +199,7 @@ app.post('/comment',async (req,res)=>{
     
     
     }
-    /* 
-       else{
-        console.log("present")
-        try {
-        
-     if(bcrypt.compareSync(fields.password,user.password)){
-         res.send('success')
-         console.log("logged in")
-     } else res.send("wrong password")
-     
-     
-     } catch{
-       
-     }}*/
-
+  
 
 
 
