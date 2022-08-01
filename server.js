@@ -7,12 +7,13 @@ const path=require('path')
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
 const port=process.env.PORT || 4000
 
-const {db} = require('./models/comment');
+const {db} = require('./models/models').comments;
 
 
 
-const Comment = require('./models/comment');
-const Campus = require('./models/campus');
+const CommentModel = require('./models/models').comments;
+const CampusModel = require('./models/models').campus;
+
 const { ObjectId } = require('mongodb');
 
 
@@ -100,7 +101,7 @@ app.post('/campus',async (req,res)=>{
    
         let msg={contact:fields.tel,body:fields.msg,date:fields.date,name:fields.name}
       
-        const campus=new Campus(msg)
+        const campus=new CampusModel(msg)
             
                campus.save().then(res=>console.log("Submitted"))
             
@@ -124,7 +125,7 @@ app.post('/comment',async (req,res)=>{
    
         let msg={contact:fields.tel,body:fields.msg}
       
-        const comment=new Comment(msg)
+        const comment=new CommentModel(msg)
             
                comment.save().then(res=>console.log("Submitted"))
                
