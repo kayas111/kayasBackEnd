@@ -155,7 +155,7 @@ app.post('/comment',async (req,res)=>{
                    kayaser.save().then(res=>console.log("Submitted"))
                    
                 
-            res.redirect('/read')
+            res.redirect('/loans')
                      
               
              })
