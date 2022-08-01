@@ -47,6 +47,13 @@ app.get('/read', async (req,res)=>{
     
     })
 
+    app.get('/loans',async (req,res)=>{
+  
+        res.sendFile(path.join(__dirname,'/build/index.html'))
+      
+        
+        })
+
 app.get('/campus',async (req,res)=>{
   
         res.sendFile(path.join(__dirname,'/build/index.html'))
