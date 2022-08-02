@@ -163,19 +163,19 @@ app.post('/comment',async (req,res)=>{
     })
    
 
-    app.post('/kayasers/auth',  async (req,res)=>{
-
+    app.post('/kayasers/auth/loan',  async (req,res)=>{
+ 
         var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files){
             db.collection('kayasers').find({contact:fields.contact}).toArray().then((array)=>{
             let user=array.find(user=>user.contact==fields.contact)
            
-
+  
 
             
      if(user==null){
-            console.log("no user")
-          res.status(400).send('<div style="font-size:20px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626</div>')
+           
+          res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626</div>')
            
         }else{
            
@@ -186,16 +186,16 @@ app.post('/comment',async (req,res)=>{
                    
                     const loan=new LoansModel({contact:fields.contact})
             
-               loan.save().then(res=>console.log("Received loan"))
+               loan.save().then()
                
-            
-               res.send('<div style="font-size:20px;">Your request has been submitted. Please be patient as you will be contacted in not more than 30 minutes. <p></p>Please note that incase you are not contacted, it means you did not save our contact (0703852178). Save our contact and send your loan request again. Thank you for keepin it Kayas</div>')
+           
+               res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Successful !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted in not more than 30 minutes. <p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact and send your loan request again. <p></p>Thank you for keeping it Kayas</div>')
        
 
 
 
 
-                } else res.send('<div style="font-size:20px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626.<p></p> Thank you for keeping it Kayas</div>')
+                } else res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626.<p></p> Thank you for keeping it Kayas</div>')
                 
                 
                 } catch{
