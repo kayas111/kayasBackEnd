@@ -156,7 +156,7 @@ let data={name:fields.name,contact:fields.contact,pin:bcrypt.hashSync(fields.pin
      kayaser.save().then(res=>console.log("Submitted"))
 res.redirect('/loans')
         
-   } else{//Kayaser is present
+   } else{//Kayaser is present. Send presence message
     res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">The WhatsApp contact you tried to register with has already been registered by another student.<p></p>Please register with another WhatsApp contact <p></p>Thank you for keeping it Kayas.</div>')
    }
 
