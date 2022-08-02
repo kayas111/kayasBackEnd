@@ -175,7 +175,7 @@ app.post('/comment',async (req,res)=>{
             
      if(user==null){
            
-          res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626</div>')
+          res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
            
         }else{
            
@@ -189,13 +189,13 @@ app.post('/comment',async (req,res)=>{
                loan.save().then()
                
            
-               res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Successful !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted in not more than 30 minutes. <p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact and send your loan request again. <p></p>Thank you for keeping it Kayas</div>')
+               res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Successful !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted in not more than 30 minutes. <p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact and send your loan request again. <p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Loan Service Not Yet Launched</div>Our loaning service will start immediately after it has been launched soon. Thank you for keeping it Kayas</div>')
        
 
 
 
 
-                } else res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626.<p></p> Thank you for keeping it Kayas</div>')
+                } else res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626 or Isaac on 0755643774<p></p> Thank you for keeping it Kayas</div>')
                 
                 
                 } catch{
