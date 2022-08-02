@@ -147,18 +147,21 @@ app.post('/comment',async (req,res)=>{
 
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files){
-   
-            let data={name:fields.name,contact:fields.contact,pin:bcrypt.hashSync(fields.pin,10),year:fields.year}
-          
-           const kayaser=new registrationModel(data)
-                
-                   kayaser.save().then(res=>console.log("Submitted"))
-                   
-                
-            res.redirect('/loans')
-                     
-              
-             })
+   //Querry to check for kayaser presence
+   db.collection('kayasers').find({contact:fields.contact}).toArray().then((array)=>{
+    const presence=array.length
+   if(presence==0){//Register because kayaser is absent
+let data={name:fields.name,contact:fields.contact,pin:bcrypt.hashSync(fields.pin,10),year:fields.year}
+     const kayaser=new registrationModel(data)
+     kayaser.save().then(res=>console.log("Submitted"))
+res.redirect('/loans')
+        
+   } else{//Kayaser is present
+    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">The WhatsApp contact you tried to register with has already been registered by another student.<p></p>Please register with another WhatsApp contact <p></p>Thank you for keeping it Kayas.</div>')
+   }
+
+   })
+       })
   
     })
    
