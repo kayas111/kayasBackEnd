@@ -1,14 +1,14 @@
 const mongoose=require('mongoose')
 const Func=mongoose.Schema
 
-const loansSchema=new Func({
+const requestsSchema=new Func({
     contact:{
     type:Number,
     required:true
     }
 },{timestamps:true})
 
-let loansModel=mongoose.model('loans',loansSchema);
+let requestsModel=mongoose.model('requests',requestsSchema);
 
 const commentsSchema=new Func({
     contact:{
@@ -69,7 +69,7 @@ const campusSchema=new Func({
 },{timestamps:true})
 let campusModel=mongoose.model('campus',campusSchema)
 
-module.exports.loans=loansModel
+module.exports.requests=requestsModel
 module.exports.campus=campusModel
 module.exports.comments=commentsModel
 module.exports.registration=registrationModel

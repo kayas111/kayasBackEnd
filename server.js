@@ -14,7 +14,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 const {db} = require('./models/models').comments;
  
 
-const LoansModel = require('./models/models').loans;
+const requestsModel = require('./models/models').requests;
 const CommentModel = require('./models/models').comments;
 const CampusModel = require('./models/models').campus;
 const registrationModel = require('./models/models').registration;
@@ -32,14 +32,13 @@ var d = new StringDecoder('utf-8');
 
 //serve static index file
 app.use(express.static(path.join(__dirname,'/build')))
-
-//below code starts here reference
 //pages router
 app.use(pagesRouter)
 //services router
 app.use(servicesRouter)
+
 //access databse by get
-app.get('/visits', (req,res)=>{
+app.get('/collection_counts_visits', (req,res)=>{
 
     db.collection('counts').find({"_id":ObjectId("62e6994c1ad04843511ddb42")}).toArray().then((array)=>{
         let no=array[0].noOfVisits+1;
@@ -52,8 +51,8 @@ app.get('/visits', (req,res)=>{
     
     }) 
 
-app.get('/readComments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
-app.get('/campusComments', (req,res)=>{
+app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/collection_campus_comments', (req,res)=>{
 
     db.collection('campus').find().toArray().then((array)=>{
 
@@ -63,7 +62,7 @@ app.get('/campusComments', (req,res)=>{
    })
 
 })
-app.post('/campus', (req,res)=>{
+app.post('/collection_campus_comment', (req,res)=>{
     var form = new formidable.IncomingForm();
 
     form.parse(req, function (err, fields, files){
@@ -84,7 +83,7 @@ app.post('/campus', (req,res)=>{
     });
 
 
-    app.post('/comment', (req,res)=>{
+    app.post('/collection_comments_comment', (req,res)=>{
         var form = new formidable.IncomingForm();
     
         form.parse(req, function (err, fields, files){
@@ -104,7 +103,7 @@ app.post('/campus', (req,res)=>{
     
         });
     
-     app.post('/kayasers/register', (req,res)=>{
+     app.post('/collection_kayasers_register', (req,res)=>{
     
             var form = new formidable.IncomingForm();
             form.parse(req, function (err, fields, files){
@@ -127,7 +126,7 @@ app.post('/campus', (req,res)=>{
         })
        
     
-        app.post('/kayasers/auth', (req,res)=>{
+    app.post('/collection_requests_service', (req,res)=>{
      
             var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files){
@@ -148,9 +147,9 @@ app.post('/campus', (req,res)=>{
             
                     if(bcrypt.compareSync(fields.pin,user.pin)){
                        
-                        const loan=new LoansModel({contact:fields.contact})
+                        const request=new requestsModel({contact:fields.contact})
                 
-                   loan.save().then(res=>console.log("request received"))
+                   request.save().then(res=>console.log("request received"))
                    
                
                    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted in not more than 30 minutes. <p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact and send your loan request again. <p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Loan Service Not Yet Launched</div>Our loaning service will start immediately after it has been launched soon. Thank you for keeping it Kayas</div>')
@@ -171,11 +170,7 @@ app.post('/campus', (req,res)=>{
         
         }
       
-    
-    
-    
                 
-               
                
             })
      
