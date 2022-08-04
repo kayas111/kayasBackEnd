@@ -147,7 +147,7 @@ app.post('/collection_campus_comment', (req,res)=>{
             
                     if(bcrypt.compareSync(fields.pin,user.pin)){
                        
-                        const request=new requestsModel({contact:fields.contact})
+                        const request=new requestsModel({contact:fields.contact,serviceType:fields.serviceType})
                 
                    request.save().then(res=>console.log("request received"))
                    

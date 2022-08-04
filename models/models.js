@@ -5,6 +5,10 @@ const requestsSchema=new Func({
     contact:{
     type:Number,
     required:true
+    },
+    serviceType:{
+        type:String,
+        required:true
     }
 },{timestamps:true})
 
