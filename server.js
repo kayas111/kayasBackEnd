@@ -7,36 +7,25 @@ const path=require('path')
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
 const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
-
     console.log("Listening on port")
     console.log(port)
 }))
 const {db} = require('./models/models').comments;
- 
-
 const requestsModel = require('./models/models').requests;
 const CommentModel = require('./models/models').comments;
 const CampusModel = require('./models/models').campus;
 const registrationModel = require('./models/models').registration;
-
 const { ObjectId } = require('mongodb');
 const pagesRouter=require('./routers/pages')
 const servicesRouter=require('./routers/services')
-
-
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
-
-
-
-
 //serve static index file
 app.use(express.static(path.join(__dirname,'/build')))
 //pages router
 app.use(pagesRouter)
 //services router
 app.use(servicesRouter)
-
 //access databse by get
 app.get('/collection_counts_visits', (req,res)=>{
 
@@ -53,15 +42,9 @@ app.get('/collection_counts_visits', (req,res)=>{
 
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_campus_comments', (req,res)=>{
-
-    db.collection('campus').find().toArray().then((array)=>{
-
-       res.send(array)
-      
-      
-   })
-
-})
+db.collection('campus').find().toArray().then((array)=>{
+res.send(array)})})
+//posts to the database
 app.post('/collection_campus_comment', (req,res)=>{
     var form = new formidable.IncomingForm();
 
