@@ -6,6 +6,10 @@ const requestsSchema=new Func({
     type:Number,
     required:true
     },
+    stdNo:{
+        type:Number,
+        required:true
+    },
     serviceType:{
         type:String,
         required:true
@@ -37,6 +41,10 @@ const registrationSchema=new Func({
         type:String,
         required:true
     },
+    stdNo:{
+        type:Number,
+        required:true
+    },
      contact:{
     type:String,
     required:true
@@ -44,11 +52,8 @@ const registrationSchema=new Func({
     pin:{
         type:String,
         required:true
-    },
-    year:{
-        type:Number,
-        required:true
     }
+   
     
 },{timestamps:true})
 let registrationModel=mongoose.model('kayasers',registrationSchema)
