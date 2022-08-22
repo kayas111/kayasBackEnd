@@ -33,7 +33,24 @@ let commentsModel=mongoose.model('comments',commentsSchema);
 
 
 
-
+const recommendationSchema=new Func({
+   
+    name:{
+        type:String,
+        required:true
+        },
+    recommender:{
+        type:String,
+        required:true
+        },
+     recommendee:{
+    type:String,
+    required:true
+    }
+   
+    
+},{timestamps:true})
+let recommendationModel=mongoose.model('recommendations',recommendationSchema)
 
 const registrationSchema=new Func({
    
@@ -77,7 +94,7 @@ const campusSchema=new Func({
     }
 },{timestamps:true})
 let campusModel=mongoose.model('campus',campusSchema)
-
+module.exports.recommendation=recommendationModel
 module.exports.requests=requestsModel
 module.exports.campus=campusModel
 module.exports.comments=commentsModel
