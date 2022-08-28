@@ -56,7 +56,7 @@ app.post('/collection_campus_comment', (req,res)=>{
       
         const campus=new CampusModel(msg)
             
-               campus.save().then(res=>console.log("Submitted"))
+               campus.save().then(res=>console.log("campus comment submitted"))
             
             
         res.redirect('/pages/campus')
@@ -77,7 +77,7 @@ app.post('/collection_campus_comment', (req,res)=>{
           
             const comment=new CommentModel(msg)
                 
-                   comment.save().then(res=>console.log("Submitted"))
+                   comment.save().then(res=>console.log("read comment submitted"))
                    
                 
             res.redirect('/pages/read')
@@ -141,7 +141,7 @@ db.collection('kayasers').find({contact:array[0].recommendee}).toArray().then((a
 const presence=array.length
 if(presence==1){//present, send request
 
-                        const request=new requestsModel({contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType})
+                        const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType})
                 
                    request.save().then(res=>console.log("request received"))
                    

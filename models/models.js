@@ -2,14 +2,19 @@ const mongoose=require('mongoose')
 const Func=mongoose.Schema
 
 const requestsSchema=new Func({
+    name:{
+        type:String,
+        required:true
+        },
+        stdNo:{
+            type:Number,
+            required:true
+        },
     contact:{
     type:Number,
     required:true
     },
-    stdNo:{
-        type:Number,
-        required:true
-    },
+   
     serviceType:{
         type:String,
         required:true
