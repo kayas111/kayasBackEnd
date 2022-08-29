@@ -95,11 +95,43 @@ app.post('/collection_campus_comment', (req,res)=>{
        //Querry to check for kayaser presence
        db.collection('kayasers').find({contact:fields.contact}).toArray().then((array)=>{
         const presence=array.length
-       if(presence==0){//Register because kayaser is absent
+       if(presence==0){
+        //querry for StdNo presence
+        db.collection('kayasers').find({stdNo:parseInt(fields.stdNo)}).toArray().then((array)=>{
+        const presence=array.length
+      
+        if(presence==0){
+         
+        //Register because kayaser is absent
     let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,pin:bcrypt.hashSync(fields.pin,10)}
          const kayaser=new registrationModel(data)
          kayaser.save().then(res=>console.log("Submitted"))
     res.redirect('/pages/services')
+
+        }
+        else{
+
+            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Your Student Number</div><div style="font-size:40px;text-align:center;padding-top:30px;">The Student number you entered does not belong to you.<p></p>Please register with your student Number. Incase you are sure that the student number you are trying to register with is yours, WhatsApp Isaac on 0755643774 for assistance.<p></p>Thank you for keeping it Kayas.</div>')
+        }
+
+        }
+
+
+
+
+        )
+
+
+    
+        
+
+
+
+        /*//Register because kayaser is absent
+    let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,pin:bcrypt.hashSync(fields.pin,10)}
+         const kayaser=new registrationModel(data)
+         kayaser.save().then(res=>console.log("Submitted"))
+    res.redirect('/pages/services')*/
             
        } else{//Kayaser is present. Send presence message
         res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">The WhatsApp contact you tried to register with has already been registered by another student.<p></p>Please register with another WhatsApp contact <p></p>Thank you for keeping it Kayas.</div>')
