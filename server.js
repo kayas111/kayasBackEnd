@@ -28,11 +28,11 @@ app.use(pagesRouter)
 //services router
 app.use(servicesRouter)
 //access databse by get
-app.get('/collection_counts_visits', (req,res)=>{
+app.get('/collection_controls_visits', (req,res)=>{
 
-    db.collection('counts').find({"_id":ObjectId("62e6994c1ad04843511ddb42")}).toArray().then((array)=>{
+    db.collection('controls').find({"_id":ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((array)=>{
         let no=array[0].noOfVisits+1;
-        db.collection('counts').updateOne({"_id":ObjectId("62e6994c1ad04843511ddb42")},{$set:{noOfVisits:no}})
+        db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{noOfVisits:no}})
     
         res.send(array)
     
@@ -40,13 +40,24 @@ app.get('/collection_counts_visits', (req,res)=>{
        
     
     }) 
-
+app.get('/collection_controls_topNavQuote', (req,res)=>{db.collection('controls').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
 //posts to the database
 
+app.post('/collection_controls_topNavQuote', (req,res)=>{
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function (err, fields, files){
+   
+        db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{topNavQuote:fields.topNavQuote}})
+        res.redirect('/pages/admin/controls')
+        res.end() 
+         })
+
+    });
 app.post('/collection_campus_comment', (req,res)=>{
     var form = new formidable.IncomingForm();
 
