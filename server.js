@@ -11,6 +11,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
 }))
 const {db} = require('./models/models').comments;
+const quotesModel = require('./models/models').quotes;
 const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
 const CommentModel = require('./models/models').comments;
@@ -44,6 +45,7 @@ app.get('/collection_controls_visits', (req,res)=>{
     app.get('/collection_controls_kayasurl', (req,res)=>{db.collection('controls').find().toArray().then((array)=>{res.send(array)})}) 
     app.get('/collection_controls_topNavQuote', (req,res)=>{db.collection('controls').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
@@ -91,6 +93,28 @@ app.post('/collection_campus_comment', (req,res)=>{
          })
 
     });
+
+    app.post('/collection_quotes_quote', (req,res)=>{
+        var form = new formidable.IncomingForm();
+    
+        form.parse(req, function (err, fields, files){
+       
+            let data={quote:fields.quote}
+          
+            const quote=new quotesModel(data)
+                
+                   quote.save().then(res=>console.log("quote posted"))
+                   
+                
+            res.redirect('/pages/admin/controls')
+            res.end()
+            
+              
+             })
+    
+        });
+
+
 
 
     app.post('/collection_comments_comment', (req,res)=>{

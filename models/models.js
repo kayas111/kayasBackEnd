@@ -1,5 +1,14 @@
 const mongoose=require('mongoose')
 const Func=mongoose.Schema
+const quotesSchema=new Func({
+   
+    quote:{
+        type:String,
+        required:true
+    }
+},{timestamps:true})
+let quotesModel=mongoose.model('quotes',quotesSchema);
+
 
 const requestsSchema=new Func({
     name:{
@@ -104,6 +113,7 @@ module.exports.requests=requestsModel
 module.exports.campus=campusModel
 module.exports.comments=commentsModel
 module.exports.registration=registrationModel
+module.exports.quotes=quotesModel
 
 
 
