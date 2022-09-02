@@ -41,15 +41,25 @@ app.get('/collection_controls_visits', (req,res)=>{
        
     
     }) 
-    app.get('/collection_controls_kayas', (req,res)=>{db.collection('controls').find().toArray().then((array)=>{res.send(array)})}) 
-    app.get('/collection_controls_kayasurl', (req,res)=>{db.collection('controls').find().toArray().then((array)=>{res.send(array)})}) 
-    app.get('/collection_controls_topNavQuote', (req,res)=>{db.collection('controls').find().toArray().then((array)=>{res.send(array)})}) 
+    app.get('/collection_controls', (req,res)=>{db.collection('controls').find().toArray().then((array)=>{res.send(array)})})
+    
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
 //posts to the database
+app.post('/collection_controls_wish', (req,res)=>{
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function (err, fields, files){
+   
+        db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{refName:fields.refName,writersName:fields.writersName,writersMsg:fields.writersMsg}})
+        res.redirect('/pages/admin/controls')
+        res.end() 
+         })
+
+    });
 app.post('/collection_controls_kayasurl', (req,res)=>{
     var form = new formidable.IncomingForm();
 
