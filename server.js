@@ -48,6 +48,27 @@ app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
+app.get('/collection_recommendations_recommendations', (req,res)=>{
+    db.collection('recommendations').find().toArray().then((array)=>{
+    res.send(array)})})
+
+    app.get('/collection_kayasers_kayasers', (req,res)=>{
+        db.collection('kayasers').find().toArray().then((array)=>{
+        res.send(array)})})
+
+app.get('/collection_requests_requests', (req,res)=>{
+    db.collection('requests').find().toArray().then((array)=>{
+    res.send(array)})})
+app.get('/collection_requests_number', (req,res)=>{
+    db.collection('requests').find().toArray().then((array)=>{
+    res.send(array)})})
+    app.get('/collection_recommendations_number', (req,res)=>{
+        db.collection('recommendations').find().toArray().then((array)=>{
+        res.send(array)})})
+        app.get('/collection_kayasers_number', (req,res)=>{
+            db.collection('kayasers').find().toArray().then((array)=>{
+            res.send(array)})})
+
 //posts to the database
 app.post('/collection_controls_wish', (req,res)=>{
     var form = new formidable.IncomingForm();
