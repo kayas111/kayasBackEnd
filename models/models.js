@@ -54,11 +54,11 @@ const recommendationSchema=new Func({
         required:true
         },
     recommender:{
-        type:String,
+        type:Number,
         required:true
         },
      recommendee:{
-    type:String,
+    type:Number,
     required:true
     }
    
@@ -77,7 +77,7 @@ const registrationSchema=new Func({
         required:true
     },
      contact:{
-    type:String,
+    type:Number,
     required:true
     },
     pin:{

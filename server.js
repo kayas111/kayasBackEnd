@@ -49,11 +49,11 @@ app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
 app.get('/collection_recommendations_recommendations', (req,res)=>{
-    db.collection('recommendations').find().toArray().then((array)=>{
+    db.collection('recommendations').find().sort({"recommender":1}).toArray().then((array)=>{
     res.send(array)})})
 
     app.get('/collection_kayasers_kayasers', (req,res)=>{
-        db.collection('kayasers').find().toArray().then((array)=>{
+        db.collection('kayasers').find().sort({"contact":1}).toArray().then((array)=>{
         res.send(array)})})
 
 app.get('/collection_requests_requests', (req,res)=>{
@@ -173,7 +173,7 @@ app.post('/collection_campus_comment', (req,res)=>{
             var form = new formidable.IncomingForm();
             form.parse(req, function (err, fields, files){
        //Querry to check for kayaser presence
-       db.collection('kayasers').find({contact:fields.contact}).toArray().then((array)=>{
+       db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
         const presence=array.length
        if(presence==0){
         //querry for StdNo presence
@@ -227,8 +227,8 @@ app.post('/collection_campus_comment', (req,res)=>{
      
             var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files){
-                db.collection('kayasers').find({contact:fields.contact}).toArray().then((array)=>{
-                let user=array.find(user=>user.contact==fields.contact)
+                db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
+                let user=array.find(user=>user.contact==parseInt(fields.contact))
                
       
     
@@ -319,8 +319,8 @@ if(presence==1){//present, send request
             var form = new formidable.IncomingForm();
         
             form.parse(req, function (err, fields, files){
-                db.collection('kayasers').find({contact:fields.recommender}).toArray().then((array)=>{
-                let user=array.find(user=>user.contact==fields.recommender)
+                db.collection('kayasers').find({contact:parseInt(fields.recommender)}).toArray().then((array)=>{
+                let user=array.find(user=>user.contact==parseInt(fields.recommender))
                
       
     
@@ -336,8 +336,8 @@ if(presence==1){//present, send request
             
                     if(bcrypt.compareSync(fields.pin,user.pin)){
 
-                        db.collection('recommendations').find({recommendee:fields.recommendee}).toArray().then((array)=>{
-                            let user2=array.find(user=>user.recommendee==fields.recommendee)
+                        db.collection('recommendations').find({recommendee:parseInt(fields.recommendee)}).toArray().then((array)=>{
+                            let user2=array.find(user=>user.recommendee==parseInt(fields.recommendee))
                            
                   
                 
