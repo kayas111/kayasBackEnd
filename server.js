@@ -264,7 +264,7 @@ if(presence==1){//present, send request
 
 
 }else{
-    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Contact Your Friend</div><div style="font-size:40px;text-align:center;padding-top:30px;">The friend you recommended has not registered with Kayas Makerere. Ask your friend to register with Kayas Makerere so that your request is sent successfully <p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774 to help you out.<p></p>Thank you for keeping it Kayas.</div>')
+    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Contact Your Friend</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your message can not be sent because the friend you recommended is not registered with Kayas Makerere. Ask your friend you recommended to register with Kayas Makerere and then resend your message and it will be delivered successfully.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774 to help you out.<p></p>Thank you for keeping it Kayas.</div>')
 }
 
 
