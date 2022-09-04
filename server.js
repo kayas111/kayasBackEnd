@@ -191,7 +191,7 @@ app.post('/collection_campus_comment', (req,res)=>{
         }
         else{
 
-            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Your Student Number</div><div style="font-size:40px;text-align:center;padding-top:30px;">The Student number you entered does not belong to you.<p></p>Please register with your student Number. Incase you are sure that the student number you are trying to register with is yours, WhatsApp Isaac on 0755643774 for assistance.<p></p>Thank you for keeping it Kayas.</div>')
+            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Student Number Already Registered</div><div style="font-size:40px;text-align:center;padding-top:30px;">The Student number you entered is already registered.<p></p>Incase you are sure that the student number you are trying to register with is yours, WhatsApp Isaac on 0755643774 for assistance.<p></p>Thank you for keeping it Kayas.</div>')
         }
 
         }
@@ -214,7 +214,7 @@ app.post('/collection_campus_comment', (req,res)=>{
     res.redirect('/pages/services')*/
             
        } else{//Kayaser is present. Send presence message
-        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">The WhatsApp contact you tried to register with has already been registered by another student.<p></p>Please register with another WhatsApp contact <p></p>Thank you for keeping it Kayas.</div>')
+        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">The WhatsApp contact you tried to register with is already registered. Please proceed wih other steps.<p></p>Incase you face any further challenges or can not remeber anything, contact Isaac on 0755643774 for help.<p></p>Thank you for keeping it Kayas.</div>')
        }
     
        })
