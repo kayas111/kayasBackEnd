@@ -200,19 +200,7 @@ app.post('/collection_campus_comment', (req,res)=>{
 
 
         )
-
-
-    
-        
-
-
-
-        /*//Register because kayaser is absent
-    let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,pin:bcrypt.hashSync(fields.pin,10)}
-         const kayaser=new registrationModel(data)
-         kayaser.save().then(res=>console.log("Submitted"))
-    res.redirect('/pages/services')*/
-            
+   
        } else{//Kayaser is present. Send presence message
         res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">The WhatsApp contact you tried to register with is already registered. Please proceed wih other steps.<p></p>Incase you face any further challenges or can not remeber anything, contact Isaac on 0755643774 for help.<p></p>Thank you for keeping it Kayas.</div>')
        }
