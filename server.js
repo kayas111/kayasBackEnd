@@ -41,7 +41,9 @@ app.get('/collection_controls_visits', (req,res)=>{
        
     
     }) 
-    app.get('/collection_controls', (req,res)=>{db.collection('controls').find().toArray().then((array)=>{res.send(array)})})
+
+
+app.get('/collection_controls', (req,res)=>{db.collection('controls').find().toArray().then((array)=>{res.send(array)})})
     
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
