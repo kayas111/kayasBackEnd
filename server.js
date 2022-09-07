@@ -1,3 +1,8 @@
+
+
+
+
+
 const express=require('express')
 const mongoose=require('mongoose')
 const bcrypt=require('bcrypt')
@@ -185,9 +190,9 @@ app.post('/collection_campus_comment', (req,res)=>{
         if(presence==0){
          
         //Register because kayaser is absent
-    let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,pin:bcrypt.hashSync(fields.pin,10)}
+    let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
          const kayaser=new registrationModel(data)
-         kayaser.save().then(res=>console.log("Submitted"))
+         kayaser.save().then(res=>console.log("New Kayaser registered"))
     res.redirect('/pages/services')
 
         }
@@ -374,3 +379,21 @@ if(presence==1){//present, send request
         
             });
 
+
+
+/*const nodemailer = require('nodemailer');
+require('dotenv').config()
+const sgMail=require("@sendgrid/mail")
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+let receipient=['isaacopio16@gmail.com','kayaso.ikayas@gmail.com','onongeisaac@gmail.com']
+
+receipient.forEach(receipient=>{
+    sgMail.send({to:receipient,
+    from:"kayas.makerere@gmail.com",
+    subject:"Upgrading",
+    text:"Sending multiple"}).then(res=>console.log("email sent")).catch(err=>{
+        console.log("error is: "+ err)
+    })
+}
+    
+)*/

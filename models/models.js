@@ -80,6 +80,10 @@ const registrationSchema=new Func({
     type:Number,
     required:true
     },
+    email:{
+        type:String,
+        required:true
+    },
     pin:{
         type:String,
         required:true
