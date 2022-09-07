@@ -2,6 +2,7 @@
 
 
 
+const emailValidator = require('deep-email-validator');
 
 const express=require('express')
 const mongoose=require('mongoose')
@@ -191,9 +192,28 @@ app.post('/collection_campus_comment', (req,res)=>{
          
         //Register because kayaser is absent
     let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
-         const kayaser=new registrationModel(data)
-         kayaser.save().then(res=>console.log("New Kayaser registered"))
-    res.redirect('/pages/services')
+  //if e-mail is valid, register 
+   emailValidator.validate(fields.email).then((resp)=>{
+  if(resp.valid==true){
+   
+    const kayaser=new registrationModel(data)
+    kayaser.save().then(res=>console.log("New Kayaser registered"))
+res.redirect('/pages/services')
+
+
+}
+else{
+    console.log("Attempt to register with wrong email address"),
+    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Wrong E-mail Address</div><div style="font-size:40px;text-align:center;padding-top:30px;">The E-mail address you have tried to register with is wrong. <p></p>Please register with your correct E-mail address<p></p>Thank you for keeping it Kayas.</div>')
+   
+    
+
+
+}
+
+
+    })
+  
 
         }
         else{
