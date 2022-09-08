@@ -1,4 +1,26 @@
 
+/*const nodemailer = require('nodemailer');
+require('dotenv').config()
+const sgMail=require("@sendgrid/mail")
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+let receipient=['isaacopio16@gmail.com','kayaso.ikayas@gmail.com','onongeisaac@gmail.com']
+
+receipient.forEach(receipient=>{
+    sgMail.send({to:receipient,
+    from:"kayas.makerere@gmail.com",
+    subject:"Upgrading",
+    text:"Sending multiple"}).then(res=>console.log("email sent")).catch(err=>{
+        console.log("error is: "+ err)
+    })
+}
+    
+)*/
+
+
+const nodemailer = require('nodemailer');
+require('dotenv').config()
+const sgMail=require("@sendgrid/mail")
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 
 
@@ -198,6 +220,15 @@ app.post('/collection_campus_comment', (req,res)=>{
    
     const kayaser=new registrationModel(data)
     kayaser.save().then(res=>console.log("New Kayaser registered"))
+
+    sgMail.send({to:fields.email,
+        from:"kayas.makerere@gmail.com",
+        subject:"Welcome To Kayas Makerere",
+        text:"You will now be able to trade with us and make money remotely as well as acquire items from us at cheaper offers. All you need to do is recommend a friend and ask your friend to register with us so that your messages will be successfully sent through the Message Form that you will always use to request for our services like loans, purchase items as well as sell your items. Thank you for keeping it Kayas."}).then(res=>console.log("email sent")).catch(err=>{
+            console.log("error is: "+ err)
+        })
+
+
 res.redirect('/pages/services')
 
 
@@ -401,19 +432,3 @@ if(presence==1){//present, send request
 
 
 
-/*const nodemailer = require('nodemailer');
-require('dotenv').config()
-const sgMail=require("@sendgrid/mail")
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-let receipient=['isaacopio16@gmail.com','kayaso.ikayas@gmail.com','onongeisaac@gmail.com']
-
-receipient.forEach(receipient=>{
-    sgMail.send({to:receipient,
-    from:"kayas.makerere@gmail.com",
-    subject:"Upgrading",
-    text:"Sending multiple"}).then(res=>console.log("email sent")).catch(err=>{
-        console.log("error is: "+ err)
-    })
-}
-    
-)*/
