@@ -224,7 +224,7 @@ app.post('/collection_campus_comment', (req,res)=>{
     sgMail.send({to:fields.email,
         from:"kayas.makerere@gmail.com",
         subject:"Welcome To Kayas Makerere",
-        text:"You will now be able to trade with us and make money remotely as well as acquire items from us at cheaper offers. All you need to do is recommend a friend and ask your friend to register with us so that your messages will be successfully sent through the Message Form that you will always use to request for our services like loans, purchase items as well as sell your items. Thank you for keeping it Kayas. "}).then(res=>console.log("email sent")).catch(err=>{
+        text:"You will now be able to trade with us and make money remotely as well as acquire items from us at cheaper offers. All you need to do is recommend a friend and ask your friend to register with us so that your messages will be successfully sent through the Message Form that you will always use to request for our services like loans, purchase items as well as sell your items. Thank you for keeping it Kayas."}).then(res=>console.log("email sent")).catch(err=>{
             console.log("error is: "+ err)
         })
 
