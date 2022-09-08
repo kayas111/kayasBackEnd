@@ -225,12 +225,7 @@ app.post('/collection_campus_comment', (req,res)=>{
         text:"You will now be able to trade with us and make money remotely as well as acquire items from us at cheaper offers. All you need to do is recommend a friend and ask your friend to register with us so that your messages will be successfully sent through the Message Form that you will always use to request for our services like loans, purchase items as well as sell your items. Thank you for keeping it Kayas."}).then(res=>console.log("email sent")).catch(err=>{
             console.log("error is: "+ err)
         })
-        sgMail.send({to:'kayas.makerere@gmail.com',
-            from:"kayas.makerere@gmail.com",
-            subject:"New Kayaser Registered",
-            text:"Thank you for your developments"}).then(res=>console.log("email sent")).catch(err=>{
-                console.log("error is: "+ err)
-            })
+
 
 res.redirect('/pages/services')
 
