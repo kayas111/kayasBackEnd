@@ -224,7 +224,7 @@ app.post('/collection_campus_comment', (req,res)=>{
     sgMail.send({to:fields.email,
         from:"kayas.makerere@gmail.com",
         subject:"Welcome To Kayas Makerere",
-        html:"Thank you for registering with Kayas. You are now eligible to buy cheaper student items from us.<p></p><h2 style='color:green;'>How To Earn With Us</h2>You will always be given a working period of only 1 hour per day on the days that payment offers are given. We will always give you the opportunity to test your circle of friends market and also give you the opportunity to widen your market for higher payments. This offer is only present to the first 500 students who register for it with Kayas Makerere. <p></p>NB:Please Recommend a friend whom you wish to benefit from Kayas Makerere.<h2 style='color:green;'>How To Send Messages to Kayas</h2>Sending messages to Kayas is only possible when you have:<br></br>1. Registered with Kayas Makerere<br></br>2. Recommended a friend to Kayas Makerere and <br></br>3. That friend has also registered with Kayas Makerere. <p></p>The Recommendation Form is found immediately below the Registration Form and the form used for sending messages i.e. the Message Form is found immediately below the Recommendation Form.<h2 style='color:green;'>How To Join</h2>To join the Kayas Trading Team in order to receive trade updates, Just send the  message 'I wish to Join the Trade Team' through the Message Form found on our website.<p></p>For any other inquiries or help, WhatsApp Isaac on 0755643774 or Charles on 0700411626. Thank you for keeping it Kayas. "}).then(res=>console.log("email sent")).catch(err=>{
+        html:"Thank you for registering with Kayas. You are now eligible to buy cheaper student items from us and also receive our Don't Sleep Hungry Loans payable with an interest of 1,000/= only.<p></p><h2 style='color:green;'>How To Earn With Us</h2>You will always be given a working period of only 1 hour per day on the days that payment offers are given. We will always give you the opportunity to test your circle of friends market and also give you the opportunity to widen your market for higher payments. This offer is only present to the first 500 students who register for it with Kayas Makerere. <p></p>NB:Please Recommend a friend whom you wish to benefit from Kayas Makerere.<h2 style='color:green;'>How To Send Messages to Kayas</h2>Sending messages to Kayas is only possible when you have:<br></br>1. Registered with Kayas Makerere<br></br>2. Recommended a friend to Kayas Makerere and <br></br>3. That friend has also registered with Kayas Makerere. <p></p>The Recommendation Form is found immediately below the Registration Form and the form used for sending messages i.e. the Message Form is found immediately below the Recommendation Form.<h2 style='color:green;'>How To Join</h2>To join the Kayas Trading Team in order to receive trade updates, Just send the  message 'I wish to Join the Trade Team' through the Message Form found on our website.<p></p>For any other inquiries or help, WhatsApp Isaac on 0755643774 or Charles on 0700411626. Thank you for keeping it Kayas. "}).then(res=>console.log("email sent")).catch(err=>{
             console.log("error is: "+ err)
         })
 
@@ -248,7 +248,7 @@ else{
 
         }
         else{
-
+            console.log("Attempt to register with already used student number"),
             res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Student Number Already Registered</div><div style="font-size:40px;text-align:center;padding-top:30px;">The Student number you entered is already registered.<p></p>Incase you are sure that the student number you are trying to register with is yours, WhatsApp Isaac on 0755643774 for assistance.<p></p>Thank you for keeping it Kayas.</div>')
         }
 
@@ -260,6 +260,7 @@ else{
         )
    
        } else{//Kayaser is present. Send presence message
+        console.log("Attempt to register with existing number"),
         res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">The WhatsApp contact you tried to register with is already registered. Please proceed wih other steps.<p></p>Incase you face any further challenges or can not remeber anything, contact Isaac on 0755643774 for help.<p></p>Thank you for keeping it Kayas.</div>')
        }
     
@@ -280,6 +281,7 @@ else{
     
                 
          if(user==null){
+            console.log("Attempt to request without registration"),
                
               res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
                
@@ -310,6 +312,7 @@ if(presence==1){//present, send request
 
 
 }else{
+    console.log("Attempt to request when friend is not registered"),
     res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Contact Your Friend</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your message can not be sent because the friend you recommended is not registered with Kayas Makerere. Ask your friend you recommended to register with Kayas Makerere and then resend your message and it will be delivered successfully.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774 to help you out.<p></p>Thank you for keeping it Kayas.</div>')
 }
 
@@ -325,6 +328,7 @@ if(presence==1){//present, send request
 
          
     } else{//Ask user to recommend before sending request
+        console.log("Attempt to request without recommending"),
      res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Recommend</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please recommend a friend by filling in the recommendation Form before sending your request.<p></p> Ask the friend you have recommended to register with Kayas Makerere so that your request is delivered successfully <p></p>Thank you for keeping it Kayas.</div>')
     }
 
