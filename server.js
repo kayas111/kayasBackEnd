@@ -219,7 +219,7 @@ app.post('/collection_campus_comment', (req,res)=>{
   if(resp.valid==true){
    
     const kayaser=new registrationModel(data)
-    kayaser.save().then(res=>console.log("New Kayaser registered"))
+    kayaser.save().then(res=>console.log(fields.contact+" New Kayaser registered"))
 
     sgMail.send({to:fields.email,
         from:"kayas.makerere@gmail.com",
@@ -234,7 +234,8 @@ res.redirect('/pages/services')
 
 }
 else{
-    console.log("Attempt to register with wrong email address"),
+    
+    console.log(fields.contact+" Attempt to register with wrong email address"),
     res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Wrong E-mail Address</div><div style="font-size:40px;text-align:center;padding-top:30px;">The E-mail address you have tried to register with is wrong. <p></p>Please register with your correct E-mail address<p></p>Thank you for keeping it Kayas.</div>')
    
     
@@ -248,7 +249,7 @@ else{
 
         }
         else{
-            console.log("Attempt to register with already used student number"),
+            console.log(fields.contact+" Attempt to register with already used student number"),
             res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Student Number Already Registered</div><div style="font-size:40px;text-align:center;padding-top:30px;">The Student number you entered is already registered.<p></p>Incase you are sure that the student number you are trying to register with is yours, WhatsApp Isaac on 0755643774 for assistance.<p></p>Thank you for keeping it Kayas.</div>')
         }
 
@@ -281,7 +282,7 @@ else{
     
                 
          if(user==null){
-            console.log("Attempt to request without registration"),
+            console.log(fields.contact+" Attempt to request without registration"),
                
               res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
                
