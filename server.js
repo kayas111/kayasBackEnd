@@ -1,5 +1,5 @@
 
-/*const nodemailer = require('nodemailer');
+/*
 require('dotenv').config()
 const sgMail=require("@sendgrid/mail")
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -23,31 +23,6 @@ require('dotenv').config()
 const sgMail=require("@sendgrid/mail")
 const { ReturnDocument } = require('mongodb')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-//sending html
-
-sgMail.send(
-    {to:"onongeisaac@gmail.com",
-    from:"kayas.makerere@gmail.com",
-    subject:"Welcome To Kayas Makerere",
-    html:"Thank you for registering with Kayas. You are now eligible to buy cheaper student items from us.<p></p><h2 style='color:green;'>How To Earn With Us</h2>You will always be given a working period of only 1 hour per day on the days that payment offers are given. We will always give you the opportunity to test your circle of friends market and also give you the opportunity to widen your market for higher payments. This offer is only present to the first 500 students who register for it with Kayas Makerere. <p></p>NB:Please Recommend a friend whom you wish to benefit from Kayas Makerere.<h2 style='color:green;'>How To Send Messages to Kayas</h2>Sending messages to Kayas is only possible when you have:<br></br>1. Registered with Kayas Makerere<br></br>2. Recommended a friend to Kayas Makerere and <br></br>3. That friend has also registered with Kayas Makerere. <p></p>The Recommendation Form is found immediately below the Registration Form and the form used for sending messages i.e. the Message Form is found immediately below the Recommendation Form.<h2 style='color:green;'>How To Join</h2>To join the Kayas Trading Team in order to receive trade updates, Just send the  message 'I wish to Join the Trade Team' through the Message Form found on our website.<p></p>For any other inquiries or help, WhatsApp Isaac on 0755643774 or Charles on 0700411626. Thank you for keeping it Kayas. "}).then(res=>console.log("email sent")).catch(err=>{
-        console.log("error is: "+ err)
-    })
-
-
-
-
-
-
-
-//sending html
-
-
-
-
-/*
-
-
-
 
 const emailValidator = require('deep-email-validator');
 
@@ -249,7 +224,7 @@ app.post('/collection_campus_comment', (req,res)=>{
     sgMail.send({to:fields.email,
         from:"kayas.makerere@gmail.com",
         subject:"Welcome To Kayas Makerere",
-        text:"You will now be able to trade with us and make money remotely as well as acquire items from us at cheaper offers. All you need to do is recommend a friend and ask your friend to register with us so that your messages will be successfully sent through the Message Form that you will always use to request for our services like loans, purchase items as well as sell your items. Thank you for keeping it Kayas."}).then(res=>console.log("email sent")).catch(err=>{
+        html:"Thank you for registering with Kayas. You are now eligible to buy cheaper student items from us.<p></p><h2 style='color:green;'>How To Earn With Us</h2>You will always be given a working period of only 1 hour per day on the days that payment offers are given. We will always give you the opportunity to test your circle of friends market and also give you the opportunity to widen your market for higher payments. This offer is only present to the first 500 students who register for it with Kayas Makerere. <p></p>NB:Please Recommend a friend whom you wish to benefit from Kayas Makerere.<h2 style='color:green;'>How To Send Messages to Kayas</h2>Sending messages to Kayas is only possible when you have:<br></br>1. Registered with Kayas Makerere<br></br>2. Recommended a friend to Kayas Makerere and <br></br>3. That friend has also registered with Kayas Makerere. <p></p>The Recommendation Form is found immediately below the Registration Form and the form used for sending messages i.e. the Message Form is found immediately below the Recommendation Form.<h2 style='color:green;'>How To Join</h2>To join the Kayas Trading Team in order to receive trade updates, Just send the  message 'I wish to Join the Trade Team' through the Message Form found on our website.<p></p>For any other inquiries or help, WhatsApp Isaac on 0755643774 or Charles on 0700411626. Thank you for keeping it Kayas. "}).then(res=>console.log("email sent")).catch(err=>{
             console.log("error is: "+ err)
         })
 
@@ -457,4 +432,3 @@ if(presence==1){//present, send request
 
 
 
-*/
