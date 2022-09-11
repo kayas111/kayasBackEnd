@@ -58,8 +58,9 @@ const recommendationSchema=new Func({
         required:true
         },
      recommendee:{
-    type:Number,
-    required:true
+    type:[Number
+   ],
+   required:true
     }
    
     

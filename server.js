@@ -386,7 +386,71 @@ if(presence==1){//present, send request
                 try {
             
                     if(bcrypt.compareSync(fields.pin,user.pin)){
+//new
 
+db.collection('recommendations').find().toArray().then((array)=>{
+
+let presence=0;    
+array.forEach(recommendation=>{
+if(recommendation.recommendee.find(recommendee=>{
+    return recommendee==fields.recommendee
+})==undefined){//Recommendee absent, set presence to 0
+
+presence=0
+   
+}
+else{//recommendee present, set presence to 1
+    presence=1;
+ 
+}
+
+})
+
+if(presence==1){//recommendee present
+
+console.log(fields.recommender+" Attempted to recommend already recommended")
+res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Already Recommended!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your friend whom you are trying to recommend has already been recommended. Please recommend another friend.</div>') 
+
+
+}
+else{//recommendee absent
+//check for recommender presence
+let recommender=array.find(user=>user.recommender==parseInt(fields.recommender))
+if(recommender==undefined){//register new recommender
+
+    const recommendation=new recommendationModel({name:user.name,recommender:fields.recommender,recommendee:fields.recommendee})
+                
+                   recommendation.save().then(res=>console.log("recommendation received"))
+                   
+               
+                   res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for recommending your friend.<p></p> Ask your friend whom you have recommended to register with Kayas Makerere in order for you to be able to use our services. <p></p>Thank you.</div>')
+           
+    
+    console.log(fields.recommender+" has registered as a new recommender")
+}
+else{
+    
+    db.collection('recommendations').updateOne({recommender:parseInt(fields.recommender)},{$push:{recommendee:parseInt(fields.recommendee)}})
+    console.log(fields.recommender+" has added "+fields.recommendee+ " to recommendees list")
+   
+
+
+}
+
+       
+
+
+
+
+
+    }
+
+
+})
+
+//new
+
+/*original
                         db.collection('recommendations').find({recommendee:parseInt(fields.recommendee)}).toArray().then((array)=>{
                             let user2=array.find(user=>user.recommendee==parseInt(fields.recommendee))
                            
@@ -405,8 +469,10 @@ if(presence==1){//present, send request
            
     
     
-                        }else{res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Already Recommended!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your friend whom you are trying to recommend has already been recommended. Please recommend another friend.</div>') }})
-
+                        }else{
+                            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Already Recommended!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your friend whom you are trying to recommend has already been recommended. Please recommend another friend.</div>') 
+                        }})
+original */
           
     
     
