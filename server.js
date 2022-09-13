@@ -26,6 +26,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const emailValidator = require('deep-email-validator');
 
+
 const express=require('express')
 const mongoose=require('mongoose')
 const bcrypt=require('bcrypt')
@@ -38,6 +39,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
 }))
+
 const {db} = require('./models/models').comments;
 const quotesModel = require('./models/models').quotes;
 const recommendationModel = require('./models/models').recommendation;
@@ -47,9 +49,58 @@ const CampusModel = require('./models/models').campus;
 const registrationModel = require('./models/models').registration;
 const { ObjectId } = require('mongodb');
 const pagesRouter=require('./routers/pages')
-const servicesRouter=require('./routers/services')
+const servicesRouter=require('./routers/services');
+const { kMaxLength } = require('buffer');
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
+//functions start
+async function inCollection(collection,arrayList){
+    let length=arrayList.length,lengthCheck=0
+   
+    
+    let i=0
+    
+  
+        while(i<arrayList.length){
+    
+            let result = await ( db.collection(collection).find({contact:arrayList[i]}).toArray().then((array)=>{
+                
+                return array.length
+              }))
+                
+           
+                    i++
+                  lengthCheck+=result
+              
+        }
+
+
+
+       
+      if(length==lengthCheck){
+        return true
+      }
+      else{
+        return false
+      }
+
+        
+        }
+
+
+
+
+
+
+
+
+//functions end
+
+
+
+
+
+
 //serve static index file
 app.use(express.static(path.join(__dirname,'/build')))
 //pages router
@@ -216,7 +267,8 @@ app.post('/collection_campus_comment', (req,res)=>{
     let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
   //if e-mail is valid, register 
    emailValidator.validate(fields.email).then((resp)=>{
-  if(resp.valid==true){
+    
+  if(resp.valid==true||resp.valid==false){
    
     const kayaser=new registrationModel(data)
     kayaser.save().then(res=>console.log(fields.contact+" New Kayaser registered"))
@@ -229,13 +281,13 @@ app.post('/collection_campus_comment', (req,res)=>{
         })
 
 
-res.redirect('/pages/services')
+        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please go and check your E-mail address for details about how to earn with us as well as the offers we have for you.  <p></p>Thank you for registering with Kayas Makerere<p></p>Thank you for keeping it Kayas.</div>')
 
 
 }
 else{
     
-    console.log(fields.contact+" Attempt to register with wrong email address"),
+    console.log(fields.contact+" Attempt to register with wrong email address")
     res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Wrong E-mail Address</div><div style="font-size:40px;text-align:center;padding-top:30px;">The E-mail address you have tried to register with is wrong. <p></p>Please register with your correct E-mail address<p></p>Thank you for keeping it Kayas.</div>')
    
     
@@ -249,7 +301,7 @@ else{
 
         }
         else{
-            console.log(fields.contact+" Attempt to register with already used student number"),
+            console.log(fields.contact+" Attempt to register with already used student number")
             res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Student Number Already Registered</div><div style="font-size:40px;text-align:center;padding-top:30px;">The Student number you entered is already registered.<p></p>Incase you are sure that the student number you are trying to register with is yours, WhatsApp Isaac on 0755643774 for assistance.<p></p>Thank you for keeping it Kayas.</div>')
         }
 
@@ -261,7 +313,7 @@ else{
         )
    
        } else{//Kayaser is present. Send presence message
-        console.log("Attempt to register with existing number"),
+        console.log("Attempt to register with existing number")
         res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">The WhatsApp contact you tried to register with is already registered. Please proceed wih other steps.<p></p>Incase you face any further challenges or can not remeber anything, contact Isaac on 0755643774 for help.<p></p>Thank you for keeping it Kayas.</div>')
        }
     
@@ -275,6 +327,8 @@ else{
      
             var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files){
+
+
                 db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
                 let user=array.find(user=>user.contact==parseInt(fields.contact))
                
@@ -282,7 +336,7 @@ else{
     
                 
          if(user==null){
-            console.log(fields.contact+" Attempt to request without registration"),
+            console.log(fields.contact+" Attempted to request when is not registered")
                
               res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
                
@@ -295,41 +349,51 @@ else{
 //Check if kayaser has recommended
 db.collection('recommendations').find({recommender:user.contact}).toArray().then((array)=>{
     const recommended=array.length
-    if(recommended==1){//has recommended
-//check if recommendee is registered i.e present in kayasers
-db.collection('kayasers').find({contact:array[0].recommendee}).toArray().then((array)=>{
-//if present, send request else ask user to ask recomendee to register
-const presence=array.length
-if(presence==1){//present, send request
+    if(recommended==1){//has recommended, check if recommendees are registered i.e present in kayasers
+      
+       
 
-                        const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType})
+     inCollection('kayasers',array[0].recommendee).then(resp=>{
+        if(resp==true){
+
+            const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType})
                 
-                   request.save().then(res=>console.log("request received"))
-                   
-               
-                   res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon.<p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
-           
-
-
-
-}else{
-    console.log("Attempt to request when friend is not registered"),
-    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Contact Your Friend</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your message can not be sent because the friend you recommended is not registered with Kayas Makerere. Ask your friend you recommended to register with Kayas Makerere and then resend your message and it will be delivered successfully.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774 to help you out.<p></p>Thank you for keeping it Kayas.</div>')
-}
-
-
-
-
-
-})
-
-
-
+            request.save().then(res=>console.log("request received from "+ user.contact))
+            
+        
+            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon.<p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
     
 
-         
-    } else{//Ask user to recommend before sending request
-        console.log("Attempt to request without recommending"),
+
+        }
+        else{
+            console.log(user.contact+" Attempted to request when friends are not registered")
+            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Contact Your Friends</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your message can not be sent because the friend or friends you recommended have not all registered with Kayas Makerere. Ask your friends you recommended to register with Kayas Makerere and then resend your message and it will be delivered successfully.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774 to help you out.<p></p>Thank you for keeping it Kayas.</div>')
+        
+        
+        }
+     })
+
+
+
+
+
+
+
+
+
+   
+
+
+
+   
+
+
+
+    }
+   
+else{//Ask user to recommend before sending request
+        console.log(user.contact+" Attempted to request without recommending")
      res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Recommend</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please recommend a friend by filling in the recommendation Form before sending your request.<p></p> Ask the friend you have recommended to register with Kayas Makerere so that your request is delivered successfully <p></p>Thank you for keeping it Kayas.</div>')
     }
 
@@ -338,19 +402,13 @@ if(presence==1){//present, send request
 
 )
 
-
-
-                   
     
-    
-    
-    
-                    } else res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626 or Isaac on 0755643774<p></p> Thank you for keeping it Kayas</div>')
+ } else res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626 or Isaac on 0755643774<p></p> Thank you for keeping it Kayas</div>')
                     
                     
-                    } catch {
-                      console.log("error")
-                    }
+    } catch {
+    console.log("error")
+    }
         
         
         
@@ -386,7 +444,7 @@ if(presence==1){//present, send request
                 try {
             
                     if(bcrypt.compareSync(fields.pin,user.pin)){
-//new
+
 
 db.collection('recommendations').find().toArray().then((array)=>{
 
@@ -448,31 +506,9 @@ else{
 
 })
 
-//new
 
-/*original
-                        db.collection('recommendations').find({recommendee:parseInt(fields.recommendee)}).toArray().then((array)=>{
-                            let user2=array.find(user=>user.recommendee==parseInt(fields.recommendee))
-                           
-                  
-                
-                            
-                     if(user2==null){
-                           
-                                      
-                        const recommendation=new recommendationModel({name:user.name,recommender:fields.recommender,recommendee:fields.recommendee})
-                
-                   recommendation.save().then(res=>console.log("recommendation received"))
-                   
-               
-                   res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for recommending your friend.<p></p> Ask your friend whom you have recommended to register with Kayas Makerere in order for you to be able to use our services. <p></p>Thank you.</div>')
-           
-    
-    
-                        }else{
-                            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Already Recommended!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your friend whom you are trying to recommend has already been recommended. Please recommend another friend.</div>') 
-                        }})
-original */
+
+
           
     
     
