@@ -1,24 +1,4 @@
 
-/*
-require('dotenv').config()
-const sgMail=require("@sendgrid/mail")
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-let receipient=['isaacopio16@gmail.com','kayaso.ikayas@gmail.com','onongeisaac@gmail.com']
-
-receipient.forEach(receipient=>{
-    sgMail.send({to:receipient,
-    from:"kayas.makerere@gmail.com",
-    subject:"Upgrading",
-    text:"Sending multiple"}).then(res=>console.log("email sent")).catch(err=>{
-        console.log("error is: "+ err)
-    })
-}
-    
-)*/
-
-
-
-
 require('dotenv').config()
 const sgMail=require("@sendgrid/mail")
 const { ReturnDocument } = require('mongodb')
@@ -151,6 +131,12 @@ app.get('/collection_requests_number', (req,res)=>{
             res.send(array)})})
 
 //posts to the database
+
+
+
+
+
+
 app.post('/collection_controls_wish', (req,res)=>{
     var form = new formidable.IncomingForm();
 
@@ -162,6 +148,10 @@ app.post('/collection_controls_wish', (req,res)=>{
          })
 
     });
+
+
+
+
 app.post('/collection_controls_kayasurl', (req,res)=>{
     var form = new formidable.IncomingForm();
 

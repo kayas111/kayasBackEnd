@@ -16,6 +16,8 @@
     "deep-email-validator": "^0.1.21",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
+    "flutterwave-node": "^1.2.2",
+    "flutterwave-node-v3": "^1.0.11",
     "formidable": "^2.0.1",
     "mongodb": "^4.8.0",
     "mongoose": "^6.4.7"
