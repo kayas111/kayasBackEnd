@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.062192b4.chunk.css",
-    "main.js": "/static/js/main.96056603.chunk.js",
-    "main.js.map": "/static/js/main.96056603.chunk.js.map",
+    "main.js": "/static/js/main.33961810.chunk.js",
+    "main.js.map": "/static/js/main.33961810.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.922ceb51.js",
     "runtime-main.js.map": "/static/js/runtime-main.922ceb51.js.map",
     "static/js/2.97b9a0a0.chunk.js": "/static/js/2.97b9a0a0.chunk.js",
@@ -44,6 +44,11 @@
     "static/media/lights.83808759.jpg": "/static/media/lights.83808759.jpg",
     "static/media/pant1.100c2958.jpg": "/static/media/pant1.100c2958.jpg",
     "static/media/pant10.1aec35ea.jpg": "/static/media/pant10.1aec35ea.jpg",
+    "static/media/pant11.1619ae55.jpg": "/static/media/pant11.1619ae55.jpg",
+    "static/media/pant12.9dbb6824.jpg": "/static/media/pant12.9dbb6824.jpg",
+    "static/media/pant13.4b3131c8.jpg": "/static/media/pant13.4b3131c8.jpg",
+    "static/media/pant14.548a1796.jpg": "/static/media/pant14.548a1796.jpg",
+    "static/media/pant15.0acd5157.jpg": "/static/media/pant15.0acd5157.jpg",
     "static/media/pant2.ef433e5c.jpg": "/static/media/pant2.ef433e5c.jpg",
     "static/media/pant3.1c77c427.jpg": "/static/media/pant3.1c77c427.jpg",
     "static/media/pant4.a33f1dfb.jpg": "/static/media/pant4.a33f1dfb.jpg",
@@ -115,6 +120,6 @@
     "static/js/runtime-main.922ceb51.js",
     "static/js/2.97b9a0a0.chunk.js",
     "static/css/main.062192b4.chunk.css",
-    "static/js/main.96056603.chunk.js"
+    "static/js/main.33961810.chunk.js"
   ]
 }
