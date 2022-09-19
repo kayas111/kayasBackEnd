@@ -1,4 +1,6 @@
 
+
+
 require('dotenv').config()
 const sgMail=require("@sendgrid/mail")
 const { ReturnDocument } = require('mongodb')
@@ -29,7 +31,7 @@ const CampusModel = require('./models/models').campus;
 const registrationModel = require('./models/models').registration;
 const { ObjectId } = require('mongodb');
 const pagesRouter=require('./routers/pages')
-const servicesRouter=require('./routers/services');
+
 const { kMaxLength } = require('buffer');
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
@@ -85,8 +87,7 @@ async function inCollection(collection,arrayList){
 app.use(express.static(path.join(__dirname,'/build')))
 //pages router
 app.use(pagesRouter)
-//services router
-app.use(servicesRouter)
+
 //access databse by get
 app.get('/collection_controls_visits', (req,res)=>{
 
