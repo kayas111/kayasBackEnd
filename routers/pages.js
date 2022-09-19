@@ -14,6 +14,7 @@ router.get('/pages/admin/requests', (req,res)=>{res.sendFile(path.join(__dirname
 router.get('/pages/admin/recommendations', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html')) })
 router.get('/pages/admin/kayasers', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html')) })
 router.get('/pages/cu/cuhome', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html')) })
+router.get('/pages/pant/panthome', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html')) })
 
 router.get('/pages/admin/controls', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html')) })
 

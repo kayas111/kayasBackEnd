@@ -79,7 +79,6 @@ async function inCollection(collection,arrayList){
 //functions end
 
 
-
 //serve static index file
 app.use(express.static(path.join(__dirname,'/build')))
 //pages router
