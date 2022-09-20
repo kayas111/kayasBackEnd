@@ -99,10 +99,7 @@ const campusSchema=new Func({
     type:Number,
     required:true
     },
-    date:{
-        type:String,
-        required:true
-    }, 
+    
     name:{
         type:String,
         required:true

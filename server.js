@@ -171,19 +171,65 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
 
     });
 app.post('/collection_campus_comment', (req,res)=>{
+   
+   
+   
+  
     var form = new formidable.IncomingForm();
 
     form.parse(req, function (err, fields, files){
    
-        let msg={contact:fields.tel,body:fields.msg,date:fields.date,name:fields.name}
+        inCollection('kayasers',[parseInt(fields.tel)]).then(resp=>{
+            if(resp==true){
+    
+               
+db.collection('kayasers').find({contact:parseInt(fields.tel)}).toArray().then(kayaser=>{
+
+    try {
+           
+        if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
+        
+        let msg={contact:fields.tel,body:fields.msg,name:fields.name}
       
         const campus=new CampusModel(msg)
             
-               campus.save().then(res=>console.log("campus comment submitted"))
+               campus.save().then(res=>console.log("campus comment registered"))
             
             
         res.redirect('/pages/campus')
         res.end()
+console.log(fields.tel+" has posted a campus comment")
+
+
+
+
+
+
+
+} else res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626 or Isaac on 0755643774<p></p> Thank you for keeping it Kayas</div>')
+        
+        
+} catch {
+console.log("error originating from issues concerning posting a campus comment")
+}
+
+
+
+
+})
+
+  
+               
+            }
+            else{
+               
+                res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not add your comment because you are not registered with Kayas Makerere. <br></br>Please tap the Register button found at the top and register with Kayas Makerere in order to be able to always post to any stories that take place. <p></p> Thank you for keeping it Kayas</div>')
+            
+            
+            }
+         })
+
+
         
           
          })
