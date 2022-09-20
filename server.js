@@ -73,9 +73,6 @@ async function inCollection(collection,arrayList){
 
 
 
-
-
-
 //functions end
 
 
