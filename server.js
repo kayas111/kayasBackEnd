@@ -1,6 +1,7 @@
 
 
 
+
 require('dotenv').config()
 const sgMail=require("@sendgrid/mail")
 const { ReturnDocument } = require('mongodb')
@@ -78,6 +79,7 @@ async function inCollection(collection,arrayList){
 
 //serve static index file
 app.use(express.static(path.join(__dirname,'/build')))
+
 //pages router
 app.use(pagesRouter)
 

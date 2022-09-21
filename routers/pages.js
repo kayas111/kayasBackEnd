@@ -6,6 +6,7 @@ const {db} = require('../models/models').comments;
 
 router.get('/pages/guildps', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html'))}) 
 router.get('/pages/campus', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html'))})
+router.get('/pages/brocode', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html'))})
 router.get('/pages/quotes', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html'))})
 router.get('/pages/read', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html')) })
 router.get('/pages/devs', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html'))})
