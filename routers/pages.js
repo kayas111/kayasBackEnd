@@ -12,8 +12,6 @@ router.get('/pages/read', (req,res)=>{res.sendFile(path.join(__dirname,'../build
 router.get('/pages/devs', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html'))})
 router.get('/pages/services', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html'))}) 
 
-
-
 router.get('/pages/admin/requests', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html')) })
 
 router.get('/pages/admin/recommendations', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html')) })
