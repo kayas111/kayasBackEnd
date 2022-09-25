@@ -27,6 +27,10 @@ const requestsSchema=new Func({
     serviceType:{
         type:String,
         required:true
+    },
+    attachment:{
+        type:String,
+        required:true
     }
 },{timestamps:true})
 

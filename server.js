@@ -386,7 +386,7 @@ db.collection('recommendations').find({recommender:user.contact}).toArray().then
      inCollection('kayasers',array[0].recommendee).then(resp=>{
         if(resp==true){
 
-            const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType})
+            const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType,attachment:fields.attachment})
                 
             request.save().then(res=>console.log("request received from "+ user.contact))
             
