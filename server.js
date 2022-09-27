@@ -461,7 +461,6 @@ db.collection('recommendations').find().toArray().then((array)=>{
 
 //establishing grandParent
 
-
     }else{//the kayaser has no parent
         console.log("no parent")
         console.log(parent)
