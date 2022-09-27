@@ -364,82 +364,165 @@ else{
       
     
                 
-         if(user==null){
-            console.log(fields.contact+" Attempted to request when is not registered")
-               
-              res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
-               
-            }else{
-               
-        
-                try {
+         if(user!=null){
+
             
-                    if(bcrypt.compareSync(fields.pin,user.pin)){
+            try {
+            
+                if(bcrypt.compareSync(fields.pin,user.pin)){
 //Check if kayaser has recommended
 db.collection('recommendations').find({recommender:user.contact}).toArray().then((array)=>{
-    const recommended=array.length
-    if(recommended==1){//has recommended, check if recommendees are registered i.e present in kayasers
+const recommended=array.length
+if(recommended==1){//has recommended, check if recommendees are registered i.e present in kayasers
+  
+   
+
+ inCollection('kayasers',array[0].recommendee).then(resp=>{//this first checks if all recomendees are registered.
+    if(resp==true||resp==false){
+console.log(user.contact)
+db.collection('recommendations').find().toArray().then((array)=>{
+
+    let presence=0,parent=703852178,grandParent=703852178    
+    
+    
+    array.forEach(recommendation=>{//this checks if the kayaser has a parent in recommendation collection
       
-       
-
-     inCollection('kayasers',array[0].recommendee).then(resp=>{
-        if(resp==true){
-
-            const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType,attachment:fields.attachment})
-                
-            request.save().then(res=>console.log("request received from "+ user.contact))
+            if(recommendation.recommendee.find(recommendee=>{
+                return recommendee==user.contact
+                 })==undefined){//this means the kayaser doesnt appear as a child in this recommendation
+          
+            presence+=0
+            //parent is Kayas Makerere by default
+               
+            }else{//Kayas appears as a recommendee in this recommendation
+                presence+=1;
+                //set the parent of the kayaser
+                parent=recommendation.recommender
+           
             
-        
-            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon.<p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
+            }
+
+    
+    }
+  
+    
+    )
+
     
 
 
-        }
-        else{
-            console.log(user.contact+" Attempted to request when friends are not registered")
-            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Contact Your Friends</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your message can not be sent because the friend or friends you recommended have not all registered with Kayas Makerere. Ask your friends you recommended to register with Kayas Makerere and then resend your message and it will be delivered successfully.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774 to help you out.<p></p>Thank you for keeping it Kayas.</div>')
-        
-        
-        }
-     })
+    if(presence==1){//The kayaser has a parent
+       
+        console.log("parent is "+parent)
 
+//establishing grandParent
 
+db.collection('recommendations').find().toArray().then((array)=>{
 
+    let presence2=0,grandParent=703852178    
+    
+    
+    array.forEach(recommendation=>{//this checks if the kayaser has a grand parent in recommendation collection
+      
+            if(recommendation.recommendee.find(recommendee=>{
+                return recommendee==parent
+                 })==undefined){//this means the parent(Kayaser) doesnt appear as a child in this recommendation hence no grand father for child
+          
+            presence2+=0
+            //Grand parent is Kayas Makerere by default
+               
+            }else{//Kayas(Parent) appears as a recommendee in this recommendation hence chld has a grand parent
+                presence2+=1;
+                //set the parent of the kayaser
+                grandParent=recommendation.recommender
+           
+            
+            }
 
-
-
-
-
+    
+    }
+  
+    
+    )
 
    
 
 
+    if(presence2==1){//The kayaser has a grand parent
+        console.log("grandParent is "+grandParent)
 
-   
+
+    }else{//the kayaser has no grand parent
+        console.log("no grand parent")
+        console.log(parent)
+    }
+
+})
+
+//establishing grandParent
 
 
+    }else{//the kayaser has no parent
+        console.log("no parent")
+        console.log(parent)
+    }
+
+})
+
+
+
+        /*saving the request
+        const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType,attachment:fields.attachment})
+            
+        request.save().then(res=>console.log("request received from "+ user.contact))
+        
+    
+        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon.<p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
+
+*/
 
     }
-   
+    else{
+        console.log(user.contact+" Attempted to request when friends are not registered")
+        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Contact Your Friends</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your message can not be sent because the friend or friends you recommended have not all registered with Kayas Makerere. Ask your friends you recommended to register with Kayas Makerere and then resend your message and it will be delivered successfully.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774 to help you out.<p></p>Thank you for keeping it Kayas.</div>')
+    
+    
+    }
+ })
+
+}
+
 else{//Ask user to recommend before sending request
-        console.log(user.contact+" Attempted to request without recommending")
-     res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Recommend</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please recommend a friend by filling in the recommendation Form before sending your request.<p></p> Ask the friend you have recommended to register with Kayas Makerere so that your request is delivered successfully <p></p>Thank you for keeping it Kayas.</div>')
-    }
+    console.log(user.contact+" Attempted to request without recommending")
+ res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Recommend</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please recommend a friend by filling in the recommendation Form before sending your request.<p></p> Ask the friend you have recommended to register with Kayas Makerere so that your request is delivered successfully <p></p>Thank you for keeping it Kayas.</div>')
+}
 
 
 }
 
 )
 
+
+} else res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626 or Isaac on 0755643774<p></p> Thank you for keeping it Kayas</div>')
+                
+                
+} catch {
+console.log("error")
+}
     
- } else res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626 or Isaac on 0755643774<p></p> Thank you for keeping it Kayas</div>')
-                    
-                    
-    } catch {
-    console.log("error")
-    }
-        
-        
+    
+           
+
+
+            }
+            
+            
+            else{
+               
+                console.log(fields.contact+" Attempted to request when is not registered")
+               
+                res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
+                 
         
         
         }
@@ -478,20 +561,31 @@ else{//Ask user to recommend before sending request
 db.collection('recommendations').find().toArray().then((array)=>{
 
 let presence=0;    
-array.forEach(recommendation=>{
-if(recommendation.recommendee.find(recommendee=>{
-    return recommendee==fields.recommendee
-})==undefined){//Recommendee absent, set presence to 0
 
-presence=0
-   
-}
-else{//recommendee present, set presence to 1
-    presence=1;
- 
-}
+
+array.forEach(recommendation=>{
+  
+
+
+        if(recommendation.recommendee.find(recommendee=>{
+            return recommendee==parseInt(fields.recommendee)
+             })==undefined){//Recommendee absent, set presence to 0
+      
+        presence+=0
+           
+        }else{//recommendee present, set presence to 1
+            presence+=1;
+       
+        
+        }
 
 })
+
+
+
+
+
+
 
 if(presence==1){//recommendee present
 
@@ -515,9 +609,11 @@ if(recommender==undefined){//register new recommender
     
     console.log(fields.recommender+" has registered as a new recommender")
 }
+
 else{
     
     db.collection('recommendations').updateOne({recommender:parseInt(fields.recommender)},{$push:{recommendee:parseInt(fields.recommendee)}})
+    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for adding a friend/child to your recommendation/children list.<p></p> Ask your friend whom you have recommended to register with Kayas Makerere in order for you to be able to use our services. <p></p>Thank you.</div>')
     console.log(fields.recommender+" has added "+fields.recommendee+ " to recommendees list")
    
 
