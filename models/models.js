@@ -32,6 +32,16 @@ const requestsSchema=new Func({
         type:String,
         required:true
     }
+    ,
+    parent:{
+        type:String,
+        required:true
+    }
+    ,
+    grandparent:{
+        type:String,
+        required:true
+    }
 },{timestamps:true})
 
 let requestsModel=mongoose.model('requests',requestsSchema);

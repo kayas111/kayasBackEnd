@@ -126,9 +126,136 @@ app.get('/collection_requests_number', (req,res)=>{
             db.collection('kayasers').find().toArray().then((array)=>{
             res.send(array)})})
 
+
+
+app.get('/collection_recommendations_familyDetails/:contact/:pin', (req,res)=>{
+
+   
+                    inCollection('kayasers',[parseInt(req.params.contact)]).then(resp=>{
+                        if(resp==true){
+                
+                           
+            db.collection('kayasers').find({contact:parseInt(req.params.contact)}).toArray().then(kayaser=>{
+            
+                try {
+                       
+                    if(bcrypt.compareSync(req.params.pin,kayaser[0].pin)){
+                    
+                   //pin is correct
+
+                    db.collection('recommendations').find({recommender:parseInt(req.params.contact)}).toArray().then(recommendation=>{
+                    
+if(recommendation.length!=1){
+
+res.send(["You don't have a child. Please get child first in order to see your details"])
+
+}
+     else{                 
+try{
+  //looking for parent
+
+
+    db.collection('recommendations').find().toArray().then((array)=>{
+
+        let presence=0,parent="You have no parent"    
+        
+              array.forEach(recommendation2=>{//this checks if the kayaser has a  parent in recommendation collection
+          
+                if(recommendation2.recommendee.find(recommendee=>{
+                    return recommendee==req.params.contact
+                     })==undefined){//this means the Kayaser doesnt appear as a child in this recommendation hence no parent 
+              
+                presence+=0
+               
+                   
+                }else{//Kayaser appears as a recommendee in this recommendation hence chlid and has a  parent
+                    presence+=1;
+                    //set the parent of the kayaser
+                    parent=recommendation2.recommender
+               
+                
+                }
+    
+        
+        }
+      
+        
+        )
+      //finds out if the user has a parent or not.
+       
+    
+    
+        if(presence==1){//The kayaser has a parent. 
+   
+           
+           res.send([parent,recommendation[0]])
+          
+
+    
+        }else{//the kayaser has no parent
+           
+         
+    res.send([parent,recommendation[0]])
+        }
+    
+    })
+
+
+
+
+}  catch(error){
+
+
+    console.log(error)
+}
+
+
+                       
+  }  }         )
+
+
+            
+            } else {
+                
+                console.log("Attempt to view family details with incorrect pin")
+
+                res.send(["Your Pin Is incorrect"])}
+                    
+                    
+            } catch {
+
+
+            console.log("error originating from issues concerning viewing family details")
+            }
+            
+            
+            })
+            
+              
+                           
+                        }
+                        else{
+                           console.log("Attempt to view family details when not registered")
+                            res.send(["Your Not Registered"])
+                        
+                        
+                        }
+                     })
+            
+            
+                    
+            
+            })
+            
+
+
+
+
+
+
+
+
 //posts to the database
-
-
 
 
 
@@ -311,7 +438,7 @@ console.log("error originating from issues concerning posting a campus comment")
         })
 
 
-        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please go and check your E-mail address for details about how to earn with us as well as the offers we have for you.  <p></p>Thank you for registering with Kayas Makerere<p></p>Thank you for keeping it Kayas.</div>')
+        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You too can recommend friends and ask them to register such that you will be able to earn from any transactions that take place through Kayas Makerere as a Kayas Family memember. Ask your friend to explain details or visit our website and navigate to the family button at the top. You can as well go and check your E-mail address for details about how to earn with us as well as the offers we have for you.  <p></p>Thank you for registering with Kayas Makerere<p></p>Thank you for keeping it Kayas.</div>')
 
 
 }
@@ -379,22 +506,25 @@ if(recommended==1){//has recommended, check if recommendees are registered i.e p
 
  inCollection('kayasers',array[0].recommendee).then(resp=>{//this first checks if all recomendees are registered.
     if(resp==true||resp==false){
-console.log(user.contact)
+
+
+try{
+
 db.collection('recommendations').find().toArray().then((array)=>{
 
     let presence=0,parent=703852178,grandParent=703852178    
     
-    
+    //finds out if the user has a parent or not.
     array.forEach(recommendation=>{//this checks if the kayaser has a parent in recommendation collection
       
             if(recommendation.recommendee.find(recommendee=>{
                 return recommendee==user.contact
-                 })==undefined){//this means the kayaser doesnt appear as a child in this recommendation
+                 })==undefined){//this means the kayaser doesnt appear as a child in this recommendation i.e has no parent
           
             presence+=0
             //parent is Kayas Makerere by default
                
-            }else{//Kayas appears as a recommendee in this recommendation
+            }else{//Kayas appears as a recommendee in this recommendation hence has a parent
                 presence+=1;
                 //set the parent of the kayaser
                 parent=recommendation.recommender
@@ -407,13 +537,13 @@ db.collection('recommendations').find().toArray().then((array)=>{
   
     
     )
-
+  //finds out if the user has a parent or not.
     
 
 
     if(presence==1){//The kayaser has a parent
        
-        console.log("parent is "+parent)
+     
 
 //establishing grandParent
 
@@ -421,12 +551,12 @@ db.collection('recommendations').find().toArray().then((array)=>{
 
     let presence2=0,grandParent=703852178    
     
-    
+    //finds out if the user's parent has a parent or not.
     array.forEach(recommendation=>{//this checks if the kayaser has a grand parent in recommendation collection
       
             if(recommendation.recommendee.find(recommendee=>{
                 return recommendee==parent
-                 })==undefined){//this means the parent(Kayaser) doesnt appear as a child in this recommendation hence no grand father for child
+                 })==undefined){//this means the parent(Kayaser) doesnt appear as a child in this recommendation hence no grand parent for child
           
             presence2+=0
             //Grand parent is Kayas Makerere by default
@@ -444,42 +574,67 @@ db.collection('recommendations').find().toArray().then((array)=>{
   
     
     )
-
+  //finds out if the user's parent has a parent or not.
    
 
 
-    if(presence2==1){//The kayaser has a grand parent
-        console.log("grandParent is "+grandParent)
+    if(presence2==1){//The kayaser has a grand parent. Also has a parent remeber
+        
+
+        const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType,attachment:fields.attachment,parent:parent,grandparent:grandParent})
+            
+        request.save().then(res=>console.log("saved request from "+ user.contact))
+        
+    
+        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon.<p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
+
 
 
     }else{//the kayaser has no grand parent
-        console.log("no grand parent")
-        console.log(parent)
+       
+        console.log("grand parent is kayas "+grandParent)
+
+        const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType,attachment:fields.attachment,parent:parent,grandparent:grandParent})
+            
+        request.save().then(res=>console.log("saved request from "+ user.contact))
+        
+    
+        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon.<p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
+
+
+
     }
 
 })
 
 //establishing grandParent
 
-    }else{//the kayaser has no parent
+    }else{//the kayaser has no parent, parent is kayas hence grand parent is kayas
         console.log("no parent")
-        console.log(parent)
-    }
-
-})
-
-
-
-        /*saving the request
-        const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType,attachment:fields.attachment})
+        console.log("parent is kayas "+parent)
+        console.log("grand parent is kayas "+grandParent)
+        const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType,attachment:fields.attachment,parent:parent,grandparent:grandParent})
             
-        request.save().then(res=>console.log("request received from "+ user.contact))
+        request.save().then(res=>console.log("saved request from "+ user.contact))
         
     
         res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon.<p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
 
-*/
 
+    }
+
+})
+
+    }catch (error){
+
+console.log("Kayas, error resulted from registering a request: "+error)
+
+
+
+
+    }
+
+       
     }
     else{
         console.log(user.contact+" Attempted to request when friends are not registered")
