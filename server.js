@@ -465,8 +465,6 @@ else{
         }
 
 
-
-
         )
    
        } else{//Kayaser is present. Send presence message
