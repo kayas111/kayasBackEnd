@@ -4,11 +4,17 @@
 
 require('dotenv').config()
 const sgMail=require("@sendgrid/mail")
-const { ReturnDocument } = require('mongodb')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+const { ReturnDocument } = require('mongodb')
+
+const {google}=require('googleapis')
+const nodemailer=require('nodemailer')
+const oAuth2Client= new google.auth.OAuth2(process.env.mailerId, process.env.mailerSecret, process.env.redirectURI)
+oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
+
+
 
 const emailValidator = require('deep-email-validator');
-
 
 const express=require('express')
 const mongoose=require('mongoose')
@@ -70,7 +76,73 @@ async function inCollection(collection,arrayList){
         
         }
 
-
+        async function SendMail(Subject,Receipients,msg){
+            try
+             
+            {
+           
+               let accessToken =await oAuth2Client.getAccessToken()
+               const transport=nodemailer.createTransport({
+           
+           service:'gmail',
+           auth:{
+           type:'OAuth2',
+           user:'kayas.makerere@gmail.com',
+           clientId:process.env.mailerId,
+           clientSecret:process.env.mailerSecret,
+           refreshToken:process.env.refreshToken,
+           accessToken:accessToken
+           
+           
+           },
+           tls:{rejectUnauthorized:false}
+           
+               })
+           
+           
+           
+           
+           const result=await transport.sendMail({
+               from:'kayas.makerere@gmail.com',
+               to:Receipients,
+               subject:Subject,
+               text:msg
+               
+               
+                })
+           
+           return result
+           
+            }
+            catch(error){
+           
+           
+               return error
+            }
+           
+           }
+           
+        
+        async function GetAllEmails(){
+        
+        
+            let list=[]
+        
+        let emails=await db.collection("kayasers").find().toArray().then((array)=>{
+               
+               array.forEach(kayaser=>{
+                list.push(kayaser.email)
+               })
+        
+        return list
+        
+            })
+        
+        
+           return emails
+        
+        
+        }
 
 
 
@@ -414,12 +486,13 @@ console.log("error originating from issues concerning posting a campus comment")
        db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
         const presence=array.length
        if(presence==0){
+
         //querry for StdNo presence
         db.collection('kayasers').find({stdNo:parseInt(fields.stdNo)}).toArray().then((array)=>{
         const presence=array.length
       
         if(presence==0){
-         
+         try{
         //Register because kayaser is absent
     let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
   //if e-mail is valid, register 
@@ -430,15 +503,13 @@ console.log("error originating from issues concerning posting a campus comment")
     const kayaser=new registrationModel(data)
     kayaser.save().then(res=>console.log(fields.contact+" New Kayaser registered"))
 
-    sgMail.send({to:fields.email,
-        from:"kayas.makerere@gmail.com",
-        subject:"Welcome To Kayas Makerere",
-        html:"Thank you for registering with Kayas. You are now eligible to buy cheaper student items from us and also receive our Don't Sleep Hungry Loans payable with an interest of 1,000/= only.<p></p><h2 style='color:green;'>How To Earn With Us</h2>You will always be given a working period of only 1 hour per day on the days that payment offers are given. We will always give you the opportunity to test your circle of friends market and also give you the opportunity to widen your market for higher payments. This offer is only present to the first 500 students who register for it with Kayas Makerere. <p></p>NB:Please Recommend a friend whom you wish to benefit from Kayas Makerere.<h2 style='color:green;'>How To Send Messages to Kayas</h2>Sending messages to Kayas is only possible when you have:<br></br>1. Registered with Kayas Makerere <br></br>2. Recommended a friend to Kayas Makerere and <br></br>3. That friend has also registered with Kayas Makerere. <p></p>The Recommendation Form is found immediately below the Registration Form and the form used for sending messages i.e. the Message Form is found immediately below the Recommendation Form.<h2 style='color:green;'>How To Join</h2>To join the Kayas Trading Team in order to receive trade updates, Just send the  message 'I wish to Join the Trade Team' through the Message Form found on our website.<p></p>For any other inquiries or help, WhatsApp Isaac on 0755643774 or Charles on 0700411626. Thank you for keeping it Kayas. "}).then(res=>console.log("email sent")).catch(err=>{
-            console.log("error is: "+ err)
+  SendMail("MAKE MONEY: KAYAS MAKERERE",[fields.email],"Thank you for registering with us. You are now eligible to purchase cheaper hostel room items from us. Please read details on how you can make money as well through Kayas Makerere by reading about the Kayas Family through this link: https://kayas-mak.herokuapp.com/pages/family/familyhome. For any detailed issues or problems, you can also WhatsApp Charles on 0700411626 or Isaac on 0755643774, they are also students of Makerere University. The Kayas Makerere WhatsApp line  is 0703852178. Thank you for keeping it Kayas.")
+        .then(res=>console.log("email sent to new Kayaser")).catch(err=>{
+            console.log("Dear Isaac, the error resulting from sending an email to a newly regsitered Kayaser is: "+ err)
         })
 
 
-        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You too can recommend friends and ask them to register such that you will be able to earn from any transactions that take place through Kayas Makerere as a Kayas Family memember. Ask your friend to explain details or visit our website and navigate to the family button at the top. You can as well go and check your E-mail address for details about how to earn with us as well as the offers we have for you.  <p></p>Thank you for registering with Kayas Makerere<p></p>Thank you for keeping it Kayas.</div>')
+        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You too can recommend friends and ask them to register such that you will be able to earn from any transactions that take place through Kayas Makerere as a Kayas Family memember. Ask your friend to explain details or visit our website and navigate to the family button at the top. You can as well go and check your E-mail address for details about how to earn with us as well as the offers we have for you. <p></p>NOTE: If you dont see the email in your email inbox immediately you open it, just refresh your email and  the message will be updated for you to see it. <p></p>Thank you for registering with Kayas Makerere<p></p>Thank you for keeping it Kayas.</div>')
 
 
 }
@@ -454,7 +525,10 @@ else{
 
 
     })
-  
+} catch(error){
+    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
+    console.log("error is result from entering a wrong student number format by "+fields.contact)
+}
 
         }
         else{
@@ -816,4 +890,6 @@ else{
             });
 
 
+
+           
 
