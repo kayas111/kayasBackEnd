@@ -123,12 +123,12 @@ async function inCollection(collection,arrayList){
            }
            
         
-        async function GetAllEmails(){
+        async function GetAllEmails(collection){
         
         
             let list=[]
         
-        let emails=await db.collection("kayasers").find().toArray().then((array)=>{
+        let emails=await db.collection(collection).find().toArray().then((array)=>{
                
                array.forEach(kayaser=>{
                 list.push(kayaser.email)
@@ -328,7 +328,25 @@ try{
 
 
 //posts to the database
+app.post('/broadcastEmail', (req,res)=>{
+    var form = new formidable.IncomingForm();
 
+    form.parse(req, function (err, fields, files){
+   
+      GetAllEmails("kayasers").then(res=>{
+
+SendMail(fields.subject,res,fields.msg).then(resp=>{
+    console.log("broadcast email sent")
+})
+
+
+        })
+        
+        res.redirect('/pages/admin/controls')
+        res.end() 
+         })
+
+    });
 
 
 
