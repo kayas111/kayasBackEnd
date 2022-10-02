@@ -339,7 +339,6 @@ SendMail(fields.subject,res,fields.msg).then(resp=>{
     console.log("broadcast email sent")
 })
 
-
         })
         
         res.redirect('/pages/admin/controls')
