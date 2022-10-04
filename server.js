@@ -625,7 +625,7 @@ else{
         )
    
        } else{//Kayaser is present. Send presence message
-        console.log("Attempt to register with existing number")
+        console.log(fields.contact+"Attempt to register with existing number")
         res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">You are  already registered with this contact. Please proceed wih other steps now. Incase you did not register and  dont recall registering with Kayas Makerere, contact Isaac or Charles below:<p></p>Incase you face any further challenges or can not remeber anything, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.<p></p>Thank you for keeping it Kayas.</div>')
        }
     
