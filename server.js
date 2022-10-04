@@ -259,7 +259,7 @@ try{
     
     
         if(presence==1){//The kayaser has a parent. 
-   console.log(recommendation[0])
+  
 
    let registered=[],notRegistered=[],pass=0,children=[];
 
@@ -289,7 +289,7 @@ children.push(child+"-Not Registered")
             if(pass!=recommendation[0].recommendee.length){
                ;
                 }else{
-                    console.log(children)
+                    
                     res.send([parent,recommendation[0],children])
 
 
