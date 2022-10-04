@@ -40,6 +40,7 @@ const { ObjectId } = require('mongodb');
 const pagesRouter=require('./routers/pages')
 
 const { kMaxLength } = require('buffer');
+const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
 //functions start
@@ -258,9 +259,63 @@ try{
     
     
         if(presence==1){//The kayaser has a parent. 
+   console.log(recommendation[0])
+
+   let registered=[],notRegistered=[],pass=0,children=[];
+
+
+
+
+    //
+    
+
+       recommendation[0].recommendee.forEach(async (child)=>{
+
+       
+    
+
+
+        await db.collection("kayasers").find({contact:child}).toArray().then((resp)=>{
+            if(resp.length==1){
+
+children.push(child+"-Registered")
+
+            }
+            else{
+children.push(child+"-Not Registered")
+
+            }
+            pass++
+            if(pass!=recommendation[0].recommendee.length){
+               ;
+                }else{
+                    console.log(children)
+                    res.send([parent,recommendation[0],children])
+
+
+
+                }
+        
+        })
+
+
+
+
+
+       
+   }
+       )
+
+      
+
+    
+   
    
            
-           res.send([parent,recommendation[0]])
+    
+
+
+
           
 
     
