@@ -35,6 +35,7 @@ const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
 const CommentModel = require('./models/models').comments;
 const CampusModel = require('./models/models').campus;
+const bidsModel = require('./models/models').bid;
 const registrationModel = require('./models/models').registration;
 const { ObjectId } = require('mongodb');
 const pagesRouter=require('./routers/pages')
@@ -171,8 +172,9 @@ app.get('/collection_controls_visits', (req,res)=>{
     }) 
 
 
-app.get('/collection_controls', (req,res)=>{db.collection('controls').find().toArray().then((array)=>{res.send(array)})})
-    
+app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
+app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{res.send(array)})})
+app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_campus_comments', (req,res)=>{
@@ -403,7 +405,7 @@ children.push(child+"-Not Registered")
             
             })
             
-
+ 
 
 
 
@@ -412,6 +414,91 @@ children.push(child+"-Not Registered")
 
 
 //posts to the database
+
+
+app.post('/deleteAllBids', (req,res)=>{
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function (err, fields, files){
+
+        console.log(db.collection("bids").deleteMany({}))
+        res.redirect('pages/admin/controls')
+
+    }
+
+         )})
+
+
+
+app.post('/collection_bids_bid', (req,res)=>{
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function (err, fields, files){
+   
+    inCollection("kayasers",[parseInt(fields.contact)]).then(resp=>{
+
+if(resp==true){
+db.collection("kayasers").find({contact:parseInt(fields.contact)}).toArray().then(kayaser=>{
+
+
+
+
+    if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
+
+try{
+    let data={name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,email:kayaser[0].email,amount:parseInt(fields.bidAmount)}
+    const bid=new bidsModel(data)
+    bid.save().then(res=>console.log(fields.contact+" has submitted a bid"))
+   
+    res.redirect('/pages/bids/bidshome')
+    res.end() 
+
+
+
+}
+        catch(error){
+            console.log("Kayas, an error occured and its below: ")
+            console.log(error)
+            
+            }
+      
+    }else{
+
+
+        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626 or Isaac on 0755643774<p></p> Thank you for keeping it Kayas</div>')
+
+
+
+    }
+
+  
+
+
+
+
+
+
+
+
+})
+
+
+}
+else{
+    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not place your bid because you are not registered with Kayas Makerere. <br></br>Please tap the Register button found at the top and register with Kayas Makerere in order to be able to always submit your bids. <p></p> Thank you for keeping it Kayas</div>')
+}
+
+
+       
+
+    })
+
+
+
+       
+         })
+
+    });
 app.post('/broadcastEmail', (req,res)=>{
     var form = new formidable.IncomingForm();
 
@@ -471,7 +558,17 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
          })
 
     });
-
+    app.post('/collection_controls_biddingMsg', (req,res)=>{
+        var form = new formidable.IncomingForm();
+    
+        form.parse(req, function (err, fields, files){
+       
+            db.collection('controls').updateOne({"_id":ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{biddingMsg:fields.biddingMsg}})
+            res.redirect('/pages/admin/controls')
+            res.end() 
+             })
+    
+        });
     app.post('/collection_controls_topNavQuote2', (req,res)=>{
         var form = new formidable.IncomingForm();
     
@@ -612,7 +709,8 @@ console.log("error originating from issues concerning posting a campus comment")
    emailValidator.validate(fields.email).then((resp)=>{
     
   if(resp.valid==true||resp.valid==false){
-   
+  
+    
     const kayaser=new registrationModel(data)
     kayaser.save().then(res=>console.log(fields.contact+" New Kayaser registered"))
 
@@ -654,7 +752,8 @@ else{
         )
    
        } else{//Kayaser is present. Send presence message
-        console.log(fields.contact+"Attempt to register with existing number")
+        console.log(fields.contact+" Attempted to register with existing number")
+       
         res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">You are  already registered with this contact. Please proceed wih other steps now. Incase you did not register and  dont recall registering with Kayas Makerere, contact Isaac or Charles below:<p></p>Incase you face any further challenges or can not remeber anything, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.<p></p>Thank you for keeping it Kayas.</div>')
        }
     

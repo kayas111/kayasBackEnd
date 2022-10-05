@@ -108,6 +108,33 @@ const registrationSchema=new Func({
 },{timestamps:true})
 let registrationModel=mongoose.model('kayasers',registrationSchema)
 
+const bidsSchema=new Func({
+   
+    name:{
+        type:String,
+        required:true
+    },
+    stdNo:{
+        type:Number,
+        required:true
+    },
+     contact:{
+    type:Number,
+    required:true
+    },
+    email:{
+        type:String,
+        required:true
+    },
+    amount:{
+        type:Number,
+        required:true
+    }
+   
+    
+},{timestamps:true})
+let bidsModel=mongoose.model('bids',bidsSchema)
+
 const campusSchema=new Func({
     contact:{
     type:Number,
@@ -125,6 +152,7 @@ const campusSchema=new Func({
 },{timestamps:true})
 let campusModel=mongoose.model('campus',campusSchema)
 module.exports.recommendation=recommendationModel
+module.exports.bid=bidsModel
 module.exports.requests=requestsModel
 module.exports.campus=campusModel
 module.exports.comments=commentsModel
