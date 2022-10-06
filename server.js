@@ -547,7 +547,7 @@ app.post('/collection_controls_kayasurl', (req,res)=>{
 
     });
 
-    
+
 app.post('/collection_controls_topNavQuote', (req,res)=>{
     var form = new formidable.IncomingForm();
 
@@ -559,6 +559,8 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
          })
 
     });
+
+    
     app.post('/collection_controls_biddingMsg', (req,res)=>{
         var form = new formidable.IncomingForm();
     
