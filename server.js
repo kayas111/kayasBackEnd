@@ -594,7 +594,7 @@ app.post('/collection_campus_comment', (req,res)=>{
     form.parse(req, function (err, fields, files){
    
         inCollection('kayasers',[parseInt(fields.tel)]).then(resp=>{
-            if(resp==true||resp==false){
+            if(resp==true){
     
                
 db.collection('kayasers').find({contact:parseInt(fields.tel)}).toArray().then(kayaser=>{
