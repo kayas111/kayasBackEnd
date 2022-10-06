@@ -560,7 +560,7 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
 
     });
 
-    
+
     app.post('/collection_controls_biddingMsg', (req,res)=>{
         var form = new formidable.IncomingForm();
     
@@ -594,7 +594,7 @@ app.post('/collection_campus_comment', (req,res)=>{
     form.parse(req, function (err, fields, files){
    
         inCollection('kayasers',[parseInt(fields.tel)]).then(resp=>{
-            if(resp==true){
+            if(resp==true||resp==false){
     
                
 db.collection('kayasers').find({contact:parseInt(fields.tel)}).toArray().then(kayaser=>{
