@@ -499,6 +499,56 @@ else{
          })
 
     });
+
+app.post('/joinFamilyGroup', (req,res)=>{
+    var form = new formidable.IncomingForm();
+   
+
+    form.parse(req, function (err, fields, files){
+
+inCollection('kayasers',[parseInt(fields.contact)]).then(resp=>{
+
+if(resp==true){
+db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((kayaser)=>{
+
+    if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
+
+        res.send('<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Family Group</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to joining the group, tap here:</div> <a href="https://chat.whatsapp.com/K7MGh5feQVDJnokvCIShop">JOIN GROUP</a> </div>')
+
+
+    }
+    else{
+
+res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Charles on 0700411626 or Isaac on 0755643774<p></p> Thank you for keeping it Kayas</div>')
+
+    }
+
+    
+})
+
+}else{
+
+   res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not join the Kayas Trading Family group because you are not registered with Kayas Makerere. <br></br>Please tap the Register button found at the top and register with Kayas Makerere in order to be able to join the group. <p></p> Thank you for keeping it Kayas</div>')
+}
+
+
+
+
+
+})
+
+
+
+
+
+
+    })
+    
+
+})
+
+
+
 app.post('/broadcastEmail', (req,res)=>{
     var form = new formidable.IncomingForm();
 
