@@ -740,6 +740,40 @@ console.log("error originating from issues concerning posting a campus comment")
              })
     
         });
+
+
+        app.post('/admin_setPin', (req,res)=>{
+
+            var form = new formidable.IncomingForm();
+            form.parse(req, function (err, fields, files){
+
+db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
+
+if(array.length==1){
+
+db.collection('kayasers').updateOne({contact:parseInt(fields.contact)},{$set:{pin:bcrypt.hashSync(fields.pin,10)}})
+res.redirect('pages/admin/controls')
+
+
+}else{
+
+    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Doesnt exist as a kayaser</div>')
+
+}
+
+
+
+
+})
+
+
+
+
+            })
+
+
+        })
+
     
      app.post('/collection_kayasers_register', (req,res)=>{
     
