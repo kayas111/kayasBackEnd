@@ -502,6 +502,57 @@ else{
 
     });
 
+
+    app.post('/linkToOffer', (req,res)=>{
+        var form = new formidable.IncomingForm();
+       
+    
+        form.parse(req, function (err, fields, files){
+    
+    inCollection('kayasers',[parseInt(fields.contact)]).then(resp=>{
+    
+    if(resp==true){
+    db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((kayaser)=>{
+    
+        if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
+    
+            res.send('<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Trading Offers</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to viewing the offer, tap here:</div> <a href="https://kayas-mak/pages/bids/bidshome">VIEW OFFER</a> </div>')
+    
+    
+        }
+        else{
+    
+    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>')
+    
+        }
+    
+        
+    })
+    
+    }else{
+    
+       res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not view the offer because you are not registered with Kayas Makerere. <br></br>Please register with Kayas Makerere in order to be able to see the offer. <p></p> Thank you for keeping it Kayas</div>')
+    }
+    
+    
+    
+    
+    
+    })
+    
+    
+    
+    
+    
+    
+        })
+        
+    
+    })
+
+
+
+
 app.post('/joinFamilyGroup', (req,res)=>{
     var form = new formidable.IncomingForm();
    
