@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.d788aae8.chunk.css",
-    "main.js": "/static/js/main.9e73bdc2.chunk.js",
-    "main.js.map": "/static/js/main.9e73bdc2.chunk.js.map",
+    "main.js": "/static/js/main.271b2381.chunk.js",
+    "main.js.map": "/static/js/main.271b2381.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -30,7 +30,7 @@
     "static/media/ball2.46ceaaff.jpg": "/static/media/ball2.46ceaaff.jpg",
     "static/media/bd.58b479f2.jpg": "/static/media/bd.58b479f2.jpg",
     "static/media/bhazi.73c87519.jpg": "/static/media/bhazi.73c87519.jpg",
-    "static/media/bid1.d5121fb4.jpg": "/static/media/bid1.d5121fb4.jpg",
+    "static/media/bid.c738d063.jpg": "/static/media/bid.c738d063.jpg",
     "static/media/blunt1.847b6d21.jpg": "/static/media/blunt1.847b6d21.jpg",
     "static/media/blunt10.a4b8e340.jpg": "/static/media/blunt10.a4b8e340.jpg",
     "static/media/blunt11.67138319.jpg": "/static/media/blunt11.67138319.jpg",
@@ -191,6 +191,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.d788aae8.chunk.css",
-    "static/js/main.9e73bdc2.chunk.js"
+    "static/js/main.271b2381.chunk.js"
   ]
 }
