@@ -621,7 +621,17 @@ SendMail(fields.subject,res,fields.msg).then(resp=>{
 
     });
 
-
+    app.post('/collection_controls_topPhotoMsgs', (req,res)=>{
+        var form = new formidable.IncomingForm();
+    
+        form.parse(req, function (err, fields, files){
+       
+            db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{topPhotoMsg1:fields.topPhotoMsg1,topPhotoMsg2:fields.topPhotoMsg2,topPhotoMsg3:fields.topPhotoMsg3,topPhotoMsg4:fields.topPhotoMsg4}})
+            res.redirect('/pages/admin/controls')
+            res.end() 
+             })
+    
+        });
 
 app.post('/collection_controls_wish', (req,res)=>{
     var form = new formidable.IncomingForm();
