@@ -33,6 +33,7 @@ const {db} = require('./models/models').comments;
 const quotesModel = require('./models/models').quotes;
 const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
+const birthdayModel = require('./models/models').bd;
 const CommentModel = require('./models/models').comments;
 const CampusModel = require('./models/models').campus;
 const bidsModel = require('./models/models').bid;
@@ -180,6 +181,7 @@ app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
+app.get('/collection_birthdayMsgs_msgs', (req,res)=>{ db.collection('birthdaymsgs').find().toArray().then((array)=>{ res.send(array)})})
 app.get('/collection_recommendations_recommendations', (req,res)=>{
     db.collection('recommendations').find().sort({"recommender":1}).toArray().then((array)=>{
     res.send(array)})})
@@ -719,7 +721,25 @@ console.log("error originating from issues concerning posting a campus comment")
         });
 
 
-
+ app.post('/collection_birthdayMsgs_msg', (req,res)=>{
+            var form = new formidable.IncomingForm();
+        
+            form.parse(req, function (err, fields, files){
+           
+                let data={name:fields.name,contact:fields.contact,msg:fields.msg}
+              
+                const msg =new birthdayModel(data)
+                    
+                       msg.save().then(res=>console.log("Birthday message saved"))
+                       
+                    
+                res.redirect('/pages/birthday')
+                res.end()
+                
+                  
+                 })
+        
+            });
 
     app.post('/collection_comments_comment', (req,res)=>{
         var form = new formidable.IncomingForm();

@@ -134,7 +134,22 @@ const bidsSchema=new Func({
     
 },{timestamps:true})
 let bidsModel=mongoose.model('bids',bidsSchema)
-
+const birthdaySchema=new Func({
+    contact:{
+    type:Number,
+    required:true
+    },
+    
+    name:{
+        type:String,
+        required:true
+    },
+    msg:{
+        type:String,
+        required:true
+    }
+},{timestamps:true})
+let bdModel=mongoose.model('birthdayMsgs',birthdaySchema)
 const campusSchema=new Func({
     contact:{
     type:Number,
@@ -155,6 +170,7 @@ module.exports.recommendation=recommendationModel
 module.exports.bid=bidsModel
 module.exports.requests=requestsModel
 module.exports.campus=campusModel
+module.exports.bd=bdModel
 module.exports.comments=commentsModel
 module.exports.registration=registrationModel
 module.exports.quotes=quotesModel
