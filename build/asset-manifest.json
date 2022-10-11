@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.d788aae8.chunk.css",
-    "main.js": "/static/js/main.a667533d.chunk.js",
-    "main.js.map": "/static/js/main.a667533d.chunk.js.map",
+    "main.js": "/static/js/main.dca659f9.chunk.js",
+    "main.js.map": "/static/js/main.dca659f9.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -26,6 +26,7 @@
     "static/media/alert.2b28fa6f.jpg": "/static/media/alert.2b28fa6f.jpg",
     "static/media/alert1.84932eca.jpg": "/static/media/alert1.84932eca.jpg",
     "static/media/alert2.320f5ba5.jpg": "/static/media/alert2.320f5ba5.jpg",
+    "static/media/alert3.5d80ec43.jpg": "/static/media/alert3.5d80ec43.jpg",
     "static/media/alionzi1.aeb0e5e4.jpg": "/static/media/alionzi1.aeb0e5e4.jpg",
     "static/media/ball2.46ceaaff.jpg": "/static/media/ball2.46ceaaff.jpg",
     "static/media/bd.58b479f2.jpg": "/static/media/bd.58b479f2.jpg",
@@ -76,7 +77,6 @@
     "static/media/dickson.25922e9c.jpg": "/static/media/dickson.25922e9c.jpg",
     "static/media/fan.099460ed.jpg": "/static/media/fan.099460ed.jpg",
     "static/media/first.d5747302.jpg": "/static/media/first.d5747302.jpg",
-    "static/media/glosh.45f6564f.jpg": "/static/media/glosh.45f6564f.jpg",
     "static/media/goddy3.e0e08dab.jpg": "/static/media/goddy3.e0e08dab.jpg",
     "static/media/holiday.63fbbb47.jpg": "/static/media/holiday.63fbbb47.jpg",
     "static/media/ip1.3d2c6a01.jpg": "/static/media/ip1.3d2c6a01.jpg",
@@ -191,6 +191,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.d788aae8.chunk.css",
-    "static/js/main.a667533d.chunk.js"
+    "static/js/main.dca659f9.chunk.js"
   ]
 }
