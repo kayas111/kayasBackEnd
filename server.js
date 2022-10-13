@@ -204,7 +204,22 @@ app.get('/collection_requests_number', (req,res)=>{
             res.send(array)})})
 
 
+app.get('/admin_getDetails/:contact', (req,res)=>{
+   
+db.collection("kayasers").find({contact:parseInt(req.params.contact)}).toArray().then(resp=>{
 
+if(resp.length==0){
+
+    res.send(["Doesn't exist as a Kayaser"])
+}else{
+
+    res.send(["Exists",resp[0]])
+}
+
+})
+
+                
+            })
 app.get('/collection_recommendations_familyDetails/:contact/:pin', (req,res)=>{
 
    
