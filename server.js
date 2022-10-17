@@ -901,8 +901,8 @@ res.redirect('pages/admin/controls')
         .then(res=>console.log("email sent to new Kayaser")).catch(err=>{
             console.log("Dear Isaac, the error resulting from sending an email to a newly regsitered Kayaser is: "+ err)
         })
-
-        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You too can recommend friends and ask them to register such that you will be able to earn from any transactions that take place through Kayas Makerere as a Kayas Family memember. Ask your friend to explain details or visit our website and navigate to the family button at the top. You can as well go and check your E-mail address for details about how to earn with us as well as the offers we have for you. <p></p>NOTE: If you dont see the email in your email inbox immediately you open it, just refresh your email and  the message will be updated for you to see it. <p></p>Thank you for registering with Kayas Makerere<p></p>Thank you for keeping it Kayas.</div>')
+        res.send('<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Trading Offers</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to viewing the offer, tap here:</div> <a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">VIEW OFFER</a> </div>')
+       // res.send('<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You too can recommend friends and ask them to register such that you will be able to earn from any transactions that take place through Kayas Makerere as a Kayas Family memember. Ask your friend to explain details or visit our website and navigate to the family button at the top.  <p></p>Thank you for registering with Kayas Makerere<p></p>Thank you for keeping it Kayas.</div>')
 
 
 }
