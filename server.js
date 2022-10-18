@@ -879,7 +879,6 @@ res.redirect('pages/admin/controls')
        db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
         const presence=array.length
        if(presence==0){
-
         //querry for StdNo presence
         db.collection('kayasers').find({stdNo:parseInt(fields.stdNo)}).toArray().then((array)=>{
         const presence=array.length
