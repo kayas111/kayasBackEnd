@@ -891,8 +891,7 @@ res.redirect('pages/admin/controls')
    emailValidator.validate(fields.email).then((resp)=>{
     
   if(resp.valid==true||resp.valid==false){
-  
-    
+      
     const kayaser=new registrationModel(data)
     kayaser.save().then(res=>console.log(fields.contact+" New Kayaser registered"))
 
