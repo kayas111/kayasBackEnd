@@ -712,6 +712,17 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
                  })
         
             });
+            app.post('/collection_controls_setBiddingHeadline', (req,res)=>{
+                var form = new formidable.IncomingForm();
+            
+                form.parse(req, function (err, fields, files){
+               
+                    db.collection('controls').updateOne({"_id":ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{biddingHeadline:fields.biddingHeadline}})
+                    res.redirect('/pages/admin/controls')
+                    res.end() 
+                     })
+            
+                });
 
     app.post('/collection_controls_topNavQuote2', (req,res)=>{
         var form = new formidable.IncomingForm();
