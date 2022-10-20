@@ -988,7 +988,7 @@ else{
 //Check if kayaser has recommended
 db.collection('recommendations').find({recommender:user.contact}).toArray().then((array)=>{
 const recommended=array.length
-if(recommended==1){//has recommended, check if recommendees are registered i.e present in kayasers
+if(recommended==1||recommended==0){//has recommended, check if recommendees are registered i.e present in kayasers
   
    
 
