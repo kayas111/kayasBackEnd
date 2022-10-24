@@ -434,17 +434,7 @@ children.push(child+"-Not Registered")
 //posts to the database
 
 app.post('/pages/opinions/:client',(req,res)=>{
-   /*let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number})
-    let Opinion=mongoose.model(req.params.client,opinionSchema)
-    */
-   
-   /* function ModelData(client,document){
-            
-       
-       return (new createModel(document))
-        
-    
-    }*/
+  
 
     var form = new formidable.IncomingForm();
 
