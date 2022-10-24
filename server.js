@@ -147,7 +147,14 @@ async function inCollection(collection,arrayList){
         
         }
 
-
+function ModelData(client,document){
+            let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number})
+            let createModel=mongoose.model(client,opinionSchema)
+           return (new createModel(document))
+            
+        
+        }
+        
 
 //functions end
 
@@ -431,15 +438,20 @@ children.push(child+"-Not Registered")
 
 
 //posts to the database
+
 app.post('/pages/opinions/:client',(req,res)=>{
-   let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number})
+   /*let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number})
     let Opinion=mongoose.model(req.params.client,opinionSchema)
+    */
+   
+
+
     var form = new formidable.IncomingForm();
 
     form.parse(req, function (err, fields, files){
 
-        let data=new Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)})
-        data.save().then(resp=>{
+        //let data=new InitModel({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)})
+        ModelData(req.params.client,{name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)}).save().then(resp=>{
             console.log("client opinion saved")
         })
         res.redirect(`/pages/opinions/${req.params.client}`)
