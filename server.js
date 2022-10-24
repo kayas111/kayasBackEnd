@@ -28,7 +28,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
 }))
-
+let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number})
 const {db} = require('./models/models').comments;
 const quotesModel = require('./models/models').quotes;
 const recommendationModel = require('./models/models').recommendation;
@@ -147,13 +147,7 @@ async function inCollection(collection,arrayList){
         
         }
 
-function ModelData(client,document){
-            let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number})
-            let createModel=mongoose.model(client,opinionSchema)
-           return (new createModel(document))
-            
-        
-        }
+
         
 
 //functions end
@@ -444,14 +438,20 @@ app.post('/pages/opinions/:client',(req,res)=>{
     let Opinion=mongoose.model(req.params.client,opinionSchema)
     */
    
-
+   /* function ModelData(client,document){
+            
+       
+       return (new createModel(document))
+        
+    
+    }*/
 
     var form = new formidable.IncomingForm();
 
     form.parse(req, function (err, fields, files){
-
-        //let data=new InitModel({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)})
-        ModelData(req.params.client,{name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)}).save().then(resp=>{
+        let Opinion=mongoose.model(req.params.client,opinionSchema)
+        
+        Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)}).save().then(resp=>{
             console.log("client opinion saved")
         })
         res.redirect(`/pages/opinions/${req.params.client}`)
