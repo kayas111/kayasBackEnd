@@ -178,10 +178,12 @@ app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').fin
 app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/opinions/:client', (req,res)=>{db.collection(req.params.client).find().toArray().then((array)=>{res.send(array)})}) 
+
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
-app.get('/collection_birthdayMsgs_msgs', (req,res)=>{ db.collection('birthdaymsgs').find().toArray().then((array)=>{ res.send(array)})})
+
 app.get('/collection_recommendations_recommendations', (req,res)=>{
     db.collection('recommendations').find().sort({"recommender":1}).toArray().then((array)=>{
     res.send(array)})})
@@ -431,21 +433,40 @@ children.push(child+"-Not Registered")
 
 
 //posts to the database
+app.post('/pages/opinions/:client',(req,res)=>{
+   let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number})
+    let Opinion=mongoose.model(req.params.client,opinionSchema)
+    var form = new formidable.IncomingForm();
 
+    form.parse(req, function (err, fields, files){
+
+        let data=new Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)})
+        data.save().then(resp=>{
+            console.log("client opinion saved")
+        })
+        res.redirect(`/pages/opinions/${req.params.client}`)
+
+    })
+
+    
+    
+
+
+})
 
 app.post('/deleteAllBids', (req,res)=>{
     var form = new formidable.IncomingForm();
 
     form.parse(req, function (err, fields, files){
 
-        console.log(db.collection("bids").deleteMany({}))
+        db.collection("bids").deleteMany({}).then(resp=>{
+            console.log("Bids deleted")
+        })
         res.redirect('pages/admin/controls')
 
     }
 
-         )})
-
-
+  )})
 
 app.post('/collection_bids_bid', (req,res)=>{
     var form = new formidable.IncomingForm();
@@ -821,25 +842,7 @@ console.log("error originating from issues concerning posting a campus comment")
         });
 
 
- app.post('/collection_birthdayMsgs_msg', (req,res)=>{
-            var form = new formidable.IncomingForm();
-        
-            form.parse(req, function (err, fields, files){
-           
-                let data={name:fields.name,contact:fields.contact,msg:fields.msg}
-              
-                const msg =new birthdayModel(data)
-                    
-                       msg.save().then(res=>console.log("Birthday message saved"))
-                       
-                    
-                res.redirect('/pages/birthday')
-                res.end()
-                
-                  
-                 })
-        
-            });
+ 
 
     app.post('/collection_comments_comment', (req,res)=>{
         var form = new formidable.IncomingForm();
