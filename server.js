@@ -430,7 +430,6 @@ children.push(child+"-Not Registered")
 
 
 
-
 //posts to the database
 app.post('/pages/opinions/:client',(req,res)=>{
    let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number})
