@@ -523,7 +523,7 @@ try{
 
 }
 else{
-    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not place your bid because you are not registered with Kayas Makerere. <br></br>Please tap the Register button found at the top and register with Kayas Makerere in order to be able to always submit your bids. <p></p> Thank you for keeping it Kayas</div>')
+    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not place your bid because you are not registered with Kayas Makerere. <p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><br></br>or tap the Register button found at the top and register with Kayas Makerere in order to be able to always submit your bids. <p></p> Thank you for keeping it Kayas</div>')
 }
 
 
@@ -567,7 +567,7 @@ else{
     
     }else{
     
-       res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not view the offer because you are not registered with Kayas Makerere. <br></br>Please register with Kayas Makerere in order to be able to see the offer. <p></p> Thank you for keeping it Kayas</div>')
+       res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not view the offer because you are not registered with Kayas Makerere. <br></br>Please register with Kayas Makerere in order to be able to see the offer.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <p></p> Thank you for keeping it Kayas</div>')
     }
     
     
@@ -617,7 +617,7 @@ res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-
 
 }else{
 
-   res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not join the Kayas Trading Family group because you are not registered with Kayas Makerere. <br></br>Please tap the Register button found at the top and register with Kayas Makerere in order to be able to join the group. <p></p> Thank you for keeping it Kayas</div>')
+   res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not join the Kayas Trading Family group because you are not registered with Kayas Makerere. <p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <br></br>or tap the Register button found at the top and register with Kayas Makerere in order to be able to join the group. <p></p> Thank you for keeping it Kayas</div>')
 }
 
 
@@ -808,7 +808,7 @@ console.log("error originating from issues concerning posting a campus comment")
             }
             else{
                
-                res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not add your comment because you are not registered with Kayas Makerere. <br></br>Please tap the Register button found at the top and register with Kayas Makerere in order to be able to always post to any stories that take place. <p></p> Thank you for keeping it Kayas</div>')
+                res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not add your comment because you are not registered with Kayas Makerere.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <br></br>or tap the Register button found at the top and register with Kayas Makerere in order to be able to always post to any stories that take place. <p></p> Thank you for keeping it Kayas</div>')
             
             
             }
@@ -926,15 +926,15 @@ res.redirect('pages/admin/controls')
         .then(res=>console.log("email sent to new Kayaser")).catch(err=>{
             console.log("Dear Isaac, the error resulting from sending an email to a newly regsitered Kayaser is: "+ err)
         })
-        res.send('<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Trading Offers</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to viewing the offer, tap here:</div> <a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">VIEW OFFER</a> </div>')
-       // res.send('<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You too can recommend friends and ask them to register such that you will be able to earn from any transactions that take place through Kayas Makerere as a Kayas Family memember. Ask your friend to explain details or visit our website and navigate to the family button at the top.  <p></p>Thank you for registering with Kayas Makerere<p></p>Thank you for keeping it Kayas.</div>')
+        //res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Trading Offers</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to viewing the offer, tap here:</div> <a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">VIEW OFFER</a> </div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for registering with Kayas Makerere.<p></p>You can now proceed with any of the following:<p></p><a href="https://kayas-mak.herokuapp.com/pages/recommend">Recommend a friend</a><p></p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p>Thank you for keeping it Kayas.</div>')
 
 
 }
 else{
     
     console.log(fields.contact+" Attempt to register with wrong email address")
-    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Wrong E-mail Address</div><div style="font-size:40px;text-align:center;padding-top:30px;">The E-mail address you have tried to register with is wrong. <p></p>Please register with your correct E-mail address<p></p>Thank you for keeping it Kayas.</div>')
+    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong E-mail Address</div><div style="font-size:40px;text-align:center;padding-top:30px;">The E-mail address you have tried to register with is wrong. <p></p>Please register with your correct E-mail address<p></p>Thank you for keeping it Kayas.</div>')
    
     
 
@@ -944,14 +944,14 @@ else{
 
     })
 } catch(error){
-    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
+    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
     console.log("error is result from entering a wrong student number format by "+fields.contact)
 }
 
         }
         else{
             console.log(fields.contact+" Attempt to register with already used student number")
-            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Student Number Already Registered</div><div style="font-size:40px;text-align:center;padding-top:30px;">The Student number you entered is already registered.<p></p>Incase you are sure that the student number you are trying to register with is yours, WhatsApp Isaac on 0755643774 for assistance.<p></p>Thank you for keeping it Kayas.</div>')
+            res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Student Number Already Registered</div><div style="font-size:40px;text-align:center;padding-top:30px;">The Student number you entered is already registered.<p></p>Incase you are sure that the student number you are trying to register with is yours, WhatsApp Isaac on 0755643774 for assistance.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register again</a></div>')
         }
 
         }
@@ -962,7 +962,7 @@ else{
        } else{//Kayaser is present. Send presence message
         console.log(fields.contact+" Attempted to register with existing number")
        
-        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">You are  already registered with this contact. Please proceed wih other steps now. Incase you did not register and  dont recall registering with Kayas Makerere, contact Isaac or Charles below:<p></p>Incase you face any further challenges or can not remeber anything, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.<p></p>Thank you for keeping it Kayas.</div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">You are  already registered with this contact. Please proceed wih other steps now.Thank you for registering with Kayas Makerere.<p></p>You can now proceed with any of the following:<p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p> Incase you did not register and  dont recall registering with Kayas Makerere, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')
        }
     
        })
@@ -1077,7 +1077,7 @@ db.collection('recommendations').find().toArray().then((array)=>{
         request.save().then(res=>console.log("saved request from "+ user.contact))
         
     
-        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon.<p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon. <p></p><a href="https://kayas-mak.herokuapp.com/">Go back to Kayas</a><p></p><div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
 
 
 
@@ -1090,7 +1090,7 @@ db.collection('recommendations').find().toArray().then((array)=>{
         request.save().then(res=>console.log("saved request from "+ user.contact))
         
     
-        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon.<p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon. <p></p><a href="https://kayas-mak.herokuapp.com/">Go back to Kayas</a><p></p><div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
 
 
 
@@ -1109,7 +1109,7 @@ db.collection('recommendations').find().toArray().then((array)=>{
         request.save().then(res=>console.log("saved request from "+ user.contact))
         
     
-        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon.<p></p><div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon. <p></p><a href="https://kayas-mak.herokuapp.com/">Go back to Kayas</a><p></p><div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
 
 
     }
@@ -1129,7 +1129,7 @@ console.log("Kayas, error resulted from registering a request: "+error)
     }
     else{
         console.log(user.contact+" Attempted to request when friends are not registered")
-        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Contact Your Friends</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your message can not be sent because the friend or friends you recommended have not all registered with Kayas Makerere. Ask your friends you recommended to register with Kayas Makerere and then resend your message and it will be delivered successfully.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774 to help you out.<p></p>Thank you for keeping it Kayas.</div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Contact Your Friends</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your message can not be sent because the friend or friends you recommended have not all registered with Kayas Makerere. Ask your friends you recommended to register with Kayas Makerere and then resend your message and it will be delivered successfully.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774 to help you out.<p></p>Thank you for keeping it Kayas.</div>')
     
     
     }
@@ -1166,7 +1166,7 @@ console.log("error")
                
                 console.log(fields.contact+" Attempted to request when is not registered")
                
-                res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
+                res.status(400).send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
                  
         
         
@@ -1193,7 +1193,7 @@ console.log("error")
                 
          if(user==null){
                
-              res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
+              res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
                
             }else{
                
@@ -1235,7 +1235,7 @@ array.forEach(recommendation=>{
 if(presence==1){//recommendee present
 
 console.log(fields.recommender+" Attempted to recommend already recommended")
-res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Already Recommended!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your friend whom you are trying to recommend has already been recommended. Please recommend another friend.</div>') 
+res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Already Recommended!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your friend whom you are trying to recommend has already been recommended. Please recommend another friend. <p></p><a href="https://kayas-mak.herokuapp.com/pages/recommend">Recommend again</a></div>') 
 
 
 }
@@ -1249,7 +1249,7 @@ if(recommender==undefined){//register new recommender
                    recommendation.save().then(res=>console.log("recommendation received"))
                    
                
-                   res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for recommending your friend.<p></p> Ask your friend whom you have recommended to register with Kayas Makerere in order for you to be able to use our services. <p></p>Thank you.</div>')
+                   res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for recommending your friend. You can now proceed sending a message.<p></p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p> <p></p>Thank you.</div>')
            
     
     console.log(fields.recommender+" has registered as a new recommender")
