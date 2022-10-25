@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.d788aae8.chunk.css",
-    "main.js": "/static/js/main.bd42dd08.chunk.js",
-    "main.js.map": "/static/js/main.bd42dd08.chunk.js.map",
+    "main.js": "/static/js/main.25ba58ea.chunk.js",
+    "main.js.map": "/static/js/main.25ba58ea.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -185,6 +185,9 @@
     "static/media/t7.4d861b1a.jpg": "/static/media/t7.4d861b1a.jpg",
     "static/media/t8.2862d469.jpg": "/static/media/t8.2862d469.jpg",
     "static/media/t9.890c5314.jpg": "/static/media/t9.890c5314.jpg",
+    "static/media/trade1.0b2a4129.jpg": "/static/media/trade1.0b2a4129.jpg",
+    "static/media/trade2.ecd29c8f.jpg": "/static/media/trade2.ecd29c8f.jpg",
+    "static/media/trade3.12dfada1.jpg": "/static/media/trade3.12dfada1.jpg",
     "static/media/wobu.f4c66e87.jpg": "/static/media/wobu.f4c66e87.jpg",
     "static/media/wobu1.f6b4f7eb.jpg": "/static/media/wobu1.f6b4f7eb.jpg",
     "static/media/wobu2.1820df1b.jpg": "/static/media/wobu2.1820df1b.jpg",
@@ -199,6 +202,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.d788aae8.chunk.css",
-    "static/js/main.bd42dd08.chunk.js"
+    "static/js/main.25ba58ea.chunk.js"
   ]
 }

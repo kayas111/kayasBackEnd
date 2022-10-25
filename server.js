@@ -31,6 +31,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number})
 const {db} = require('./models/models').comments;
 const quotesModel = require('./models/models').quotes;
+const traderModel = require('./models/models').trader;
 const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
 const birthdayModel = require('./models/models').bd;
@@ -462,7 +463,7 @@ app.post('/deleteAllBids', (req,res)=>{
         db.collection("bids").deleteMany({}).then(resp=>{
             console.log("Bids deleted")
         })
-        res.redirect('pages/admin/controls')
+        res.redirect('/pages/admin/controls')
 
     }
 
@@ -864,6 +865,37 @@ console.log("error originating from issues concerning posting a campus comment")
     
         });
 
+        app.post('/admin_setTradingCode', (req,res)=>{
+
+            var form = new formidable.IncomingForm();
+            form.parse(req, function (err, fields, files){
+
+db.collection('traders').find({contact:parseInt(fields.tradingId)}).toArray().then((array)=>{
+
+if(array.length==1){
+
+db.collection('traders').updateOne({contact:parseInt(fields.tradingId)},{$set:{tradingCode:bcrypt.hashSync(fields.tradingCode,10)}})
+res.redirect('pages/admin/controls')
+
+
+}else{
+
+    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Doesnt exist as a trader</div>')
+
+}
+
+
+
+
+})
+
+
+
+
+            })
+
+
+        })
 
         app.post('/admin_setPin', (req,res)=>{
 
@@ -896,7 +928,60 @@ res.redirect('pages/admin/controls')
 
 
         })
+        app.post('/collection_traders_register', (req,res)=>{
+    
+            var form = new formidable.IncomingForm();
+            form.parse(req, function (err, fields, files){
+inCollection('kayasers',[parseInt(fields.tradingId)]).then(resp=>{
 
+    if (resp==true){
+inCollection('traders',[parseInt(fields.tradingId)]).then(resp=>{
+
+if(resp==true){
+
+res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Already registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">You have already registered as a Kayas trader. Please proceed with the next steps. <p></p><a href="https://kayas-mak.herokuapp.com/pages/trading/tradingregistration">Back to Kayas</a><p></p> Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>')
+}
+else{
+
+   
+
+    try{
+
+    db.collection('kayasers').find({contact:parseInt(fields.tradingId)}).toArray().then(kayaser=>{
+        if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
+            let data={name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,email:kayaser[0].email,tradingCode:bcrypt.hashSync(fields.tradingCode,10)}
+            const trader=new traderModel(data)
+            trader.save().then(res=>console.log(fields.tradingId+" has registered as a new trader"))
+
+res.redirect('/pages/trading/tradingregistration')
+        }
+        else{
+res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. <p></p><a href="https://kayas-mak.herokuapp.com/pages/trading/tradingregistration">Try again</a><p></p> Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>')
+        }
+    })
+
+
+
+}
+catch(err){
+    console.log("Kayas, the error originated from registering a trader.")
+}
+
+
+}
+
+        })
+
+    }
+    else{
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
+    }
+})
+
+
+
+            })
+        })
     
      app.post('/collection_kayasers_register', (req,res)=>{
     

@@ -81,6 +81,35 @@ const recommendationSchema=new Func({
 },{timestamps:true})
 let recommendationModel=mongoose.model('recommendations',recommendationSchema)
 
+const tradingRegistrationSchema=new Func({
+   
+    name:{
+        type:String,
+        required:true
+    },
+    stdNo:{
+        type:Number,
+        required:true
+    },
+     contact:{
+    type:Number,
+    required:true
+    },
+    email:{
+        type:String,
+        required:true
+    },
+    tradingCode:{
+        type:String,
+        required:true
+    }
+   
+    
+},{timestamps:true})
+let tradingRegistrationModel=mongoose.model('traders',tradingRegistrationSchema)
+
+
+
 const registrationSchema=new Func({
    
     name:{
@@ -174,6 +203,7 @@ module.exports.bd=bdModel
 module.exports.comments=commentsModel
 module.exports.registration=registrationModel
 module.exports.quotes=quotesModel
+module.exports.trader=tradingRegistrationModel
 
 
 
