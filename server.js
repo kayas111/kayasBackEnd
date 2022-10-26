@@ -34,7 +34,7 @@ const quotesModel = require('./models/models').quotes;
 const traderModel = require('./models/models').trader;
 const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
-const birthdayModel = require('./models/models').bd;
+
 const CommentModel = require('./models/models').comments;
 const CampusModel = require('./models/models').campus;
 const bidsModel = require('./models/models').bid;
@@ -180,6 +180,7 @@ app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').fin
 app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/opinions/:client', (req,res)=>{db.collection(req.params.client).find().toArray().then((array)=>{res.send(array)})}) 
 
 app.get('/collection_campus_comments', (req,res)=>{
@@ -469,23 +470,38 @@ app.post('/deleteAllBids', (req,res)=>{
 
   )})
 
+  app.post('/deleteAllRequests', (req,res)=>{
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function (err, fields, files){
+
+        db.collection("requests").deleteMany({}).then(resp=>{
+            console.log("Requests deleted")
+        })
+        res.redirect('/pages/admin/controls')
+
+    }
+
+  )})
+
 app.post('/collection_bids_bid', (req,res)=>{
     var form = new formidable.IncomingForm();
 
     form.parse(req, function (err, fields, files){
    
-    inCollection("kayasers",[parseInt(fields.contact)]).then(resp=>{
+    inCollection("traders",[parseInt(fields.tradingId)]).then(resp=>{
 
 if(resp==true){
-db.collection("kayasers").find({contact:parseInt(fields.contact)}).toArray().then(kayaser=>{
+db.collection("traders").find({contact:parseInt(fields.tradingId)}).toArray().then(trader=>{
 
 
 
 
-    if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
+    if(bcrypt.compareSync(fields.tradingCode,trader[0].tradingCode)){
+        
 
 try{
-    let data={name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,email:kayaser[0].email,amount:parseInt(fields.bidAmount)}
+    let data={contact:fields.contact,amount:parseInt(fields.bidAmount),tradingId:parseInt(fields.tradingId)}
     const bid=new bidsModel(data)
     bid.save().then(res=>console.log(fields.contact+" has submitted a bid"))
    
@@ -496,7 +512,7 @@ try{
 
 }
         catch(error){
-            console.log("Kayas, an error occured and its below: ")
+            console.log("Kayas, an error occured due to submitting a bid and its below: ")
             console.log(error)
             
             }
@@ -504,7 +520,7 @@ try{
     }else{
 
 
-        res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp  Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong trading code</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your trading code is incorrect. Incase you dont know the trading code, contact the student who sent this message to you.<p></p><a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
 
 
 
@@ -524,7 +540,7 @@ try{
 
 }
 else{
-    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not place your bid because you are not registered with Kayas Makerere. <p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><br></br>or tap the Register button found at the top and register with Kayas Makerere in order to be able to always submit your bids. <p></p> Thank you for keeping it Kayas</div>')
+    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong trading ID</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not post your amount because you entered a wrong trading ID. Incase you dont know the trading ID, contact the student who sent this message to you. <p></p><a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
 }
 
 
@@ -669,6 +685,18 @@ SendMail(fields.subject,res,fields.msg).then(resp=>{
              })
     
         });
+
+        app.post('/collection_controls_resetVisits', (req,res)=>{
+            var form = new formidable.IncomingForm();
+        
+            form.parse(req, function (err, fields, files){
+           
+                db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{noOfVisits:parseInt(fields.value)}})
+                res.redirect('/pages/admin/controls')
+                res.end() 
+                 })
+        
+            });
 
 app.post('/collection_controls_wish', (req,res)=>{
     var form = new formidable.IncomingForm();
