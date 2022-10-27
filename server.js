@@ -28,7 +28,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
 }))
-let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number})
+let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number},{strict:false})
 const {db} = require('./models/models').comments;
 const quotesModel = require('./models/models').quotes;
 const traderModel = require('./models/models').trader;
@@ -435,6 +435,94 @@ children.push(child+"-Not Registered")
 
 //posts to the database
 
+app.post('/pages/trading/:client',(req,res)=>{
+  
+
+    var form = new formidable.IncomingForm();
+
+   
+
+        form.parse(req, function (err, fields, files){
+   
+            inCollection("traders",[parseInt(fields.tradingId)]).then(resp=>{
+        
+        if(resp==true){
+        db.collection("traders").find({contact:parseInt(fields.tradingId)}).toArray().then(trader=>{
+        
+        
+        
+        
+            if(bcrypt.compareSync(fields.tradingCode,trader[0].tradingCode)){
+                
+        
+        try{
+
+inCollection(req.params.client,[parseInt(fields.contact)]).then(resp=>{
+    if(resp==true){
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Already submitted</div><div style="font-size:40px;text-align:center;padding-top:30px;">You have already submitted your notice. <p></p> Thank you for keeping it Kayas</div>')
+    }
+    else{
+
+        let Opinion=mongoose.model(req.params.client,opinionSchema)
+        
+        Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact),tradingId:trader[0].contact,traderName:trader[0].name}).save().then(resp=>{
+            console.log("client opinion saved")
+        })
+        res.redirect(`/pages/trading/${req.params.client}`)
+        
+
+
+    }
+})
+
+
+         
+        
+        
+        }
+                catch(error){
+                    console.log("Kayas, an error occured due to submitting a trading opinion and its below: ")
+                    console.log(error)
+                    
+                    }
+              
+            }else{
+        
+        
+                res.send(`<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong trading code</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your trading code is incorrect. Incase you dont know the trading code, contact the student who sent this message to you.<p></p><a href="https://kayas-mak.herokuapp.com/pages/trading/${req.params.client}">Try again</a> <p></p> Thank you for keeping it Kayas</div>`)
+        
+        
+        
+            }
+        
+          
+        
+        })
+        
+        
+        }
+        else{
+            res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong trading ID</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not post your amount because you entered a wrong trading ID. Incase you dont know the trading ID, contact the student who sent this message to you. <p></p><a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
+        }
+        
+        
+               
+        
+            })
+        
+        
+        
+               
+        })
+
+    
+    
+
+
+})
+
+
+
 app.post('/pages/opinions/:client',(req,res)=>{
   
 
@@ -455,6 +543,8 @@ app.post('/pages/opinions/:client',(req,res)=>{
 
 
 })
+
+
 
 app.post('/deleteAllBids', (req,res)=>{
     var form = new formidable.IncomingForm();
