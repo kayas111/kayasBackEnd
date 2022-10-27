@@ -573,7 +573,6 @@ app.post('/deleteAllBids', (req,res)=>{
     }
 
   )})
-
 app.post('/collection_bids_bid', (req,res)=>{
     var form = new formidable.IncomingForm();
 

@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.d788aae8.chunk.css",
-    "main.js": "/static/js/main.60309e4b.chunk.js",
-    "main.js.map": "/static/js/main.60309e4b.chunk.js.map",
+    "main.js": "/static/js/main.b32e1f3b.chunk.js",
+    "main.js.map": "/static/js/main.b32e1f3b.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -191,6 +191,7 @@
     "static/media/trade2.ecd29c8f.jpg": "/static/media/trade2.ecd29c8f.jpg",
     "static/media/trade3.12dfada1.jpg": "/static/media/trade3.12dfada1.jpg",
     "static/media/trade31.ffcde48b.jpg": "/static/media/trade31.ffcde48b.jpg",
+    "static/media/trader4.d02dcd52.jpg": "/static/media/trader4.d02dcd52.jpg",
     "static/media/wobu.f4c66e87.jpg": "/static/media/wobu.f4c66e87.jpg",
     "static/media/wobu1.f6b4f7eb.jpg": "/static/media/wobu1.f6b4f7eb.jpg",
     "static/media/wobu2.1820df1b.jpg": "/static/media/wobu2.1820df1b.jpg",
@@ -205,6 +206,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.d788aae8.chunk.css",
-    "static/js/main.60309e4b.chunk.js"
+    "static/js/main.b32e1f3b.chunk.js"
   ]
 }
