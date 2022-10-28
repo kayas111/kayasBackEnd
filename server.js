@@ -1129,7 +1129,7 @@ catch(err){
             console.log("Dear Isaac, the error resulting from sending an email to a newly regsitered Kayaser is: "+ err)
         })
         //res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Trading Offers</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to viewing the offer, tap here:</div> <a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">VIEW OFFER</a> </div>')
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for registering with Kayas Makerere.<p></p>You can now proceed with any of the following:<p></p><a href="https://kayas-mak.herokuapp.com/pages/recommend">Recommend a friend</a><p></p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p>Thank you for keeping it Kayas.</div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for registering with Kayas Makerere.<p></p>You can now proceed with any of your activities on Kayas Makerere. <p></p>Thank you for keeping it Kayas.</div>')
 
 
 }
