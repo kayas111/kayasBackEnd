@@ -1069,8 +1069,8 @@ else{
             let data={name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,email:kayaser[0].email,tradingCode:bcrypt.hashSync(fields.tradingCode,10)}
             const trader=new traderModel(data)
             trader.save().then(res=>console.log(fields.tradingId+" has registered as a new trader"))
+            res.send('<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Welcome</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div> To proceed to joining the group where you will be givent an advertising card, tap here:</div> <a href="https://chat.whatsapp.com/BU6aMsNR6jL5x11rcWc9HZ">JOIN GROUP</a> </div>')
 
-res.redirect('/pages/trading/tradingregistration')
         }
         else{
 res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. <p></p><a href="https://kayas-mak.herokuapp.com/pages/trading/tradingregistration">Try again</a><p></p> Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>')
