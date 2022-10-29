@@ -1179,8 +1179,7 @@ else{
                 db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
                 let user=array.find(user=>user.contact==parseInt(fields.contact))
                
-      
-    
+         
                 
          if(user!=null){
 
