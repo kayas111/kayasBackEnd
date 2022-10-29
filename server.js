@@ -1060,8 +1060,6 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
 }
 else{
 
-   
-
     try{
 
     db.collection('kayasers').find({contact:parseInt(fields.tradingId)}).toArray().then(kayaser=>{
