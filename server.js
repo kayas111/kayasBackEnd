@@ -29,6 +29,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
 }))
 let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number},{strict:false})
+let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/models').comments;
 const quotesModel = require('./models/models').quotes;
 const traderModel = require('./models/models').trader;
@@ -152,7 +153,10 @@ async function inCollection(collection,arrayList){
         
 
 //functions end
+//variables start
 
+let familyTradingGroupLink="https://chat.whatsapp.com/BU6aMsNR6jL5x11rcWc9HZ"
+//varaibles end
 
 //serve static index file
 app.use(express.static(path.join(__dirname,'/build')))
@@ -180,7 +184,9 @@ app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').fin
 app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/collection_orders_orders', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/opinions/:client', (req,res)=>{db.collection(req.params.client).find().toArray().then((array)=>{res.send(array)})}) 
 
 app.get('/collection_campus_comments', (req,res)=>{
@@ -435,6 +441,70 @@ children.push(child+"-Not Registered")
 
 //posts to the database
 
+app.post('/collection_orders_order',(req,res)=>{
+
+    var form = new formidable.IncomingForm();
+
+
+    form.parse(req, function (err, fields, files){
+
+        inCollection("traders",[parseInt(fields.tradingId)]).then(resp=>{
+        
+            if(resp==true){
+            db.collection("traders").find({contact:parseInt(fields.tradingId)}).toArray().then(trader=>{
+            
+            
+                if(bcrypt.compareSync(fields.tradingCode,trader[0].tradingCode)){
+                    
+            
+            try{
+    
+            Order({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact),msg:fields.msg,tradingId:trader[0].contact}).save().then(resp=>{
+                console.log("client order received")
+            })
+            res.send(`<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your order has been sent and you will be contacted shortly. Please be patient.<p></p><a href="https://kayas-mak.herokuapp.com/">Go back to Kayas</a> <p></p> Thank you for keeping it Kayas</div>`)
+            
+    
+        
+            
+            
+            }
+                    catch(error){
+                        console.log("Kayas, an error occured due to submitting an order and its below: ")
+                        console.log(error)
+                        
+                        }
+                  
+                }else{
+            
+            
+                    res.send(`<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong trading code</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your trading code is incorrect. Incase you dont know the trading code, contact the student who sent this message to you.<p></p><a href="https://kayas-mak.herokuapp.com/pages/orderform">Try again</a> <p></p> Thank you for keeping it Kayas</div>`)
+            
+            
+            
+                }
+            
+              
+            
+            })
+            
+            
+            }
+            else{
+                res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong trading ID</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not send your order because you entered a wrong trading ID. Incase you dont know the trading ID, contact the student who sent this message to you. <p></p><a href="https://kayas-mak.herokuapp.com/pages/orderform">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
+            }
+            
+            
+                   
+            
+                })
+
+
+
+    })
+
+})
+
 app.post('/pages/trading/:client',(req,res)=>{
   
 
@@ -567,6 +637,19 @@ app.post('/deleteAllBids', (req,res)=>{
 
         db.collection("requests").deleteMany({}).then(resp=>{
             console.log("Requests deleted")
+        })
+        res.redirect('/pages/admin/controls')
+
+    }
+
+  )})
+  app.post('/deleteAllOrders', (req,res)=>{
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function (err, fields, files){
+
+        db.collection("orders").deleteMany({}).then(resp=>{
+            console.log("Orders deleted")
         })
         res.redirect('/pages/admin/controls')
 
@@ -1056,7 +1139,7 @@ inCollection('traders',[parseInt(fields.tradingId)]).then(resp=>{
 
 if(resp==true){
 
-res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Already registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">You have already registered as a Kayas trader. Please proceed with the next steps. <p></p><a href="https://kayas-mak.herokuapp.com/pages/trading/tradingregistration">Back to Kayas</a><p></p> Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>')
+res.send(`<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Already registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">You have already registered as a Kayas trader. Please proceed with the next steps. <p></p><a href=${familyTradingGroupLink}>Join Trading Group</a><p></p> Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>`)
 }
 else{
 
@@ -1067,7 +1150,7 @@ else{
             let data={name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,email:kayaser[0].email,tradingCode:bcrypt.hashSync(fields.tradingCode,10)}
             const trader=new traderModel(data)
             trader.save().then(res=>console.log(fields.tradingId+" has registered as a new trader"))
-            res.send('<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Welcome</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div> To proceed to joining the group where you will be givent an advertising card, tap here:</div> <a href="https://chat.whatsapp.com/BU6aMsNR6jL5x11rcWc9HZ">JOIN GROUP</a> </div>')
+            res.send(`<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Welcome</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div> To proceed to joining the group where you will be given an advertising card, tap here:</div> <a href=${familyTradingGroupLink}>JOIN GROUP</a> </div>`)
 
         }
         else{
