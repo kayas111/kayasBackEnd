@@ -654,7 +654,6 @@ app.post('/deleteAllBids', (req,res)=>{
         res.redirect('/pages/admin/controls')
 
     }
-
   )})
 app.post('/collection_bids_bid', (req,res)=>{
     var form = new formidable.IncomingForm();
