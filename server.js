@@ -640,6 +640,7 @@ app.post('/deleteAllBids', (req,res)=>{
         })
         res.redirect('/pages/admin/controls')
 
+        
     }
 
   )})
