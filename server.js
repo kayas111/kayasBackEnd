@@ -437,8 +437,6 @@ children.push(child+"-Not Registered")
 
 
 
-
-
 //posts to the database
 
 app.post('/collection_orders_order',(req,res)=>{
