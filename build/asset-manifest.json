@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.d788aae8.chunk.css",
-    "main.js": "/static/js/main.2b1f2f20.chunk.js",
-    "main.js.map": "/static/js/main.2b1f2f20.chunk.js.map",
+    "main.js": "/static/js/main.3cec9bcb.chunk.js",
+    "main.js.map": "/static/js/main.3cec9bcb.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -60,7 +60,7 @@
     "static/media/blunt8.b86086b3.jpg": "/static/media/blunt8.b86086b3.jpg",
     "static/media/blunt9.864e8e8b.jpg": "/static/media/blunt9.864e8e8b.jpg",
     "static/media/camp1.bf48c37e.jpg": "/static/media/camp1.bf48c37e.jpg",
-    "static/media/client3.7748c64e.jpg": "/static/media/client3.7748c64e.jpg",
+    "static/media/client3.6c6cf50d.jpg": "/static/media/client3.6c6cf50d.jpg",
     "static/media/craft1.5ae8733d.jpg": "/static/media/craft1.5ae8733d.jpg",
     "static/media/craft10.2dc8c95c.jpg": "/static/media/craft10.2dc8c95c.jpg",
     "static/media/craft11.851cfaa5.jpg": "/static/media/craft11.851cfaa5.jpg",
@@ -206,6 +206,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.d788aae8.chunk.css",
-    "static/js/main.2b1f2f20.chunk.js"
+    "static/js/main.3cec9bcb.chunk.js"
   ]
 }
