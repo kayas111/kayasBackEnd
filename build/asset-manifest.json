@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.d788aae8.chunk.css",
-    "main.js": "/static/js/main.ebd5aa24.chunk.js",
-    "main.js.map": "/static/js/main.ebd5aa24.chunk.js.map",
+    "main.js": "/static/js/main.3e832811.chunk.js",
+    "main.js.map": "/static/js/main.3e832811.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -75,7 +75,9 @@
     "static/media/craft8.a95debae.jpg": "/static/media/craft8.a95debae.jpg",
     "static/media/craft9.b9e69f8a.jpg": "/static/media/craft9.b9e69f8a.jpg",
     "static/media/cu.8d13c343.jpg": "/static/media/cu.8d13c343.jpg",
+    "static/media/daniel.d56fe81c.jpg": "/static/media/daniel.d56fe81c.jpg",
     "static/media/dickson.25922e9c.jpg": "/static/media/dickson.25922e9c.jpg",
+    "static/media/egau.6dab0678.jpg": "/static/media/egau.6dab0678.jpg",
     "static/media/family1.344710ab.jpg": "/static/media/family1.344710ab.jpg",
     "static/media/family2.656516e5.jpg": "/static/media/family2.656516e5.jpg",
     "static/media/family3.a379a50c.jpg": "/static/media/family3.a379a50c.jpg",
@@ -151,6 +153,7 @@
     "static/media/s6.5b0d6c42.jpg": "/static/media/s6.5b0d6c42.jpg",
     "static/media/s7.c736b25c.jpg": "/static/media/s7.c736b25c.jpg",
     "static/media/s8.32ead710.jpg": "/static/media/s8.32ead710.jpg",
+    "static/media/saviour.01b6906e.jpg": "/static/media/saviour.01b6906e.jpg",
     "static/media/sham.eab1d932.jpg": "/static/media/sham.eab1d932.jpg",
     "static/media/index.css": "/static/media/snacks.b0cf4eac.jpg",
     "static/media/t1.085f6c37.jpg": "/static/media/t1.085f6c37.jpg",
@@ -213,6 +216,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.d788aae8.chunk.css",
-    "static/js/main.ebd5aa24.chunk.js"
+    "static/js/main.3e832811.chunk.js"
   ]
 }
