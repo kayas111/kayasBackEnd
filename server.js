@@ -244,7 +244,7 @@ if(resp.length==0){
                 
                 if(resp.length==0){
                 
-                    res.send(["Doesn't exist as a tradeer"])
+                    res.send(["Doesn't exist as a trader"])
                 }else{
                 
                     res.send(["Exists",resp[0]])
