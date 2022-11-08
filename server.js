@@ -238,6 +238,23 @@ if(resp.length==0){
 
                 
             })
+ app.get('/admin_getTradingDetails/:contact', (req,res)=>{
+   
+    db.collection("traders").find({contact:parseInt(req.params.contact)}).toArray().then(resp=>{
+                
+                if(resp.length==0){
+                
+                    res.send(["Doesn't exist as a tradeer"])
+                }else{
+                
+                    res.send(["Exists",resp[0]])
+                }
+                
+                })
+                
+                                
+                            })
+
 app.get('/collection_recommendations_familyDetails/:contact/:pin', (req,res)=>{
 
    
