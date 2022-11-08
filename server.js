@@ -1252,7 +1252,7 @@ else{
             let data={name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,email:kayaser[0].email,tradingCode:bcrypt.hashSync(fields.tradingCode,10)}
             const trader=new traderModel(data)
             trader.save().then(res=>console.log(fields.tradingId+" has registered as a new trader"))
-            res.send(`<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Welcome</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div> To proceed to joining the group where you will be given an advertising card, tap here:</div> <a href=${familyTradingGroupLink}>JOIN GROUP</a> </div>`)
+            res.send(`<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Welcome</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Thank you for creating an account with Kayas Makerere.</div><div> If you have created an account in order to get a trading card, proceed to joining the group where you will be given trading card, tap here:</div> <a href=${familyTradingGroupLink}>JOIN GROUP</a> </div>`)
 
         }
         else{
