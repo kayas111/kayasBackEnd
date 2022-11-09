@@ -151,6 +151,10 @@ const bidsSchema=new Func({
 tradingId:{
         type:String,
         required:true
+    },
+    traderName:{
+        type:String,
+        required:true
     }
    
     
