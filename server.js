@@ -674,7 +674,7 @@ inCollection(req.params.client,[parseInt(fields.contact)]).then(resp=>{
         
         }
         else{
-            res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong trading ID</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not submit your information because you entered a wrong trading ID. Incase you dont know the trading ID, contact the student who sent this message to you. <p></p><a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
+            res.send(`<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong trading ID</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not submit your information because you entered a wrong trading ID. Incase you dont know the trading ID, contact the student who sent this message to you. <p></p><a href="https://kayas-mak.herokuapp.com/pages/trading/${req.params.client}">Try again</a> <p></p> Thank you for keeping it Kayas</div>`)
         }
         
         
