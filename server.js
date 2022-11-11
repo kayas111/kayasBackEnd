@@ -1378,209 +1378,54 @@ else{
     app.post('/collection_requests_service', (req,res)=>{
      
             var form = new formidable.IncomingForm();
-        form.parse(req, function (err, fields, files){
+            form.parse(req, function (err, fields, files){
+inCollection('kayasers',[parseInt(fields.contact)]).then(resp=>{
+    if(resp==true){
+db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then(kayaser=>{
+
+    if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
+
+      try{
 
 
-                db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
-                let user=array.find(user=>user.contact==parseInt(fields.contact))
+requestsModel({name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,serviceType:fields.serviceType}).save().then(res=>console.log("request received"))
+                   
                
-         
-                
-         if(user!=null){
-
-            
-            try {
-            
-                if(bcrypt.compareSync(fields.pin,user.pin)){
-//Check if kayaser has recommended
-db.collection('recommendations').find({recommender:user.contact}).toArray().then((array)=>{
-const recommended=array.length
-if(recommended==1||recommended==0){//has recommended, check if recommendees are registered i.e present in kayasers
-  
-   
-
- inCollection('kayasers',array[0].recommendee).then(resp=>{//this first checks if all recomendees are registered.
-    if(resp==true||resp==false){
+res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for sending your message. Please be patient as you will be contacted through your WhatsApp line by our business line 0703852178 or Isaac on 0755643774.<p></p><a href="https://kayas-mak.herokuapp.com/">Back to Kayas</a><p></p>Thank you.</div>')
 
 
-try{
-
-db.collection('recommendations').find().toArray().then((array)=>{
-
-    let presence=0,parent=703852178,grandParent=703852178    
-    
-    //finds out if the user has a parent or not.
-    array.forEach(recommendation=>{//this checks if the kayaser has a parent in recommendation collection
-      
-            if(recommendation.recommendee.find(recommendee=>{
-                return recommendee==user.contact
-                 })==undefined){//this means the kayaser doesnt appear as a child in this recommendation i.e has no parent
-          
-            presence+=0
-            //parent is Kayas Makerere by default
-               
-            }else{//Kayas appears as a recommendee in this recommendation hence has a parent
-                presence+=1;
-                //set the parent of the kayaser
-                parent=recommendation.recommender
-           
-            
-            }
-
-    
-    }
-  
-    
-    )
-  //finds out if the user has a parent or not.
-    
-
-
-    if(presence==1){//The kayaser has a parent
-       
-     
-
-//establishing grandParent
-
-db.collection('recommendations').find().toArray().then((array)=>{
-
-    let presence2=0,grandParent=703852178    
-    
-    //finds out if the user's parent has a parent or not.
-    array.forEach(recommendation=>{//this checks if the kayaser has a grand parent in recommendation collection
-      
-            if(recommendation.recommendee.find(recommendee=>{
-                return recommendee==parent
-                 })==undefined){//this means the parent(Kayaser) doesnt appear as a child in this recommendation hence no grand parent for child
-          
-            presence2+=0
-            //Grand parent is Kayas Makerere by default
-               
-            }else{//Kayas(Parent) appears as a recommendee in this recommendation hence chld has a grand parent
-                presence2+=1;
-                //set the parent of the kayaser
-                grandParent=recommendation.recommender
-           
-            
-            }
-
-    
-    }
-  
-    
-    )
-  //finds out if the user's parent has a parent or not.
-   
-
-
-    if(presence2==1){//The kayaser has a grand parent. Also has a parent remeber
-        
-
-        const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType,attachment:fields.attachment,parent:parent,grandparent:grandParent})
-            
-        request.save().then(res=>console.log("saved request from "+ user.contact))
-        
-    
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon. <p></p><a href="https://kayas-mak.herokuapp.com/">Go back to Kayas</a><p></p><div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
+console.log(kayaser[0].contact+" has sent a request")
 
 
 
-    }else{//the kayaser has no grand parent
-       
-        console.log("grand parent is kayas "+grandParent)
-
-        const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType,attachment:fields.attachment,parent:parent,grandparent:grandParent})
-            
-        request.save().then(res=>console.log("saved request from "+ user.contact))
-        
-    
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon. <p></p><a href="https://kayas-mak.herokuapp.com/">Go back to Kayas</a><p></p><div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
 
 
+      }catch(error){
+        console.log("Kayas, the error originated from sending a request for service message and it is:")
+        console.log(error)
+      }
+
+
+
+
+
+    }else{
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Please try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/message">Try again</a>  <p></p> Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>')
 
     }
 
+  
 })
-
-//establishing grandParent
-
-    }else{//the kayaser has no parent, parent is kayas hence grand parent is kayas
-        console.log("no parent")
-        console.log("parent is kayas "+parent)
-        console.log("grand parent is kayas "+grandParent)
-        const request=new requestsModel({name:user.name,contact:fields.contact,stdNo:user.stdNo,serviceType:fields.serviceType,attachment:fields.attachment,parent:parent,grandparent:grandParent})
-            
-        request.save().then(res=>console.log("saved request from "+ user.contact))
-        
     
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Success !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your request has been submitted. Please be patient as you will be contacted  soon. <p></p><a href="https://kayas-mak.herokuapp.com/">Go back to Kayas</a><p></p><div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Please Note !</div> Incase you are not contacted, it means you did not save our contact (0703852178). Save our contact as soon as possible as you wait to be contacted. <p></p> Thank you for keeping it Kayas</div>')
-
-
-    }
-
-})
-
-    }catch (error){
-
-console.log("Kayas, error resulted from registering a request: "+error)
-
-
-
-
-    }
-
-       
     }
     else{
-        console.log(user.contact+" Attempted to request when friends are not registered")
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Contact Your Friends</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your message can not be sent because the friend or friends you recommended have not all registered with Kayas Makerere. Ask your friends you recommended to register with Kayas Makerere and then resend your message and it will be delivered successfully.<p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774 to help you out.<p></p>Thank you for keeping it Kayas.</div>')
-    
-    
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>') 
     }
- })
-
-}
-
-else{//Ask user to recommend before sending request
-    console.log(user.contact+" Attempted to request without recommending")
- res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Recommend</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please recommend a friend by filling in the recommendation Form before sending your request.<p></p> Ask the friend you have recommended to register with Kayas Makerere so that your request is delivered successfully <p></p>Thank you for keeping it Kayas.</div>')
-}
+})
 
 
-}
-
-)
-
-
-} else res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>')
-                
-                
-} catch {
-console.log("error")
-}
-    
-    
-           
-
-
-            }
-            
-            
-            else{
-               
-                console.log(fields.contact+" Attempted to request when is not registered")
-               
-                res.status(400).send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
-                 
-        
-        
-        }
-      
-                
-               
             })
-     
-                 })
+       
         
         })
 

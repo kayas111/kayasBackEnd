@@ -27,20 +27,6 @@ const requestsSchema=new Func({
     serviceType:{
         type:String,
         required:true
-    },
-    attachment:{
-        type:String,
-        required:true
-    }
-    ,
-    parent:{
-        type:String,
-        required:true
-    }
-    ,
-    grandparent:{
-        type:String,
-        required:true
     }
 },{timestamps:true})
 
