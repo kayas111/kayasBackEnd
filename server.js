@@ -1387,7 +1387,6 @@ db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().the
 
       try{
 
-
 requestsModel({name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,serviceType:fields.serviceType}).save().then(res=>console.log("request received"))
                    
                
