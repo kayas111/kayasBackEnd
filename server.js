@@ -706,10 +706,21 @@ app.post('/pages/opinions/:client',(req,res)=>{
     form.parse(req, function (err, fields, files){
         let Opinion=mongoose.model(req.params.client,opinionSchema)
         
-        Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)}).save().then(resp=>{
-            console.log("client opinion saved")
-        })
-        res.redirect(`/pages/opinions/${req.params.client}`)
+try{
+
+    Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)}).save().then(resp=>{
+        console.log("client opinion saved")
+    })
+    res.redirect(`/pages/opinions/${req.params.client}`)
+
+
+
+}
+catch(err){
+    console.log("kayas, the error oriiginated from posting a client opinion and it is here:")
+    console.log(err)
+}
+
 
     })
 
