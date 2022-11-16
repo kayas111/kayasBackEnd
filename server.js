@@ -714,7 +714,6 @@ try{
     res.redirect(`/pages/opinions/${req.params.client}`)
 
 
-
 }
 catch(err){
     console.log("kayas, the error oriiginated from posting a client opinion and it is here:")
@@ -735,10 +734,21 @@ app.post('/pages/memeopinions/:client',(req,res)=>{
     form.parse(req, function (err, fields, files){
         let Opinion=mongoose.model(req.params.client,opinionSchema)
         
-        Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)}).save().then(resp=>{
-            console.log("meme opinion saved")
-        })
-        res.redirect(`/pages/memeopinions`)
+        
+try{
+
+    Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)}).save().then(resp=>{
+        console.log("meme opinion saved")
+    })
+    res.redirect(`/pages/memeopinions`)
+}
+catch(err){
+    console.log("Kayas the error originated from saving a meme opinion and it is here below:")
+    console.log(err)
+}
+
+
+
 
     })
 
