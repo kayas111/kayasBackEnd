@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.9c660bd3.chunk.css",
-    "main.js": "/static/js/main.ca37479f.chunk.js",
-    "main.js.map": "/static/js/main.ca37479f.chunk.js.map",
+    "main.js": "/static/js/main.fbbed4bf.chunk.js",
+    "main.js.map": "/static/js/main.fbbed4bf.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -63,6 +63,7 @@
     "static/media/charity.2d718c62.jpg": "/static/media/charity.2d718c62.jpg",
     "static/media/client101s.6e5e3426.jpg": "/static/media/client101s.6e5e3426.jpg",
     "static/media/client15.421788f6.jpg": "/static/media/client15.421788f6.jpg",
+    "static/media/client18s.6b2bb1c1.jpg": "/static/media/client18s.6b2bb1c1.jpg",
     "static/media/client200s.7e934b75.jpg": "/static/media/client200s.7e934b75.jpg",
     "static/media/client201s.59aece97.jpg": "/static/media/client201s.59aece97.jpg",
     "static/media/client3.c06f6c3a.jpg": "/static/media/client3.c06f6c3a.jpg",
@@ -232,6 +233,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.9c660bd3.chunk.css",
-    "static/js/main.ca37479f.chunk.js"
+    "static/js/main.fbbed4bf.chunk.js"
   ]
 }
