@@ -733,8 +733,7 @@ app.post('/pages/memeopinions/:client',(req,res)=>{
 
     form.parse(req, function (err, fields, files){
         let Opinion=mongoose.model(req.params.client,opinionSchema)
-        
-        
+             
 try{
 
     Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)}).save().then(resp=>{
