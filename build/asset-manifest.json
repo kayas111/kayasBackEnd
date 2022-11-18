@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.9c660bd3.chunk.css",
-    "main.js": "/static/js/main.89c4e06a.chunk.js",
-    "main.js.map": "/static/js/main.89c4e06a.chunk.js.map",
+    "main.js": "/static/js/main.a18ece87.chunk.js",
+    "main.js.map": "/static/js/main.a18ece87.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -70,6 +70,7 @@
     "static/media/client201s.59aece97.jpg": "/static/media/client201s.59aece97.jpg",
     "static/media/client203s.ccfbf26f.jpg": "/static/media/client203s.ccfbf26f.jpg",
     "static/media/client3.c06f6c3a.jpg": "/static/media/client3.c06f6c3a.jpg",
+    "static/media/client5s.cc462b58.jpg": "/static/media/client5s.cc462b58.jpg",
     "static/media/craft1.5ae8733d.jpg": "/static/media/craft1.5ae8733d.jpg",
     "static/media/craft10.2dc8c95c.jpg": "/static/media/craft10.2dc8c95c.jpg",
     "static/media/craft11.851cfaa5.jpg": "/static/media/craft11.851cfaa5.jpg",
@@ -241,6 +242,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.9c660bd3.chunk.css",
-    "static/js/main.89c4e06a.chunk.js"
+    "static/js/main.a18ece87.chunk.js"
   ]
 }
