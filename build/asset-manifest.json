@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.9c660bd3.chunk.css",
-    "main.js": "/static/js/main.a18ece87.chunk.js",
-    "main.js.map": "/static/js/main.a18ece87.chunk.js.map",
+    "main.js": "/static/js/main.5b981899.chunk.js",
+    "main.js.map": "/static/js/main.5b981899.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -70,6 +70,7 @@
     "static/media/client201s.59aece97.jpg": "/static/media/client201s.59aece97.jpg",
     "static/media/client203s.ccfbf26f.jpg": "/static/media/client203s.ccfbf26f.jpg",
     "static/media/client3.c06f6c3a.jpg": "/static/media/client3.c06f6c3a.jpg",
+    "static/media/client300s.5c4a1817.jpg": "/static/media/client300s.5c4a1817.jpg",
     "static/media/client5s.cc462b58.jpg": "/static/media/client5s.cc462b58.jpg",
     "static/media/craft1.5ae8733d.jpg": "/static/media/craft1.5ae8733d.jpg",
     "static/media/craft10.2dc8c95c.jpg": "/static/media/craft10.2dc8c95c.jpg",
@@ -130,6 +131,7 @@
     "static/media/ken1.e8a5bf32.jpg": "/static/media/ken1.e8a5bf32.jpg",
     "static/media/kenneth.b1380989.jpg": "/static/media/kenneth.b1380989.jpg",
     "static/media/kicaber.b7085ed4.jpg": "/static/media/kicaber.b7085ed4.jpg",
+    "static/media/ldc1.7c5de727.jpg": "/static/media/ldc1.7c5de727.jpg",
     "static/media/lights.83808759.jpg": "/static/media/lights.83808759.jpg",
     "static/media/lucky.c3d3941d.jpg": "/static/media/lucky.c3d3941d.jpg",
     "static/media/mayanja.67f1647c.jpg": "/static/media/mayanja.67f1647c.jpg",
@@ -163,6 +165,7 @@
     "static/media/parco.b8d4be2f.jpg": "/static/media/parco.b8d4be2f.jpg",
     "static/media/paul.3e4486da.jpg": "/static/media/paul.3e4486da.jpg",
     "static/media/prosper.fbb7d079.jpg": "/static/media/prosper.fbb7d079.jpg",
+    "static/media/queen.fc4bbffc.mp3": "/static/media/queen.fc4bbffc.mp3",
     "static/media/raymond.c3088b08.jpg": "/static/media/raymond.c3088b08.jpg",
     "static/media/rogers.a92ca9c6.jpg": "/static/media/rogers.a92ca9c6.jpg",
     "static/media/s1.7b8f4adb.jpg": "/static/media/s1.7b8f4adb.jpg",
@@ -176,7 +179,6 @@
     "static/media/saviour.01b6906e.jpg": "/static/media/saviour.01b6906e.jpg",
     "static/media/sham.eab1d932.jpg": "/static/media/sham.eab1d932.jpg",
     "static/media/index.css": "/static/media/snacks.b0cf4eac.jpg",
-    "static/media/surmon.f9da2934.mp3": "/static/media/surmon.f9da2934.mp3",
     "static/media/t1.085f6c37.jpg": "/static/media/t1.085f6c37.jpg",
     "static/media/t10.84aff5be.jpg": "/static/media/t10.84aff5be.jpg",
     "static/media/t11.35089604.jpg": "/static/media/t11.35089604.jpg",
@@ -242,6 +244,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.9c660bd3.chunk.css",
-    "static/js/main.a18ece87.chunk.js"
+    "static/js/main.5b981899.chunk.js"
   ]
 }
