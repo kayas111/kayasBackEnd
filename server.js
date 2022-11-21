@@ -772,6 +772,20 @@ app.post('/deleteAllBids', (req,res)=>{
 
   )})
 
+  app.post('/deleteAllDocuments', (req,res)=>{
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function (err, fields, files){
+
+        db.collection(fields.collection).deleteMany({}).then(resp=>{
+            console.log("All documents in collection "+fields.collection+" have been deleted")
+        })
+        res.redirect('/pages/admin/controls')
+
+    }
+
+  )})
+
   app.post('/deleteAllRequests', (req,res)=>{
     var form = new formidable.IncomingForm();
 
