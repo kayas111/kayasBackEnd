@@ -824,7 +824,6 @@ db.collection("traders").find({contact:parseInt(fields.tradingId)}).toArray().th
 
 
 
-
     if(bcrypt.compareSync(fields.tradingCode,trader[0].tradingCode)){
         
 
