@@ -28,11 +28,13 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
 }))
+
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number},{strict:false})
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/models').comments;
 const quotesModel = require('./models/models').quotes;
+const hookupModel = require('./models/models').hookup;
 const traderModel = require('./models/models').trader;
 const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
@@ -190,6 +192,7 @@ app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:
 app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/collection_hookups_hookups', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_orders_orders', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find().toArray().then((array)=>{res.send(array)})}) 
@@ -463,6 +466,116 @@ children.push(child+"-Not Registered")
 
 //posts to the database
 
+app.post('/auth_to_see_hookups',(req,res)=>{
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files){
+inCollection("hookups",[parseInt(fields.contact)]).then(resp=>{
+if(resp==true){
+
+    db.collection("kayasers").find({contact:parseInt(fields.contact)}).toArray().then(kayaser=>{
+
+        if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
+
+            res.redirect(`/pages/hookup/seehookups`)
+
+}
+        
+        else{
+            //incorrect pin
+            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178. <p></p><a href="https://kayas-mak.herokuapp.com/pages/hookup/writeaboutself">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
+
+        }
+
+      })
+
+
+
+
+}
+else{
+    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Allowed!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not see hookups because you have not written about yourself. Please, first write about yourself then proceed to see hookups. <p></p><a href="https://kayas-mak.herokuapp.com/pages/hookup/writeaboutself">Write about self</a> <p></p> Thank you for keeping it Kayas</div>')
+
+}
+
+})
+
+
+
+
+    })
+
+
+})
+
+app.post('/collection_hookups_writeaboutself',(req,res)=>{
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files){
+inCollection("kayasers",[parseInt(fields.contact)]).then(resp=>{
+    if(resp==true){
+      db.collection("kayasers").find({contact:parseInt(fields.contact)}).toArray().then(kayaser=>{
+
+        if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
+
+          
+inCollection("hookups",[kayaser[0].contact]).then(resp=>{
+
+if(resp==true){
+
+    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Already described!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You already described yourself before. Proceed to see friends to hookup with.<p></p><a href="https://kayas-mak.herokuapp.com/pages/hookup/seehookups">Proceed to see friends</a> <p></p> Thank you for keeping it Kayas</div>')
+
+}
+else{
+
+try{
+ 
+  hookupModel({name:kayaser[0].name,campus:fields.campus,contact:kayaser[0].contact,msg:fields.msg}).save().then(resp=>{
+      console.log(kayaser[0].name+":"+kayaser[0].contact+" has submitted a hookup description")
+  })
+  
+  res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Great!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for submitting your description. You can now proceed to see friends to hookup with.<p></p><a href="https://kayas-mak.herokuapp.com/pages/hookup/seehookups">Proceed to see friends</a> <p></p> Thank you for keeping it Kayas</div>')
+ 
+
+}
+catch(err){
+
+console.log("Kayas, the error has originated from saving a hookup description and it is:")
+console.log(err)
+
+}
+
+
+}
+
+
+})    
+
+
+
+}
+        //incorrect pin
+        else{
+            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178. <p></p><a href="https://kayas-mak.herokuapp.com/pages/hookup/writeaboutself">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
+
+        }
+
+      })
+        
+    }
+
+    //not registered
+    else{
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not submit your description because you are not registered with Kayas. <br></br>Please register with Kayas in order to submit your description by clicking here:<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <p></p> Thank you for keeping it Kayas</div>') 
+    }
+})
+
+
+
+
+    })
+
+
+})
+
 app.post('/collection_orders_order',(req,res)=>{
 
     var form = new formidable.IncomingForm();
@@ -593,7 +706,7 @@ res.redirect(`/pages/politics/opinionpolls`)
                     
                 }else{//user is not registered
 
-                    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not submit your choice because you are not registered with Kayas Makerere. <br></br>Please register with Kayas Makerere in order to submit your choice of a candidate by clicking here:<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <p></p> Thank you for keeping it Kayas</div>') 
+                    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not submit your choice because you are not registered with Kayas. <br></br>Please register with Kayas in order to submit your choice of a candidate by clicking here:<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <p></p> Thank you for keeping it Kayas</div>') 
                 }
             })
 
@@ -911,7 +1024,7 @@ else{
     
     }else{
     
-       res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not view the offer because you are not registered with Kayas Makerere. <br></br>Please register with Kayas Makerere in order to be able to see the offer.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <p></p> Thank you for keeping it Kayas</div>')
+       res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not view the offer because you are not registered with Kayas. <br></br>Please register with Kayas in order to be able to see the offer.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <p></p> Thank you for keeping it Kayas</div>')
     }
     
     
@@ -961,7 +1074,7 @@ res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-
 
 }else{
 
-   res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not join the Kayas Trading Family group because you are not registered with Kayas Makerere. <p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <br></br>or tap the Register button found at the top and register with Kayas Makerere in order to be able to join the group. <p></p> Thank you for keeping it Kayas</div>')
+   res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not join the Kayas Trading Family group because you are not registered with Kayas. <p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <br></br>or tap the Register button found at the top and register with Kayas in order to be able to join the group. <p></p> Thank you for keeping it Kayas</div>')
 }
 
 
@@ -1164,7 +1277,7 @@ console.log("error originating from issues concerning posting a campus comment")
             }
             else{
                
-                res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not add your comment because you are not registered with Kayas Makerere.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <br></br>or tap the Register button found at the top and register with Kayas Makerere in order to be able to always post to any stories that take place. <p></p> Thank you for keeping it Kayas</div>')
+                res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not add your comment because you are not registered with Kayas.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <br></br>or tap the Register button found at the top and register with Kayas in order to be able to always post to any stories that take place. <p></p> Thank you for keeping it Kayas</div>')
             
             
             }
@@ -1305,7 +1418,7 @@ else{
             let data={name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,email:kayaser[0].email,tradingCode:bcrypt.hashSync(fields.tradingCode,10)}
             const trader=new traderModel(data)
             trader.save().then(res=>console.log(fields.tradingId+" has registered as a new trader"))
-            res.send(`<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Welcome</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Thank you for creating an account with Kayas Makerere.</div><div> If you have created an account in order to get a trading card, proceed to joining the group where you will be given trading card, tap here:</div> <a href=${familyTradingGroupLink}>JOIN GROUP</a> </div>`)
+            res.send(`<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Welcome</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Thank you for creating an account with Kayas.</div><div> If you have created an account in order to get a trading card, proceed to joining the group where you will be given trading card, tap here:</div> <a href=${familyTradingGroupLink}>JOIN GROUP</a> </div>`)
 
         }
         else{
@@ -1327,7 +1440,7 @@ catch(err){
 
     }
     else{
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
     }
 })
 
@@ -1360,12 +1473,12 @@ catch(err){
     const kayaser=new registrationModel(data)
     kayaser.save().then(res=>console.log(fields.contact+" New Kayaser registered"))
 
-  SendMail("MAKE MONEY: KAYAS MAKERERE",[fields.email],"Thank you for registering with us. You are now eligible to purchase cheaper hostel room items from us. Please read details on how you can make money as well through Kayas Makerere by reading about the Kayas Family through this link: https://kayas-mak.herokuapp.com/pages/family/familyhome. For any detailed issues or problems, you can also WhatsApp Charles on 0700411626 or Isaac on 0755643774, they are also students of Makerere University. The Kayas Makerere WhatsApp line  is 0703852178. Thank you for keeping it Kayas.")
+  SendMail("MAKE MONEY: KAYAS",[fields.email],"Thank you for registering with us. You are now eligible to purchase cheaper hostel room items from us. Please read details on how you can make money as well through Kayas by reading about the Kayas Family through this link: https://kayas-mak.herokuapp.com/pages/family/familyhome. For any detailed issues or problems, you can also WhatsApp Charles on 0700411626 or Isaac on 0755643774, they are also students of Makerere University. The Kayas WhatsApp line  is 0703852178. Thank you for keeping it Kayas.")
         .then(res=>console.log("email sent to new Kayaser")).catch(err=>{
             console.log("Dear Isaac, the error resulting from sending an email to a newly regsitered Kayaser is: "+ err)
         })
         //res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Trading Offers</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to viewing the offer, tap here:</div> <a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">VIEW OFFER</a> </div>')
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for registering with Kayas Makerere.<p></p>You can now proceed with any of your activities on Kayas Makerere. <p></p>Thank you for keeping it Kayas.</div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for registering with Kayas.<p></p>You can now proceed with any of your activities on Kayas. <p></p>Thank you for keeping it Kayas.</div>')
 
 
 }
@@ -1400,7 +1513,7 @@ else{
        } else{//Kayaser is present. Send presence message
         console.log(fields.contact+" Attempted to register with existing number")
        
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">You are  already registered with this contact. Please proceed wih other steps now.Thank you for registering with Kayas Makerere.<p></p>You can now proceed with any of the following:<p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p> Incase you did not register and  dont recall registering with Kayas Makerere, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">You are  already registered with this contact. Please proceed wih other steps now.Thank you for registering with Kayas.<p></p>You can now proceed with any of the following:<p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')
        }
     
        })
@@ -1451,7 +1564,7 @@ console.log(kayaser[0].contact+" has sent a request")
     
     }
     else{
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>') 
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>') 
     }
 })
 
@@ -1474,7 +1587,7 @@ console.log(kayaser[0].contact+" has sent a request")
                 
          if(user==null){
                
-              res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas Makerere University. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
+              res.status(400).send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
                
             }else{
                
@@ -1539,7 +1652,7 @@ if(recommender==undefined){//register new recommender
 else{
     
     db.collection('recommendations').updateOne({recommender:parseInt(fields.recommender)},{$push:{recommendee:parseInt(fields.recommendee)}})
-    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for adding a friend/child to your recommendation/children list.<p></p> Ask your friend whom you have recommended to register with Kayas Makerere in order for you to be able to use our services. <p></p>Thank you.</div>')
+    res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for adding a friend/child to your recommendation/children list.<p></p> Ask your friend whom you have recommended to register with Kayas in order for you to be able to use our services. <p></p>Thank you.</div>')
     console.log(fields.recommender+" has added "+fields.recommendee+ " to recommendees list")
    
 

@@ -1,5 +1,12 @@
 const mongoose=require('mongoose')
 const Func=mongoose.Schema
+const hookupSchema=new Func(
+    
+    {name:{type:String,required:true},campus:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true}}
+    
+    ,{timestamps:true})
+let hookupModel=mongoose.model('hookups',hookupSchema);
+
 const quotesSchema=new Func({
    
     quote:{
@@ -173,6 +180,7 @@ module.exports.comments=commentsModel
 module.exports.registration=registrationModel
 module.exports.quotes=quotesModel
 module.exports.trader=tradingRegistrationModel
+module.exports.hookup=hookupModel
 
 
 
