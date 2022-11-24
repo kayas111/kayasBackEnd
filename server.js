@@ -199,6 +199,7 @@ app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find(
 app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/opinions/:client', (req,res)=>{db.collection(req.params.client).find().toArray().then((array)=>{res.send(array)})}) 
 
+
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
