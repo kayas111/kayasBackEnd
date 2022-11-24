@@ -1465,12 +1465,8 @@ catch(err){
          try{
         //Register because kayaser is absent
     let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
-  //if e-mail is valid, register 
-   emailValidator.validate(fields.email).then((resp)=>{
-    
-  if(resp.valid==true||resp.valid==false){
-      
-    const kayaser=new registrationModel(data)
+
+          const kayaser=new registrationModel(data)
     kayaser.save().then(res=>console.log(fields.contact+" New Kayaser registered"))
 
   SendMail("MAKE MONEY: KAYAS",[fields.email],"Thank you for registering with us. You are now eligible to purchase cheaper hostel room items from us. Please read details on how you can make money as well through Kayas by reading about the Kayas Family through this link: https://kayas-mak.herokuapp.com/pages/family/familyhome. For any detailed issues or problems, you can also WhatsApp Charles on 0700411626 or Isaac on 0755643774, they are also students of Makerere University. The Kayas WhatsApp line  is 0703852178. Thank you for keeping it Kayas.")
@@ -1481,19 +1477,10 @@ catch(err){
         res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for registering with Kayas.<p></p>You can now proceed with any of your activities on Kayas. <p></p>Thank you for keeping it Kayas.</div>')
 
 
-}
-else{
+
+
+
     
-    console.log(fields.contact+" Attempt to register with wrong email address")
-    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong E-mail Address</div><div style="font-size:40px;text-align:center;padding-top:30px;">The E-mail address you have tried to register with is wrong. <p></p>Please register with your correct E-mail address<p></p>Thank you for keeping it Kayas.</div>')
-   
-    
-
-
-}
-
-
-    })
 } catch(error){
     res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
     console.log("error is result from entering a wrong student number format by "+fields.contact)
