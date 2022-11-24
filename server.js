@@ -1463,6 +1463,7 @@ catch(err){
       
         if(presence==0){
          try{
+            
         //Register because kayaser is absent
     let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
 
