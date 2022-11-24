@@ -208,7 +208,7 @@ app.get('/collection_recommendations_recommendations', (req,res)=>{
     res.send(array)})})
 
     app.get('/collection_kayasers_kayasers', (req,res)=>{
-        db.collection('kayasers').find().sort({"contact":1}).toArray().then((array)=>{
+        db.collection('kayasers').find().toArray().then((array)=>{
         res.send(array)})})
 
 app.get('/collection_requests_requests', (req,res)=>{
@@ -1463,7 +1463,7 @@ catch(err){
       
         if(presence==0){
          try{
-            
+
         //Register because kayaser is absent
     let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
 
