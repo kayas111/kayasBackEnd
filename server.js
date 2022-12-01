@@ -200,7 +200,6 @@ app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().
 app.get('/opinions/:client', (req,res)=>{db.collection(req.params.client).find().toArray().then((array)=>{res.send(array)})}) 
 
 
-
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
