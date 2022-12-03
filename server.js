@@ -31,10 +31,12 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number},{strict:false})
+
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/models').comments;
 const quotesModel = require('./models/models').quotes;
 const hookupModel = require('./models/models').hookup;
+const groupLinkModel = require('./models/models').groupLinkModel;
 const traderModel = require('./models/models').trader;
 const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
@@ -198,6 +200,7 @@ app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find(
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})})  
 app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/collection_whatsappgrouplinks_links', (req,res)=>{db.collection('whatsappgrouplinks').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/opinions/:client', (req,res)=>{db.collection(req.params.client).find().toArray().then((array)=>{res.send(array)})}) 
 
 
@@ -467,7 +470,56 @@ children.push(child+"-Not Registered")
 
 
 //posts to the database
+app.post('/link_to_whatsapp_group',(req,res)=>{
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files){
 
+        switch(parseInt(fields.campusId)){
+            case 1:{
+                let campus="Makerere University"
+                groupLinkModel({campusId:parseInt(fields.campusId),campus:campus,groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
+                    console.log("Whatsapp group link added")
+                    res.end()
+                    })
+                break;
+            }
+
+            case 2:{
+                let campus="Kyambogo University"
+                groupLinkModel({campusId:parseInt(fields.campusId),campus:campus,groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
+                    console.log("Whatsapp group link added")
+                    res.end()
+                    })
+                break;
+            }
+            case 3:{
+                let campus="Mubs"
+                groupLinkModel({campusId:parseInt(fields.campusId),campus:campus,groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
+                    console.log("Whatsapp group link added")
+                    res.end()
+                    })
+                break;
+            }
+
+
+           default:{
+
+            
+            groupLinkModel({campusId:parseInt(fields.campusId),campus:"General group",groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
+                console.log("Whatsapp group link added")
+                res.end()
+                })
+            break;
+
+           } 
+        }
+
+
+
+
+    })
+
+})
 app.post('/auth_to_see_hookups',(req,res)=>{
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files){

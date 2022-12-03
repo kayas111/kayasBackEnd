@@ -170,7 +170,13 @@ const campusSchema=new Func({
         required:true
     }
 },{timestamps:true})
+
 let campusModel=mongoose.model('campus',campusSchema)
+
+const groupLinkSchema=new Func({campusId:Number,campus:String,groupName:String,groupAdmin:String,description:String,link:String},{strict:false})
+let groupLinkModel=mongoose.model('whatsappgrouplinks',groupLinkSchema)
+
+module.exports.groupLinkModel=groupLinkModel
 module.exports.recommendation=recommendationModel
 module.exports.bid=bidsModel
 module.exports.requests=requestsModel
