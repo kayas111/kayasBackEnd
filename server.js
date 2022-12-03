@@ -479,7 +479,7 @@ app.post('/link_to_whatsapp_group',(req,res)=>{
                 let campus="Makerere University"
                 groupLinkModel({campusId:parseInt(fields.campusId),campus:campus,groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
                     console.log("Whatsapp group link added")
-                    res.end()
+                    res.redirect('/pages/admin/controls')
                     })
                 break;
             }
@@ -488,7 +488,7 @@ app.post('/link_to_whatsapp_group',(req,res)=>{
                 let campus="Kyambogo University"
                 groupLinkModel({campusId:parseInt(fields.campusId),campus:campus,groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
                     console.log("Whatsapp group link added")
-                    res.end()
+                    res.redirect('/pages/admin/controls')
                     })
                 break;
             }
@@ -496,7 +496,7 @@ app.post('/link_to_whatsapp_group',(req,res)=>{
                 let campus="Mubs"
                 groupLinkModel({campusId:parseInt(fields.campusId),campus:campus,groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
                     console.log("Whatsapp group link added")
-                    res.end()
+                    res.redirect('/pages/admin/controls')
                     })
                 break;
             }
@@ -507,7 +507,7 @@ app.post('/link_to_whatsapp_group',(req,res)=>{
             
             groupLinkModel({campusId:parseInt(fields.campusId),campus:"General group",groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
                 console.log("Whatsapp group link added")
-                res.end()
+                res.redirect('/pages/admin/controls')
                 })
             break;
 
