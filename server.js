@@ -1173,7 +1173,7 @@ SendMail(fields.subject,res,fields.msg).then(resp=>{
     
         form.parse(req, function (err, fields, files){
        
-            db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{topPhotoMsg1:fields.topPhotoMsg1,topPhotoMsg2:fields.topPhotoMsg2,topPhotoMsg3:fields.topPhotoMsg3,topPhotoMsg4:fields.topPhotoMsg4}})
+            db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{topPhotoMsg1:fields.topPhotoMsg1,topPhotoMsg2:fields.topPhotoMsg2,topPhotoMsg3:fields.topPhotoMsg3,topPhotoMsg4:fields.topPhotoMsg4,topPhotoMsg5:fields.topPhotoMsg5}})
             res.redirect('/pages/admin/controls')
             res.end() 
              })
