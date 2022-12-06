@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.533edd12.chunk.css",
-    "main.js": "/static/js/main.409f0e0c.chunk.js",
-    "main.js.map": "/static/js/main.409f0e0c.chunk.js.map",
+    "main.js": "/static/js/main.896c7e36.chunk.js",
+    "main.js.map": "/static/js/main.896c7e36.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -116,7 +116,6 @@
     "static/media/hookup2.82651946.jpg": "/static/media/hookup2.82651946.jpg",
     "static/media/ip1.3d2c6a01.jpg": "/static/media/ip1.3d2c6a01.jpg",
     "static/media/irene.53caa8a2.jpg": "/static/media/irene.53caa8a2.jpg",
-    "static/media/isaac.71fab4f7.jpg": "/static/media/isaac.71fab4f7.jpg",
     "static/media/isaac1.654b5457.jpg": "/static/media/isaac1.654b5457.jpg",
     "static/media/isaac10.b4939a73.jpg": "/static/media/isaac10.b4939a73.jpg",
     "static/media/isaac2.c16a4aa2.jpg": "/static/media/isaac2.c16a4aa2.jpg",
@@ -167,6 +166,7 @@
     "static/media/meme6.9f91948f.jpg": "/static/media/meme6.9f91948f.jpg",
     "static/media/meme7.9a04be53.jpg": "/static/media/meme7.9a04be53.jpg",
     "static/media/memory.b669c33c.jpg": "/static/media/memory.b669c33c.jpg",
+    "static/media/ndyabahika.15556a09.jpg": "/static/media/ndyabahika.15556a09.jpg",
     "static/media/nu1.65286410.jpg": "/static/media/nu1.65286410.jpg",
     "static/media/otim.82a60872.jpg": "/static/media/otim.82a60872.jpg",
     "static/media/ovon1.a08edffe.jpg": "/static/media/ovon1.a08edffe.jpg",
@@ -271,6 +271,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.533edd12.chunk.css",
-    "static/js/main.409f0e0c.chunk.js"
+    "static/js/main.896c7e36.chunk.js"
   ]
 }
