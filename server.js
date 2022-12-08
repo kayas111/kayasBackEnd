@@ -31,6 +31,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number},{strict:false})
+let monitoredOpinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number,clientCollection:String},{strict:false})
 
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/models').comments;
@@ -188,7 +189,6 @@ app.get('/collection_controls_visits', (req,res)=>{
     app.get('/collections_opinionpolls_cand4', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:4}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand5', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:5}).toArray().then((array)=>{res.send(array)})}) 
 
-
 app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
@@ -197,6 +197,10 @@ app.get('/collection_hookups_hookups', (req,res)=>{db.collection('hookups').find
 app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_orders_orders', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/collection_monitoredopinions_number', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
+app.get('/collection_monitoredopinions_opinions', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
+
+
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})})  
 app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
@@ -872,6 +876,7 @@ app.post('/pages/opinions/:client',(req,res)=>{
 
     form.parse(req, function (err, fields, files){
         let Opinion=mongoose.model(req.params.client,opinionSchema)
+        let MonitoredOpinion=mongoose.model('monitoredopinions',monitoredOpinionSchema)
         
 try{
 
@@ -879,7 +884,9 @@ try{
         console.log("client opinion saved")
     })
     res.redirect(`/pages/opinions/${req.params.client}`)
-
+    MonitoredOpinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact),clientCollection:req.params.client}).save().then(resp=>{
+        console.log("monitored opinion saved")
+    })
 
 }
 catch(err){
