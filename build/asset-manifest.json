@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.533edd12.chunk.css",
-    "main.js": "/static/js/main.180d7815.chunk.js",
-    "main.js.map": "/static/js/main.180d7815.chunk.js.map",
+    "main.js": "/static/js/main.0673fdef.chunk.js",
+    "main.js.map": "/static/js/main.0673fdef.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -130,7 +130,6 @@
     "static/media/hookup2.82651946.jpg": "/static/media/hookup2.82651946.jpg",
     "static/media/ip1.3d2c6a01.jpg": "/static/media/ip1.3d2c6a01.jpg",
     "static/media/irene.53caa8a2.jpg": "/static/media/irene.53caa8a2.jpg",
-    "static/media/isaac.71fab4f7.jpg": "/static/media/isaac.71fab4f7.jpg",
     "static/media/isaac1.654b5457.jpg": "/static/media/isaac1.654b5457.jpg",
     "static/media/isaac10.b4939a73.jpg": "/static/media/isaac10.b4939a73.jpg",
     "static/media/isaac2.c16a4aa2.jpg": "/static/media/isaac2.c16a4aa2.jpg",
@@ -282,12 +281,13 @@
     "static/media/wobu6.ff74c240.jpg": "/static/media/wobu6.ff74c240.jpg",
     "static/media/wobu7.17a0751f.jpg": "/static/media/wobu7.17a0751f.jpg",
     "static/media/woofer.67da8a62.jpg": "/static/media/woofer.67da8a62.jpg",
+    "static/media/xmas.b45576da.jpg": "/static/media/xmas.b45576da.jpg",
     "static/media/yunus.7dd6203c.jpg": "/static/media/yunus.7dd6203c.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.533edd12.chunk.css",
-    "static/js/main.180d7815.chunk.js"
+    "static/js/main.0673fdef.chunk.js"
   ]
 }
