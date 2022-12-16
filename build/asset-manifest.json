@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.533edd12.chunk.css",
-    "main.js": "/static/js/main.a9459da4.chunk.js",
-    "main.js.map": "/static/js/main.a9459da4.chunk.js.map",
+    "main.js": "/static/js/main.ec1bc108.chunk.js",
+    "main.js.map": "/static/js/main.ec1bc108.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.5ea76ec2.js",
     "runtime-main.js.map": "/static/js/runtime-main.5ea76ec2.js.map",
     "static/js/2.aff7dd47.chunk.js": "/static/js/2.aff7dd47.chunk.js",
@@ -162,6 +162,7 @@
     "static/media/kyu1.d5646a32.jpg": "/static/media/kyu1.d5646a32.jpg",
     "static/media/kyu10.5b5bc87d.jpg": "/static/media/kyu10.5b5bc87d.jpg",
     "static/media/kyu11.ee1921b1.jpg": "/static/media/kyu11.ee1921b1.jpg",
+    "static/media/kyu12.0067a0a2.jpg": "/static/media/kyu12.0067a0a2.jpg",
     "static/media/kyu2.6c7ce68e.jpg": "/static/media/kyu2.6c7ce68e.jpg",
     "static/media/kyu3.d1369863.jpg": "/static/media/kyu3.d1369863.jpg",
     "static/media/kyu4.ea73cd11.jpg": "/static/media/kyu4.ea73cd11.jpg",
@@ -288,6 +289,6 @@
     "static/js/runtime-main.5ea76ec2.js",
     "static/js/2.aff7dd47.chunk.js",
     "static/css/main.533edd12.chunk.css",
-    "static/js/main.a9459da4.chunk.js"
+    "static/js/main.ec1bc108.chunk.js"
   ]
 }
