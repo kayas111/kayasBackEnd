@@ -29,6 +29,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
 }))
 
+
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number},{strict:false})
 let monitoredOpinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number,clientCollection:String},{strict:false})
