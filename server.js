@@ -1622,7 +1622,7 @@ catch(err){
         res.status(401).end();
     }
     else{
-if(req.body.status=='successful'){
+if(req.body.status=="successful"){
     console.log("payment was successful")
     try{
 
