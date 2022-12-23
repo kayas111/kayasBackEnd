@@ -1536,8 +1536,30 @@ catch(err){
         try{
 
             //Register because kayaser is absent
-          
 
+            inCollection('pendingregistrations',[parseInt(fields.contact)]).then(resp=>{
+
+                if(resp==true){
+
+                    flw.MobileMoney.uganda({
+                        fullname:fields.name,
+                        phone_number: fields.contact,
+                        network: "MTN,AIRTEL",
+                        amount: 100,
+                        currency: 'UGX',
+                        email:fields.email,
+                        tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
+                    })
+                        .then(resp=>{
+                            console.log("Initiating payment for registration of "+fields.contact+" ........")
+                            res.redirect(resp.meta.authorization.redirect)
+                        })
+                        .catch(console.log);
+                
+
+
+                }else{
+                
         let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
     
               const pendingKayaser=new pendingRegistrationModel(data)
@@ -1560,7 +1582,12 @@ catch(err){
         
 
 
-        
+  
+
+                }
+            })
+          
+      
     } catch(error){
         res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
         console.log("error is result from entering a wrong student number format by "+fields.contact)
@@ -1588,11 +1615,13 @@ catch(err){
         // This request isn't from Flutterwave; discard
         res.status(401).end();
     }
-    const payload = req.body;
-    // It's a good idea to log all received events.
-   console.log(payload);
-    // Do something (that doesn't take too long) with the payload
+    else{
+
+
+   
+    
     res.status(200).end()
+    }
     
         })
            
