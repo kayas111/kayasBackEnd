@@ -63,8 +63,7 @@ const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
 
-app.use(bodyParser.urlencoded({extended:false}))
-app.use(bodyParser.json())
+
 //functions start
 async function inCollection(collection,arrayList){
     let length=arrayList.length,lengthCheck=0
@@ -1582,6 +1581,8 @@ catch(err){
         })
 
  app.post('/flw-webhook/kayaspayment',(req,res)=>{
+    app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.json())
     
     // If you specified a secret hash, check for the signature
  
