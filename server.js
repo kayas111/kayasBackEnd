@@ -13,7 +13,7 @@ const oAuth2Client= new google.auth.OAuth2(process.env.mailerId, process.env.mai
 oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
 
 const Flutterwave=require('flutterwave-node-v3')
-const flw = new Flutterwave("FLWPUBK_TEST-def14ee0df8af10466357ff590281757-X", "FLWSECK_TEST-90575f5a67b4848f34337c763e18331a-X");
+const flw = new Flutterwave("FLWPUBK-956f708bd917bcfd2b34082f347eeae9-X", "FLWSECK-d5bdfb893c97c9c772fdf37d0da6ff2f-X");
 
 
 const emailValidator = require('deep-email-validator');
