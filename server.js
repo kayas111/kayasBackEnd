@@ -29,9 +29,11 @@ var formidable = require('formidable');
 const path=require('path')
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
 const port=process.env.PORT || 4000
+ app.timeout=0;
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+    console.log(app.timeout)
 }))
 
 
