@@ -1631,7 +1631,7 @@ console.log(resp[0])
     let data={name:resp[0].name,stdNo:resp[0].stdNo,contact:req.body.customer.phone,email:req.body.customer.email,pin:bcrypt.hashSync(resp[0].pin,10)}
 
     const kayaser=new registrationModel(data)
-kayaser.save().then(resp=>{
+kayaser.save().then(response=>{
  
   console.log(resp[0].contact+" has registered as a new Kayaser")})
   res.status(200).end();
