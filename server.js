@@ -1612,10 +1612,8 @@ catch(err){
         })
 
  app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
-    console.log("the request verif hash is ......................................................") 
-    console.log(req.headers["verif-hash"])
-   
-    const secretHash = 1962;
+ 
+    const secretHash = '1962';
     const signature = req.headers["verif-hash"];
     if (!signature || (signature !== secretHash)) {
         console.log("signature error")
