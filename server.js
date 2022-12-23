@@ -66,25 +66,6 @@ var d = new StringDecoder('utf-8');
 
 
 
-const details = {
-    account_bank: "MPS",
-    account_number: "256755643774",
-    amount: 1000,
-    currency: "UGX",
-    beneficiary_name: "Akinyi Kimwei",
-    meta: {
-      "sender": "Flutterwave Developers",
-      "sender_country": "UG",
-      "mobile_number": "23457558595"
-    }
-  };
-
-  for(let y=0;y<5;y++){
-    flw.Transfer.initiate(details).then(resp=>{console.log(resp)})
-
-  }
-
-
 
 
 
@@ -1576,6 +1557,7 @@ catch(err){
                    try {flw.MobileMoney.uganda({
                         fullname:fields.name,
                         phone_number: fields.contact,
+                        network:"MTN",
                         amount: 100,
                         currency: 'UGX',
                         email:fields.email,
@@ -1658,7 +1640,7 @@ if(req.body.status=="successful"){
 
         //Register because kayaser has completed payment
 db.collection('pendingregistrations').find({contact:parseInt(req.body.customer.phone)}).toArray().then(resp=>{
-console.log(resp[0])
+
     let data={name:resp[0].name,stdNo:resp[0].stdNo,contact:req.body.customer.phone,email:req.body.customer.email,pin:bcrypt.hashSync(resp[0].pin,10)}
 
     const kayaser=new registrationModel(data)
