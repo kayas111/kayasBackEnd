@@ -1632,9 +1632,9 @@ if(req.body.status=="successful"){
 
           const kayaser=new registrationModel(data)
     kayaser.save().then(resp=>{
+       
+        console.log(fields.contact+" has registered as a new Kayaser")})
         res.status(200).end();
-        console.log(fields.contact+" New Kayaser registered")})
-
   
         //res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Trading Offers</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to viewing the offer, tap here:</div> <a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">VIEW OFFER</a> </div>')
         
@@ -1643,7 +1643,7 @@ if(req.body.status=="successful"){
 
     
 } catch(error){
-    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
+   
     console.log("error is result from entering a wrong student number format by "+ req.body.customer.phone)
 }
 
