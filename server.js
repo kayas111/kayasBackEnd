@@ -1626,18 +1626,22 @@ if(req.body.status=="successful"){
     try{
 
         //Register because kayaser has completed payment
+db.collection('pendingregistrations').find({contact:parseInt(req.body.customer.phone)}).toArray().then(resp=>{
+console.log(resp[0])
+    let data={name:resp[0].name,stdNo:resp[0].stdNo,contact:req.body.customer.phone,email:req.body.customer.email,pin:bcrypt.hashSync(resp[0].pin,10)}
 
+    const kayaser=new registrationModel(data)
+kayaser.save().then(resp=>{
+ 
+  console.log(fields.contact+" has registered as a new Kayaser")})
+  res.status(200).end();
 
-    let data={name:fields.name,stdNo:fields.stdNo,contact:req.body.customer.phone,email:req.body.customer.email,pin:bcrypt.hashSync(fields.pin,10)}
-
-          const kayaser=new registrationModel(data)
-    kayaser.save().then(resp=>{
-       
-        console.log(fields.contact+" has registered as a new Kayaser")})
-        res.status(200).end();
+ 
   
-        //res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Trading Offers</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to viewing the offer, tap here:</div> <a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">VIEW OFFER</a> </div>')
-        
+
+})
+
+   
        
 
 
