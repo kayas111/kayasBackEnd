@@ -1576,7 +1576,6 @@ catch(err){
                    try {flw.MobileMoney.uganda({
                         fullname:fields.name,
                         phone_number: fields.contact,
-                        network: "MTN,AIRTEL",
                         amount: 100,
                         currency: 'UGX',
                         email:fields.email,
