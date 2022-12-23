@@ -1633,7 +1633,7 @@ console.log(resp[0])
     const kayaser=new registrationModel(data)
 kayaser.save().then(resp=>{
  
-  console.log(fields.contact+" has registered as a new Kayaser")})
+  console.log(resp[0].contact+" has registered as a new Kayaser")})
   res.status(200).end();
 
  
