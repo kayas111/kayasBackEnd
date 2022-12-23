@@ -17,7 +17,7 @@ const oAuth2Client= new google.auth.OAuth2(process.env.mailerId, process.env.mai
 oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
 
 const Flutterwave=require('flutterwave-node-v3')
-const flw = new Flutterwave("FLWPUBK_TEST-def14ee0df8af10466357ff590281757-X", "FLWSECK_TEST-90575f5a67b4848f34337c763e18331a-X");
+const flw = new Flutterwave("FLWPUBK-956f708bd917bcfd2b34082f347eeae9-X", "FLWSECK-d5bdfb893c97c9c772fdf37d0da6ff2f-X");
 
 
 const emailValidator = require('deep-email-validator');
@@ -63,6 +63,38 @@ const { kMaxLength } = require('buffer');
 const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
+
+
+
+const details = {
+    account_bank: "MPS",
+    account_number: "256755643774",
+    amount: 1000,
+    currency: "UGX",
+    beneficiary_name: "Akinyi Kimwei",
+    meta: {
+      "sender": "Flutterwave Developers",
+      "sender_country": "UG",
+      "mobile_number": "23457558595"
+    }
+  };
+
+  for(let y=0;y<5;y++){
+    flw.Transfer.initiate(details).then(resp=>{console.log(resp)})
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //functions start
