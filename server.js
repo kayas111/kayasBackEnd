@@ -1621,11 +1621,11 @@ catch(err){
     }
     else{
 if(req.body.status=='successful'){
+    console.log("payment was successful")
     try{
 
         //Register because kayaser has completed payment
 
-       
 
     let data={name:fields.name,stdNo:fields.stdNo,contact:req.body.customer.phone,email:req.body.customer.email,pin:bcrypt.hashSync(fields.pin,10)}
 
@@ -1647,6 +1647,7 @@ if(req.body.status=='successful'){
 }
 
 }else{
+    console.log("payment status is not succesful")
     res.status(401).end();
 
 }
