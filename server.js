@@ -1573,7 +1573,7 @@ catch(err){
       
         })
 
- app.post('/https://kayas-mak.herokuapp.com/flw-webhook/kayasauth',(req,res)=>{
+ app.post('/flw-webhook/kayaspayment',(req,res)=>{
     
     // If you specified a secret hash, check for the signature
  
