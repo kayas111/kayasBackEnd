@@ -1542,7 +1542,7 @@ catch(err){
                 amount: 100,
                 currency: 'UGX',
                 email:fields.email,
-                tx_ref:(parseInt(fields.contact)+parseInt(fields.contact)/2),
+                tx_ref:1,
             })
                 .then(resp=>{
                     console.log("Initiating payment for registration of "+fields.contact+" ........")
