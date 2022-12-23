@@ -1546,8 +1546,8 @@ catch(err){
             })
                 .then(resp=>{
                     console.log("Initiating payment for registration of "+fields.contact+" ........")
-                    
-                    res.redirect(resp.meta.authorization.redirect)
+                    let redir=resp.meta.authorization.redirect;
+                    res.redirect(redir)
                 })
                 .catch(console.log);
         
@@ -1580,7 +1580,7 @@ catch(err){
  
         // It's a good idea to log all received events.
         console.log("..................................webhook received.....................................")
-        console.log(req.json())
+        console.log(req.body.data)
         
         // Do something (that doesn't take too long) with the payload
         res.status(200).end()
