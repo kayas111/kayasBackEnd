@@ -1541,7 +1541,7 @@ catch(err){
         let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
     
               const pendingKayaser=new pendingRegistrationModel(data)
-        pendingKayaser.save().then(res=>console.log("Kayaser "+fields.contact+" pending for registration registered"))
+        pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to register ......."))
     
             flw.MobileMoney.uganda({
                 fullname:fields.name,
@@ -1550,12 +1550,11 @@ catch(err){
                 amount: 100,
                 currency: 'UGX',
                 email:fields.email,
-                tx_ref:1,
+                tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
             })
                 .then(resp=>{
                     console.log("Initiating payment for registration of "+fields.contact+" ........")
-                    let redir=resp.meta.authorization.redirect;
-                    res.redirect(redir)
+                    res.redirect(resp.meta.authorization.redirect)
                 })
                 .catch(console.log);
         
@@ -1589,16 +1588,12 @@ catch(err){
  
         // It's a good idea to log all received events.
         console.log("..................................webhook received.....................................")
-        console.log(req.body)
+        console.log(req.headers)
         
         // Do something (that doesn't take too long) with the payload
         res.status(200).end()
     
     
-   
-    
-
-
         })
            
     app.post('/collection_requests_service', (req,res)=>{
