@@ -1573,24 +1573,21 @@ catch(err){
       
         })
 
- app.post('https://kayas-mak.herokuapp.com/flw-webhook/kayasauth',(req,res)=>{
+ app.post('/https://kayas-mak.herokuapp.com/flw-webhook/kayasauth',(req,res)=>{
     
     // If you specified a secret hash, check for the signature
-    const secretHash = 1962;
-    const signature = req.headers["verif-hash"];
-    if (!signature || (signature !== secretHash)) {
-        // This request isn't from Flutterwave; discard
-        res.status(401).end();
-    }
-    const payload = req.body;
-    // It's a good idea to log all received events.
-    console.log("..................................webhook received.....................................")
-    log(payload);
+ 
+ 
+        // It's a good idea to log all received events.
+        console.log("..................................webhook received.....................................")
+        console.log(req)
+        
+        // Do something (that doesn't take too long) with the payload
+        res.status(200).end()
     
-    // Do something (that doesn't take too long) with the payload
-    res.status(200).end()
-
-
+    
+   
+    
 
 
         })
