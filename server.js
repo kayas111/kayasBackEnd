@@ -1541,7 +1541,7 @@ catch(err){
 
                 if(resp==true){
 
-                    flw.MobileMoney.uganda({
+                   try {flw.MobileMoney.uganda({
                         fullname:fields.name,
                         phone_number: fields.contact,
                         network: "MTN,AIRTEL",
@@ -1554,7 +1554,10 @@ catch(err){
                             console.log("Initiating payment for registration of "+fields.contact+" ........")
                             res.redirect(resp.meta.authorization.redirect)
                         })
-                        .catch(console.log);
+                        .catch(console.log);}catch(error){
+                            console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
+                            console.log(error)
+                        }
                 
 
 
@@ -1565,23 +1568,24 @@ catch(err){
               const pendingKayaser=new pendingRegistrationModel(data)
         pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to register ......."))
     
-            flw.MobileMoney.uganda({
-                fullname:fields.name,
-                phone_number: fields.contact,
-                network: "MTN,AIRTEL",
-                amount: 100,
-                currency: 'UGX',
-                email:fields.email,
-                tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
+        try {flw.MobileMoney.uganda({
+            fullname:fields.name,
+            phone_number: fields.contact,
+            network: "MTN,AIRTEL",
+            amount: 100,
+            currency: 'UGX',
+            email:fields.email,
+            tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
+        })
+            .then(resp=>{
+                console.log("Initiating payment for registration of "+fields.contact+" ........")
+                res.redirect(resp.meta.authorization.redirect)
             })
-                .then(resp=>{
-                    console.log("Initiating payment for registration of "+fields.contact+" ........")
-                    res.redirect(resp.meta.authorization.redirect)
-                })
-                .catch(console.log);
-        
-
-
+            .catch(console.log);}catch(error){
+                console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
+                console.log(error)
+            }
+    
   
 
                 }
@@ -1616,9 +1620,36 @@ catch(err){
         res.status(401).end();
     }
     else{
+if(req.body.status=='successful'){
+    try{
+
+        //Register because kayaser has completed payment
+
+       
+
+    let data={name:fields.name,stdNo:fields.stdNo,contact:req.body.customer.phone,email:req.body.customer.email,pin:bcrypt.hashSync(fields.pin,10)}
+
+          const kayaser=new registrationModel(data)
+    kayaser.save().then(resp=>{
+        res.status(200).end();
+        console.log(fields.contact+" New Kayaser registered")})
+
+  
+        //res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Trading Offers</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to viewing the offer, tap here:</div> <a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">VIEW OFFER</a> </div>')
+        
+       
 
 
-   
+    
+} catch(error){
+    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
+    console.log("error is result from entering a wrong student number format by "+fields.contact)
+}
+
+}else{
+    res.status(401).end();
+
+}
     
     res.status(200).end()
     }
