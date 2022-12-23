@@ -9,6 +9,7 @@ const sgMail=require("@sendgrid/mail")
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const { ReturnDocument } = require('mongodb')
 const bodyParser=require('body-parser')
+var jsonParser = bodyParser.json()
 
 const {google}=require('googleapis')
 const nodemailer=require('nodemailer')
@@ -1580,9 +1581,8 @@ catch(err){
       
         })
 
- app.post('/flw-webhook/kayaspayment',(req,res)=>{
-    app.use(bodyParser.urlencoded({extended:false}))
-app.use(bodyParser.json())
+ app.post('/flw-webhook/kayaspayment',jsonParser,(req,res)=>{
+   
     
     // If you specified a secret hash, check for the signature
  
