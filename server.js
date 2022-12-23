@@ -1582,17 +1582,17 @@ catch(err){
 
  app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
    
-    
-    // If you specified a secret hash, check for the signature
- 
- 
-        // It's a good idea to log all received events.
-        console.log("..................................webhook received.....................................")
-        console.log(req.headers)
-        
-        // Do something (that doesn't take too long) with the payload
-        res.status(200).end()
-    
+    const secretHash = 1962;
+    const signature = req.headers["verif-hash"];
+    if (!signature || (signature !== secretHash)) {
+        // This request isn't from Flutterwave; discard
+        res.status(401).end();
+    }
+    const payload = req.body;
+    // It's a good idea to log all received events.
+    log(payload);
+    // Do something (that doesn't take too long) with the payload
+    res.status(200).end()
     
         })
            
