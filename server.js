@@ -3,9 +3,12 @@
 
 
 require('dotenv').config()
+const express=require('express')
+const app=express()
 const sgMail=require("@sendgrid/mail")
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const { ReturnDocument } = require('mongodb')
+const bodyParser=require('body-parser')
 
 const {google}=require('googleapis')
 const nodemailer=require('nodemailer')
@@ -18,10 +21,10 @@ const flw = new Flutterwave("FLWPUBK_TEST-def14ee0df8af10466357ff590281757-X", "
 
 const emailValidator = require('deep-email-validator');
 
-const express=require('express')
+
 const mongoose=require('mongoose')
 const bcrypt=require('bcrypt')
-const app=express()
+
 var formidable = require('formidable');
 const path=require('path')
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
@@ -57,6 +60,9 @@ const { kMaxLength } = require('buffer');
 const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
+
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.json())
 //functions start
 async function inCollection(collection,arrayList){
     let length=arrayList.length,lengthCheck=0
@@ -1580,7 +1586,7 @@ catch(err){
  
         // It's a good idea to log all received events.
         console.log("..................................webhook received.....................................")
-        console.log(req)
+        console.log(req.body)
         
         // Do something (that doesn't take too long) with the payload
         res.status(200).end()

@@ -1,15 +1,1 @@
-{
-"name":"server",
-"version":"1.0.0",
-"description":"",
-"main":"server.js",
-"scripts":{"start":"node server","dev":"nodemon server"},
-"keywords":[],"author":"",
-"license":"ISC",
-"dependencies":{"@sendgrid/mail":"^7.7.0","bcrypt":"^5.0.1","deep-email-validator":"^0.1.21","dotenv":"^16.0.2",
-"express":"^4.18.1","flutterwave-node":"^1.2.2",
-"flutterwave-node-v3":"^1.0.12","formidable":"^2.0.1",
-"googleapis":"^108.0.0","mongodb":"^4.8.0",
-"mongoose":"^6.4.7","node-fetch":"^2.6.7",
-"nodemailer":"^6.8.0"},
-"devDependencies":{"nodemon":"^2.0.16"}}
+{"name":"server","version":"1.0.0","description":"","main":"server.js","scripts":{"start":"node server","dev":"nodemon server"},"keywords":[],"author":"","license":"ISC","dependencies":{"@sendgrid/mail":"^7.7.0","bcrypt":"^5.0.1","body-parser":"^1.20.1","deep-email-validator":"^0.1.21","dotenv":"^16.0.2","express":"^4.18.1","flutterwave-node":"^1.2.2","flutterwave-node-v3":"^1.0.12","formidable":"^2.0.1","googleapis":"^108.0.0","mongodb":"^4.8.0","mongoose":"^6.4.7","node-fetch":"^2.6.7","nodemailer":"^6.8.0"},"devDependencies":{"nodemon":"^2.0.16"}}
