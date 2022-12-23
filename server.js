@@ -1612,11 +1612,11 @@ catch(err){
         })
 
  app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
-    console.log("the body header is ......................................................") 
-    console.log(req.body.headers)
+    console.log("the request header is ......................................................") 
+    console.log(req.headers)
    
     const secretHash = 1962;
-    const signature = req.headers.verif-hash;
+    const signature = req.headers["verif-hash"];
     if (!signature || (signature !== secretHash)) {
         console.log("signature error")
         // This request isn't from Flutterwave; discard
