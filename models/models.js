@@ -128,6 +128,7 @@ const registrationSchema=new Func({
    
     
 },{timestamps:true})
+let pendingRegistrationModel=mongoose.model('pendingregistrations',registrationSchema)
 let registrationModel=mongoose.model('kayasers',registrationSchema)
 
 const bidsSchema=new Func({
@@ -184,6 +185,7 @@ module.exports.campus=campusModel
 
 module.exports.comments=commentsModel
 module.exports.registration=registrationModel
+module.exports.pendingRegistration=pendingRegistrationModel
 module.exports.quotes=quotesModel
 module.exports.trader=tradingRegistrationModel
 module.exports.hookup=hookupModel

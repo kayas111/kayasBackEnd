@@ -12,6 +12,8 @@ const nodemailer=require('nodemailer')
 const oAuth2Client= new google.auth.OAuth2(process.env.mailerId, process.env.mailerSecret, process.env.redirectURI)
 oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
 
+const Flutterwave=require('flutterwave-node-v3')
+const flw = new Flutterwave("FLWPUBK_TEST-def14ee0df8af10466357ff590281757-X", "FLWSECK_TEST-90575f5a67b4848f34337c763e18331a-X");
 
 
 const emailValidator = require('deep-email-validator');
@@ -47,6 +49,7 @@ const CommentModel = require('./models/models').comments;
 const CampusModel = require('./models/models').campus;
 const bidsModel = require('./models/models').bid;
 const registrationModel = require('./models/models').registration;
+const pendingRegistrationModel = require('./models/models').pendingRegistration;
 const { ObjectId } = require('mongodb');
 const pagesRouter=require('./routers/pages')
 
@@ -1520,48 +1523,46 @@ catch(err){
        db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
         const presence=array.length
        if(presence==0){
-        //querry for StdNo presence
-        db.collection('kayasers').find({stdNo:parseInt(fields.stdNo)}).toArray().then((array)=>{
-        const presence=array.length
-      
-        if(presence==0){
-         try{
+        //register
 
-        //Register because kayaser is absent
-    let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+        try{
 
-          const kayaser=new registrationModel(data)
-    kayaser.save().then(res=>console.log(fields.contact+" New Kayaser registered"))
+            //Register because kayaser is absent
+          
 
-  SendMail("MAKE MONEY: KAYAS",[fields.email],"Thank you for registering with us. You are now eligible to purchase cheaper hostel room items from us. Please read details on how you can make money as well through Kayas by reading about the Kayas Family through this link: https://kayas-mak.herokuapp.com/pages/family/familyhome. For any detailed issues or problems, you can also WhatsApp Charles on 0700411626 or Isaac on 0755643774, they are also students of Makerere University. The Kayas WhatsApp line  is 0703852178. Thank you for keeping it Kayas.")
-        .then(res=>console.log("email sent to new Kayaser")).catch(err=>{
-            console.log("Dear Isaac, the error resulting from sending an email to a newly regsitered Kayaser is: "+ err)
-        })
-        //res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Kayas Trading Offers</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Welcome, to proceed to viewing the offer, tap here:</div> <a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">VIEW OFFER</a> </div>')
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Great !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for registering with Kayas.<p></p>You can now proceed with any of your activities on Kayas. <p></p>Thank you for keeping it Kayas.</div>')
-
-
-
-
-
+        let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
     
-} catch(error){
-    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
-    console.log("error is result from entering a wrong student number format by "+fields.contact)
-}
+              const pendingKayaser=new pendingRegistrationModel(data)
+        pendingKayaser.save().then(res=>console.log("Kayaser "+fields.contact+" pending for registration registered"))
+    
+            flw.MobileMoney.uganda({
+                fullname:fields.name,
+                phone_number: fields.contact,
+                network: "MTN,AIRTEL",
+                amount: 100,
+                currency: 'UGX',
+                email:fields.email,
+                tx_ref:(parseInt(fields.contact)+parseInt(fields.contact)/2),
+            })
+                .then(resp=>{
+                    console.log("Initiating payment for registration of "+fields.contact+" ........")
+                    
+                    res.redirect(resp.meta.authorization.redirect)
+                })
+                .catch(console.log);
+        
 
-        }
-        else{
-            console.log(fields.contact+" Attempt to register with already used student number")
-            res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Student Number Already Registered</div><div style="font-size:40px;text-align:center;padding-top:30px;">The Student number you entered is already registered.<p></p>Incase you are sure that the student number you are trying to register with is yours, WhatsApp Isaac on 0755643774 for assistance.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register again</a></div>')
-        }
 
-        }
-  
-
-        )
-   
-       } else{//Kayaser is present. Send presence message
+        
+    } catch(error){
+        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
+        console.log("error is result from entering a wrong student number format by "+fields.contact)
+    }
+    
+   //register
+       } 
+       
+       else{//Kayaser is present. Send presence message
         console.log(fields.contact+" Attempted to register with existing number")
        
         res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">You are  already registered with this contact. Please proceed wih other steps now.Thank you for registering with Kayas.<p></p>You can now proceed with any of the following:<p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')
@@ -1570,6 +1571,28 @@ catch(err){
        })
            })
       
+        })
+
+ app.post('https://kayas-mak.herokuapp.com/flw-webhook/kayasauth',(req,res)=>{
+    
+    // If you specified a secret hash, check for the signature
+    const secretHash = 1962;
+    const signature = req.headers["verif-hash"];
+    if (!signature || (signature !== secretHash)) {
+        // This request isn't from Flutterwave; discard
+        res.status(401).end();
+    }
+    const payload = req.body;
+    // It's a good idea to log all received events.
+    console.log("..................................webhook received.....................................")
+    log(payload);
+    
+    // Do something (that doesn't take too long) with the payload
+    res.status(200).end()
+
+
+
+
         })
            
     app.post('/collection_requests_service', (req,res)=>{
