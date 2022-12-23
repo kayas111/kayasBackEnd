@@ -1618,6 +1618,7 @@ catch(err){
     const secretHash = 1962;
     const signature = req.headers["verif-hash"];
     if (!signature || (signature !== secretHash)) {
+        console.log("signature error")
         // This request isn't from Flutterwave; discard
         res.status(401).end();
     }
