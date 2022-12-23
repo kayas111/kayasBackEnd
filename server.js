@@ -1580,7 +1580,7 @@ catch(err){
  
         // It's a good idea to log all received events.
         console.log("..................................webhook received.....................................")
-        console.log(req)
+        console.log(req.res)
         
         // Do something (that doesn't take too long) with the payload
         res.status(200).end()
