@@ -127,7 +127,7 @@ const registrationSchema=new Func({
     }
    
     
-},{timestamps:true})
+},{timestamps:true,strict:false})
 let pendingRegistrationModel=mongoose.model('pendingregistrations',registrationSchema)
 let registrationModel=mongoose.model('kayasers',registrationSchema)
 

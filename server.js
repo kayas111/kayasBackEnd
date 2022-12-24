@@ -63,11 +63,7 @@ const { kMaxLength } = require('buffer');
 const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
-
 const registrationFee=500;
-
-
-
 
 
 
@@ -1530,8 +1526,9 @@ catch(err){
             })
         })
     
-     app.post('/collection_kayasers_register', (req,res)=>{
-    
+     app.post('/collection_kayasers_register',(req,res)=>{
+  
+   
             var form = new formidable.IncomingForm();
             form.parse(req, function (err, fields, files){
        //Querry to check for kayaser presence
@@ -1544,61 +1541,31 @@ catch(err){
 
             //Register because kayaser is absent
 
-            inCollection('pendingregistrations',[parseInt(fields.contact)]).then(resp=>{
-
-                if(resp==true){
-
-              
-
-                   try {flw.MobileMoney.uganda({
-                        fullname:fields.name,
-                        phone_number:fields.contact,
-                        network:"AIRTEL",
-                        amount:registrationFee,
-                        currency: 'UGX',
-                        email:fields.email,
-                        tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
-                    })
-                        .then(resp=>{
-                            console.log("Initiating payment for registration of "+fields.contact+" ........")
-                            res.redirect(resp.meta.authorization.redirect)
-                        })
-                        .catch(console.log);}catch(error){
-                            console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
-                            console.log(error)
-                        }
-            
-
-
-                }else{
-                
-        let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+                    
+        let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),payerNo:fields.payerNo,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
     
-              const pendingKayaser=new pendingRegistrationModel(data)
-        pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to register ......."))
-    
-        try {flw.MobileMoney.uganda({
-            fullname:fields.name,
-            phone_number:fields.contact,
-            network: "AIRTEL",
-            amount:registrationFee,
-            currency: 'UGX',
-            email:fields.email,
-            tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
-        })
-            .then(resp=>{
-                console.log("Initiating payment for registration of "+fields.contact+" ........")
-                res.redirect(resp.meta.authorization.redirect)
-            })
-            .catch(console.log);}catch(error){
-                console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
-                console.log(error)
-            }
-    
-  
+        const pendingKayaser=new pendingRegistrationModel(data)
+  pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to register ......."))
 
-                }
-            })
+             try {flw.MobileMoney.uganda({
+                  fullname:fields.name,
+                  phone_number:fields.payerNo,
+                  network:"AIRTEL",
+                  amount:registrationFee,
+                  currency: 'UGX',
+                  email:fields.email,
+                  tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
+              })
+                  .then(resp=>{
+                      console.log("Initiating payment for registration of "+fields.contact+" ........")
+                      res.redirect(resp.meta.authorization.redirect)
+                  })
+                  .catch(console.log);}catch(error){
+                      console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
+                      console.log(error)
+                  }
+    
+
           
       
     } catch(error){
@@ -1618,7 +1585,7 @@ catch(err){
        })
            })
       
-        })
+    })
 
  app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
  
@@ -1635,7 +1602,7 @@ if(req.body.data.status=="successful"){
     try{
 
         //Register because kayaser has completed payment
-db.collection('pendingregistrations').find({contact:parseInt(req.body.data.customer.phone_number)}).toArray().then(resp=>{
+db.collection('pendingregistrations').find({payerNo:req.body.data.customer.phone_number}).toArray().then(resp=>{
 
     let data={name:resp[0].name,stdNo:resp[0].stdNo,contact:resp[0].contact,email:req.body.data.customer.email,pin:resp[0].pin}
 
@@ -1644,7 +1611,7 @@ kayaser.save().then(response=>{
    console.log(resp[0].contact+" has registered as a new Kayaser")})
    
 //remove the registered kayaser from pending registration collection
-db.collection('pendingregistrations').deleteOne({contact:resp[0].contact}).then(resp=>{
+db.collection('pendingregistrations').deleteMany({contact:resp[0].contact}).then(resp=>{
     ;
 })
 
