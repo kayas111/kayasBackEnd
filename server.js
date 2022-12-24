@@ -64,7 +64,7 @@ const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
 
-
+const registrationFee=300;
 
 
 
@@ -1551,10 +1551,10 @@ catch(err){
               
 
                    try {flw.MobileMoney.uganda({
-                      
+                        fullname:fields.name,
                         phone_number:fields.contact,
                         network:"AIRTEL",
-                        amount: 10,
+                        amount:registrationFee,
                         currency: 'UGX',
                         email:fields.email,
                         tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
@@ -1572,16 +1572,16 @@ catch(err){
 
                 }else{
                 
-        let data={name:fields.name,stdNo:fields.stdNo,contact:fields.contact,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+        let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
     
               const pendingKayaser=new pendingRegistrationModel(data)
         pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to register ......."))
     
         try {flw.MobileMoney.uganda({
             fullname:fields.name,
-            phone_number: fields.contact,
-            network: "MTN,AIRTEL",
-            amount: 100,
+            phone_number:fields.contact,
+            network: "AIRTEL",
+            amount:registrationFee,
             currency: 'UGX',
             email:fields.email,
             tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
@@ -1637,7 +1637,7 @@ if(req.body.status=="successful"){
         //Register because kayaser has completed payment
 db.collection('pendingregistrations').find({contact:parseInt(req.body.customer.phone)}).toArray().then(resp=>{
 
-    let data={name:resp[0].name,stdNo:resp[0].stdNo,contact:req.body.customer.phone,email:req.body.customer.email,pin:bcrypt.hashSync(resp[0].pin,10)}
+    let data={name:resp[0].name,stdNo:resp[0].stdNo,contact:parseInt(req.body.customer.phone),email:req.body.customer.email,pin:bcrypt.hashSync(resp[0].pin,10)}
 
     const kayaser=new registrationModel(data)
 kayaser.save().then(response=>{
