@@ -1548,10 +1548,12 @@ catch(err){
 
                 if(resp==true){
 
+              
+
                    try {flw.MobileMoney.uganda({
-                        fullname:fields.name,
-                        phone_number: fields.contact,
-                        network:"MTN",
+                      
+                        phone_number:fields.contact,
+                        network:"AIRTEL",
                         amount: 10,
                         currency: 'UGX',
                         email:fields.email,
@@ -1565,7 +1567,7 @@ catch(err){
                             console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
                             console.log(error)
                         }
-                
+            
 
 
                 }else{
