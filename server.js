@@ -72,12 +72,6 @@ var d = new StringDecoder('utf-8');
 
 
 
-
-
-
-
-
-
 //functions start
 async function inCollection(collection,arrayList){
     let length=arrayList.length,lengthCheck=0
@@ -1558,7 +1552,7 @@ catch(err){
                         fullname:fields.name,
                         phone_number: fields.contact,
                         network:"MTN",
-                        amount: 100,
+                        amount: 10,
                         currency: 'UGX',
                         email:fields.email,
                         tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
