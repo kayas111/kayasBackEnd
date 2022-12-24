@@ -64,7 +64,7 @@ const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
 
-const registrationFee=300;
+const registrationFee=500;
 
 
 
@@ -1621,7 +1621,7 @@ catch(err){
         })
 
  app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
- 
+ console.log("..........................."+req.body.status)
     const secretHash = '1962';
     const signature = req.headers["verif-hash"];
     if (!signature || (signature !== secretHash)) {
