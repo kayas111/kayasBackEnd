@@ -1621,8 +1621,7 @@ catch(err){
         })
 
  app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
- console.log("..............................req body is ...................")
- console.log(req.body)
+ 
     const secretHash = '1962';
     const signature = req.headers["verif-hash"];
     if (!signature || (signature !== secretHash)) {
@@ -1631,14 +1630,14 @@ catch(err){
         res.status(401).end();
     }
     else{
-if(req.body.status=="successful"){
+if(req.body.data.status=="successful"){
     console.log("payment was successful")
     try{
 
         //Register because kayaser has completed payment
-db.collection('pendingregistrations').find({contact:parseInt(req.body.customer.phone)}).toArray().then(resp=>{
+db.collection('pendingregistrations').find({contact:parseInt(req.body.data.customer.phone_number)}).toArray().then(resp=>{
 
-    let data={name:resp[0].name,stdNo:resp[0].stdNo,contact:parseInt(req.body.customer.phone),email:req.body.customer.email,pin:bcrypt.hashSync(resp[0].pin,10)}
+    let data={name:resp[0].name,stdNo:resp[0].stdNo,contact:resp[0].contact,email:req.body.data.customer.email,pin:resp[0].pin}
 
     const kayaser=new registrationModel(data)
 kayaser.save().then(response=>{
