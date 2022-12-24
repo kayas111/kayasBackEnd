@@ -1631,7 +1631,7 @@ catch(err){
     }
     else{
 if(req.body.data.status=="successful"){
-    console.log("payment was successful")
+    console.log("payment for registration has been received successfully")
     try{
 
         //Register because kayaser has completed payment
@@ -1641,8 +1641,16 @@ db.collection('pendingregistrations').find({contact:parseInt(req.body.data.custo
 
     const kayaser=new registrationModel(data)
 kayaser.save().then(response=>{
- 
-  console.log(resp[0].contact+" has registered as a new Kayaser")})
+   console.log(resp[0].contact+" has registered as a new Kayaser")})
+   
+//remove the registered kayaser from pending registration collection
+db.collection('pendingregistrations').deleteOne({contact:resp[0].contact}).then(resp=>{
+    ;
+})
+
+
+
+
   res.status(200).end();
 
  
