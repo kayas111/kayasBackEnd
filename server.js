@@ -34,6 +34,8 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+   
+    
     
 }))
 
@@ -486,7 +488,18 @@ children.push(child+"-Not Registered")
             })
             
  
-
+app.post('/delete_client_opinion',bodyParser.urlencoded({extended:false}),(req,res)=>{
+   
+    db.collection(req.body.collection).deleteMany({_id:ObjectId(req.body.documentID)}).then(resp=>{
+       
+        db.collection('monitoredopinions').deleteMany({_id:ObjectId(req.body.documentID),clientCollection:req.body.collection}).then(resp=>{
+           res.redirect('/pages/admin/clientsmonitor')
+        })
+    })
+   
+    
+    
+})
 
 
 //posts to the database
@@ -885,6 +898,7 @@ inCollection(req.params.client,[parseInt(fields.contact)]).then(resp=>{
 
 
 
+
 app.post('/pages/opinions/:client',(req,res)=>{
   
 
@@ -897,12 +911,16 @@ app.post('/pages/opinions/:client',(req,res)=>{
 try{
 
     Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)}).save().then(resp=>{
+   
         console.log("client opinion saved")
+        MonitoredOpinion({_id:resp._id,name:fields.name, msg:fields.msg,contact:parseInt(fields.contact),clientCollection:req.params.client}).save().then(resp=>{
+            console.log("monitored opinion saved")
+           
+            
+        })
     })
     res.redirect(`/pages/opinions/${req.params.client}`)
-    MonitoredOpinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact),clientCollection:req.params.client}).save().then(resp=>{
-        console.log("monitored opinion saved")
-    })
+  
 
 }
 catch(err){
