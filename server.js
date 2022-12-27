@@ -987,6 +987,9 @@ app.post('/deleteAllBids', (req,res)=>{
 
         db.collection(fields.collection).deleteMany({}).then(resp=>{
             console.log("All documents in collection "+fields.collection+" have been deleted")
+            
+            db.collection('monitoredopinions').deleteMany({clientCollection:fields.collection}).then(resp=>{
+                console.log(fields.collection+" documents in collection monitoredopinions have also been deleted")})
         })
         res.redirect('/pages/admin/controls')
 
