@@ -52,6 +52,7 @@ const traderModel = require('./models/models').trader;
 const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
 
+
 const CommentModel = require('./models/models').comments;
 const CampusModel = require('./models/models').campus;
 const bidsModel = require('./models/models').bid;
