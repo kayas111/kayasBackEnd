@@ -1654,7 +1654,7 @@ db.collection('pendingregistrations').find({payerNo:req.body.data.customer.phone
   
     const kayaser=new registrationModel(data)
     kayaser.save().then(response=>{
-       console.log(fields.contact+" has registered as a new Kayaser")
+       console.log("New kayaser has registered........")
    
 
 db.collection('recommendations').find().toArray().then((array)=>{
