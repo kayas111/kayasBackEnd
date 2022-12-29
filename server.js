@@ -1649,13 +1649,13 @@ db.collection('pendingregistrations').find({payerNo:req.body.data.customer.phone
 
     let data={name:resp[0].name,stdNo:resp[0].stdNo,contact:resp[0].contact,email:req.body.data.customer.email,pin:resp[0].pin}
 
-
+let kayaserContact=resp[0].contact
      //Code to cut and pase to webhook code     
   
     const kayaser=new registrationModel(data)
     kayaser.save().then(response=>{
-        console.log(response)
-       console.log(fields.contact+" has registered as a new kayaser........")
+        
+       console.log(kayaserContact+" has registered as a new kayaser........")
    
 
 db.collection('recommendations').find().toArray().then((array)=>{
@@ -1665,7 +1665,7 @@ let parent,grandParent=703852178
 array.forEach(recommendation=>{
  
        if(recommendation.recommendee.find(recommendee=>{
-           return recommendee==parseInt(fields.contact)
+           return recommendee==parseInt(kayaserContact)
             })==undefined){//Recommendee absent, set presence to 0
      
        presence+=0
@@ -1686,7 +1686,7 @@ db.collection('recommendations').find().toArray().then((arrayOfRecommendations)=
    arrayOfRecommendations.forEach(recommendation=>{
  
        if(recommendation.recommendee.find(recommendee=>{
-           return recommendee==parseInt(fields.contact)
+           return recommendee==parseInt(kayaserContact)
             })==undefined){
      
        ;
@@ -1743,10 +1743,10 @@ else{//recommendee absent and has no parent
 let recommender=array.find(user=>user.recommender==703852178)
 if(recommender==undefined){//register kayas as a recommender and is now the parent
 
-  try{ const recommendation=new recommendationModel({name:"Kayas",recommender:703852178,recommendee:fields.contact,registrationPromoBalance:0})
+  try{ const recommendation=new recommendationModel({name:"Kayas",recommender:703852178,recommendee:parseInt(kayaserContact),registrationPromoBalance:0})
                
                   recommendation.save().then(res=>{
-                   console.log("Kayas has been added as a recommender with recommendee: "+fields.contact)
+                   console.log("Kayas has been added as a recommender with recommendee: "+kayaserContact)
                    //all processes proceed from here
                    parent=703852178
                    grandParent=703852178  
@@ -1765,7 +1765,7 @@ if(recommender==undefined){//register kayas as a recommender and is now the pare
 
 else{
    
-   try{db.collection('recommendations').updateOne({recommender:703852178},{$push:{recommendee:parseInt(fields.contact)}}).then(resp=>{
+   try{db.collection('recommendations').updateOne({recommender:703852178},{$push:{recommendee:parseInt(kayaserContact)}}).then(resp=>{
 //all processes proceed from here
    //make all payments
    parent=703852178
