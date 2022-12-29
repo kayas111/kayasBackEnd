@@ -36,7 +36,6 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
    
     
-    
 }))
 
 
@@ -65,7 +64,7 @@ const { kMaxLength } = require('buffer');
 const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
-const registrationFee=3300;
+const registrationFee=500;
 
 
 
