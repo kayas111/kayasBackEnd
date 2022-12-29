@@ -17,7 +17,7 @@ const oAuth2Client= new google.auth.OAuth2(process.env.mailerId, process.env.mai
 oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
 
 const Flutterwave=require('flutterwave-node-v3')
-const flw = new Flutterwave("FLWPUBK-956f708bd917bcfd2b34082f347eeae9-X", "FLWSECK-d5bdfb893c97c9c772fdf37d0da6ff2f-X");
+const flw = new Flutterwave("FLWPUBK_TEST-def14ee0df8af10466357ff590281757-X", "FLWSECK_TEST-90575f5a67b4848f34337c763e18331a-X");
 
 
 const emailValidator = require('deep-email-validator');
@@ -65,7 +65,7 @@ const { kMaxLength } = require('buffer');
 const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
-const registrationFee=2000;
+const registrationFee=3300;
 
 
 
@@ -173,7 +173,31 @@ async function inCollection(collection,arrayList){
         }
 
 
+        function PayParentAndGrandParent(parent,grandParent){
+            db.collection('recommendations').find({recommender:parseInt(parent)}).toArray().then((parentArray)=>{
+                let parentBalance,grandParentBalance
+              
+               parentBalance=parentArray[0].registrationPromoBalance
+                db.collection('recommendations').find({recommender:parseInt(grandParent)}).toArray().then((grandParentArray)=>{
+                    grandParentBalance=grandParentArray[0].registrationPromoBalance
+                    db.collection('recommendations').updateOne({recommender:parseInt(parent)},{$set:{registrationPromoBalance:parentBalance+9000}}).then(resp=>{
+db.collection('recommendations').find({recommender:parseInt(grandParent)}).toArray().then((grandParentArray)=>{
+    grandParentBalance=grandParentArray[0].registrationPromoBalance
+   
+                        db.collection('recommendations').updateOne({recommender:parseInt(grandParent)},{$set:{registrationPromoBalance:grandParentBalance+1000}}).then(resp=>{
+                            console.log("parent and grandparent credited")
+                        })
+
+                        
+
+})
+                       
+                    })
+                })
+            })
+        }
         
+              
 
 //functions end
 //variables start
@@ -362,7 +386,7 @@ children.push(child+"-Registered")
 
             }
             else{
-children.push(child+"-Not Registered")
+children.push("<span style='color:red;'>"+child+"-Not Registered</span>")
 
             }
             pass++
@@ -1564,7 +1588,7 @@ catch(err){
 
                     
         let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),payerNo:fields.payerNo,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
-    
+   
         const pendingKayaser=new pendingRegistrationModel(data)
   pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to register ......."))
 
@@ -1587,7 +1611,6 @@ catch(err){
                   }
     
 
-          
       
     } catch(error){
         res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
@@ -1627,12 +1650,154 @@ db.collection('pendingregistrations').find({payerNo:req.body.data.customer.phone
 
     let data={name:resp[0].name,stdNo:resp[0].stdNo,contact:resp[0].contact,email:req.body.data.customer.email,pin:resp[0].pin}
 
+
+     //Code to cut and pase to webhook code     
+  
     const kayaser=new registrationModel(data)
-kayaser.save().then(response=>{
-   console.log(resp[0].contact+" has registered as a new Kayaser")})
+    kayaser.save().then(response=>{
+       console.log(fields.contact+" has registered as a new Kayaser")
    
+
+db.collection('recommendations').find().toArray().then((array)=>{
+let presence=0;    
+let parent,grandParent=703852178
+//checks if recommedee is recommended
+array.forEach(recommendation=>{
+ 
+       if(recommendation.recommendee.find(recommendee=>{
+           return recommendee==parseInt(fields.contact)
+            })==undefined){//Recommendee absent, set presence to 0
+     
+       presence+=0
+          
+       }else{//recommendee present, set presence to 1
+           presence+=1;
+      
+       
+       }
+
+})
+//checks if recommedee is recommended
+
+if(presence==1){//recommendee present and has a parent
+
+try{
+db.collection('recommendations').find().toArray().then((arrayOfRecommendations)=>{
+   arrayOfRecommendations.forEach(recommendation=>{
+ 
+       if(recommendation.recommendee.find(recommendee=>{
+           return recommendee==parseInt(fields.contact)
+            })==undefined){
+     
+       ;
+          
+       }else{
+         parent=recommendation.recommender//set Parent
+         
+         //look for grandParent
+         db.collection('recommendations').find().toArray().then((arrayOfRecommendations)=>{
+           arrayOfRecommendations.forEach(recommendation=>{
+         
+               if(recommendation.recommendee.find(recommendee=>{
+                   return recommendee==parseInt(parent)
+                    })==undefined){
+           ;
+            
+                  
+               }else{
+                  
+                 grandParent=recommendation.recommender//set grandParent
+                 
+                 
+               }
+       
+       })
+
+
+       
+       //make all payments  for both parent and gparent 
+       console.log("top up 9k to parent and parent is "+parent)
+       console.log("top up 1k to grand parent and grand parent is "+grandParent)
+       PayParentAndGrandParent(parent,grandParent)
+       
+       })
+       //look for grandParent
+        
+      
+       
+       }
+
+})
+
+})
+}
+catch(err){
+   console.log("Kayas, the error originated from proceeding with a recommendee who has a parent in the process of paying for the registration Promo and the error is: ")
+  
+   console.log(err)
+}
+
+}
+else{//recommendee absent and has no parent
+//check if kayas is present as a recommender
+let recommender=array.find(user=>user.recommender==703852178)
+if(recommender==undefined){//register kayas as a recommender and is now the parent
+
+  try{ const recommendation=new recommendationModel({name:"Kayas",recommender:703852178,recommendee:fields.contact,registrationPromoBalance:0})
+               
+                  recommendation.save().then(res=>{
+                   console.log("Kayas has been added as a recommender with recommendee: "+fields.contact)
+                   //all processes proceed from here
+                   parent=703852178
+                   grandParent=703852178  
+                   //make all payments     
+                   console.log("top up 9k to parent and parent is "+parent)
+                   console.log("top up 1k to grand parent and grand parent is "+grandParent)
+                   PayParentAndGrandParent(parent,grandParent)
+                   
+               
+               })
+                 } catch(err){
+                   console.log(err)
+                 }
+   
+}
+
+else{
+   
+   try{db.collection('recommendations').updateOne({recommender:703852178},{$push:{recommendee:parseInt(fields.contact)}}).then(resp=>{
+//all processes proceed from here
+   //make all payments
+   parent=703852178
+   grandParent=703852178       
+   console.log("top up 9k to parent and parent is "+parent)
+
+   console.log("top up 1k to grand parent and grand parent is "+grandParent)
+   PayParentAndGrandParent(parent,grandParent)
+   })
+   
+}catch(err){
+   console.log(err)
+}
+
+}
+
+}
+
+
+})
+ 
+   })
+
+    //Code to cut and pase to webhook code
+
+
+
 //remove the registered kayaser from pending registration collection
 db.collection('pendingregistrations').deleteMany({contact:resp[0].contact}).then(resp=>{
+
+
+
     ;
 })
 
@@ -1648,8 +1813,6 @@ db.collection('pendingregistrations').deleteMany({contact:resp[0].contact}).then
 
    
        
-
-
     
 } catch(error){
    
@@ -1725,6 +1888,7 @@ console.log(kayaser[0].contact+" has sent a request")
             var form = new formidable.IncomingForm();
         
             form.parse(req, function (err, fields, files){
+                
                 db.collection('kayasers').find({contact:parseInt(fields.recommender)}).toArray().then((array)=>{
                 let user=array.find(user=>user.contact==parseInt(fields.recommender))
                
@@ -1767,16 +1931,10 @@ array.forEach(recommendation=>{
 })
 
 
-
-
-
-
-
 if(presence==1){//recommendee present
 
 console.log(fields.recommender+" Attempted to recommend already recommended")
 res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Already Recommended!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your friend whom you are trying to recommend has already been recommended. Please recommend another friend. <p></p><a href="https://kayas-mak.herokuapp.com/pages/recommend">Recommend again</a></div>') 
-
 
 }
 else{//recommendee absent
@@ -1784,12 +1942,12 @@ else{//recommendee absent
 let recommender=array.find(user=>user.recommender==parseInt(fields.recommender))
 if(recommender==undefined){//register new recommender
 
-    const recommendation=new recommendationModel({name:user.name,recommender:fields.recommender,recommendee:fields.recommendee})
+    const recommendation=new recommendationModel({name:user.name,recommender:fields.recommender,recommendee:fields.recommendee,registrationPromoBalance:0})
                 
                    recommendation.save().then(res=>console.log("recommendation received"))
                    
                
-                   res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for recommending your friend. You can now proceed sending a message.<p></p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p> <p></p>Thank you.</div>')
+                   res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for recommending your friend.<p></p>Keep it Kayas.</div>')
            
     
     console.log(fields.recommender+" has registered as a new recommender")

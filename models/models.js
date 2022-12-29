@@ -68,7 +68,11 @@ const recommendationSchema=new Func({
     type:[Number
    ],
    required:true
-    }
+    },
+    registrationPromoBalance:{
+        type:Number,
+        required:true
+        }
    
     
 },{timestamps:true})
