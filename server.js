@@ -64,7 +64,7 @@ const { kMaxLength } = require('buffer');
 const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
-const registrationFee=500;
+const registrationFee=33000;
 
 
 
