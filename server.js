@@ -1259,7 +1259,20 @@ SendMail(fields.subject,res,fields.msg).then(resp=>{
                  })
         
             });
-
+     app.post('/collection_controls_resetAdminRegCode', (req,res)=>{
+                var form = new formidable.IncomingForm();
+            
+                form.parse(req, function (err, fields, files){
+               
+      db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:fields.adminRegCode}}).then(resp=>{
+        console.log("Admin registration code  reset")
+       
+      })
+                    res.redirect('/pages/admin/controls')
+                    res.end() 
+                     })
+            
+                });
 app.post('/collection_controls_wish', (req,res)=>{
     var form = new formidable.IncomingForm();
 
@@ -1570,7 +1583,167 @@ catch(err){
 
             })
         })
+app.post('/collection_kayasers_registerThrouhAdmin',(req,res)=>{//register though Admin
+  
+   
+        var form = new formidable.IncomingForm();
+        form.parse(req, function (err, fields, files){
+   //Querry to check for kayaser presence
+   db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
+    const presence=array.length
+   if(presence==0){
+//check if is recommended
+db.collection('recommendations').find().toArray().then((array)=>{
+    let presence=0;    
     
+    array.forEach(recommendation=>{
+     
+           if(recommendation.recommendee.find(recommendee=>{
+               return recommendee==parseInt(fields.contact)
+                })==undefined){//Recommendee absent, set presence to 0
+         
+           presence+=0
+              
+           }else{//recommendee present, set presence to 1
+               presence+=1;
+          
+           
+           }
+    
+    })
+    //checks if recommedee is recommended
+    
+    if(presence==1){//recommendee present
+        //register
+        db.collection('controls').find({"_id":ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
+if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
+ //update admin registration code then register
+ db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
+
+ let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),adminRegCode:fields.adminRegCode,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+
+ const kayaser=new registrationModel(data)
+ kayaser.save().then(response=>{
+    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
+    console.log(fields.contact+" has registered as a new kayaser........")
+
+ })
+
+
+ })
+ 
+}else{
+
+    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Invalid admin registration code</div><div style="font-size:40px;text-align:center;padding-top:30px;">You entered a wrong admin registration code. Please try again.<p></p><a href="/pages/registerthroughadmin">Register again</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')   
+}
+
+        })
+    //register
+    
+    }
+    else{//recommendee absent and has no parent
+    //check if kayas is present as a recommender
+    let recommender=array.find(user=>user.recommender==703852178)
+    if(recommender==undefined){//register kayas as a recommender and is now the parent
+    
+      try{ const recommendation=new recommendationModel({name:"Kayas",recommender:703852178,recommendee:parseInt(fields.contact),registrationPromoBalance:0})
+                   
+                      recommendation.save().then(res=>{
+                       console.log("Kayas has been added as a recommender with recommendee: "+fields.contact)
+                       //all processes proceed from here
+                        //register
+        db.collection('controls').find({"_id":ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
+            if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
+             //update admin registration code then register
+             db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
+            
+             let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),adminRegCode:fields.adminRegCode,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+            
+             const kayaser=new registrationModel(data)
+             kayaser.save().then(response=>{
+                res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
+                console.log(fields.contact+" has registered as a new kayaser........")
+            
+             })
+            
+            
+             })
+             
+            }else{
+            
+                res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Invalid admin registration code</div><div style="font-size:40px;text-align:center;padding-top:30px;">You entered a wrong admin registration code. Please try again.<p></p><a href="/pages/registerthroughadmin">Register again</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')   
+            }
+            
+                    })
+                //register
+                   
+                   })
+                     } catch(err){
+                       console.log(err)
+                     }
+       
+    }
+    
+    else{
+       
+       try{db.collection('recommendations').updateOne({recommender:703852178},{$push:{recommendee:parseInt(fields.contact)}}).then(resp=>{
+    //all processes proceed from here
+       //register
+       db.collection('controls').find({"_id":ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
+        if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
+         //update admin registration code then register
+         db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
+        
+         let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),adminRegCode:fields.adminRegCode,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+        
+         const kayaser=new registrationModel(data)
+         kayaser.save().then(response=>{
+            res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
+            console.log(fields.contact+" has registered as a new kayaser........")
+        
+         })
+        
+        
+         })
+         
+        }else{
+        
+            res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Invalid admin registration code</div><div style="font-size:40px;text-align:center;padding-top:30px;">You entered a wrong admin registration code. Please try again.<p></p><a href="/pages/registerthroughadmin">Register again</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')   
+        }
+        
+                })
+            //register
+       })
+       
+    }catch(err){
+       console.log(err)
+    }
+    
+    }
+    
+    }
+    
+    
+    })
+     
+
+   
+   } 
+   
+   else{//Kayaser is present. Send presence message
+    console.log(fields.contact+" Attempted to register with existing number")
+   
+    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">You are  already registered with this contact. Please proceed with other steps now.Thank you for registering with Kayas.<p></p>You can now proceed with any of the following:<p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')
+   }
+
+   })
+       })
+  
+})
+
+
+
+
      app.post('/collection_kayasers_register',(req,res)=>{
   
    
