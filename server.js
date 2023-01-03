@@ -34,8 +34,9 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
     
-
-SendMail("Server launched","onongeisaac@gmail.com","listening on port "+port)
+   
+  
+//SendMail("Server launched","onongeisaac@gmail.com","listening on port "+port)
    
     
 }))
@@ -99,6 +100,8 @@ async function inCollection(collection,arrayList){
       if(length==lengthCheck){
         return true
       }
+
+      
       else{
         return false
       }
@@ -109,39 +112,42 @@ async function SendMail(Subject,Receipients,msg){
             try
              
             {
-           
-               let accessToken =await oAuth2Client.getAccessToken()
-             
-               const transport=nodemailer.createTransport({
-           
-           service:'gmail',
-           auth:{
-           type:'OAuth2',
-           user:'kayas.makerere@gmail.com',
-           clientId:process.env.mailerId,
-           clientSecret:process.env.mailerSecret,
-           refreshToken:accessToken.res.data.refresh_token,
-           accessToken:accessToken.res.data.access_token 
-           
-           
-           },
-           tls:{rejectUnauthorized:false}
-           
-               })
-           
-           
-           
-           
-           const result=await transport.sendMail({
-               from:'kayas.makerere@gmail.com',
-               to:Receipients,
-               subject:Subject,
-               text:msg
-               
-               
+                
+                oAuth2Client.getAccessToken().then((resp)=>{
+                   
+                   let RefreshToken=resp.res.data.refresh_token, AccessToken=resp.res.data.access_token
+                   
+                    const transport=nodemailer.createTransport({
+            
+                        service:'gmail',
+                        auth:{
+                        type:'OAuth2',
+                        user:'kayas.makerere@gmail.com',
+                        clientId:process.env.mailerId,
+                        clientSecret:process.env.mailerSecret,
+                        refreshToken:RefreshToken,
+                        accessToken:AccessToken
+                        
+                        
+                        },
+                        tls:{rejectUnauthorized:false}
+                        
+                            })
+                        
+                                   
+                        transport.sendMail({
+                            from:'kayas.makerere@gmail.com',
+                            to:Receipients,
+                            subject:Subject,
+                            text:msg
+                            
+                            
+                             })
+                       
                 })
-           
-           return result
+             
+            
+          
            
             }
             catch(error){
@@ -173,6 +179,7 @@ async function SendMail(Subject,Receipients,msg){
         
         
         }
+
 
 
         function PayParentAndGrandParent(parent,grandParent){
@@ -924,6 +931,7 @@ inCollection(req.params.client,[parseInt(fields.contact)]).then(resp=>{
 
 
 app.post('/send_opinion_emails/:client/:headline1',bodyParser.json(),(req,res)=>{
+
     
 SendMail("You have just received on your w....",req.body,"A comment has been received on your website page: '"+req.params.headline1+"'. See the comment by following or tapping this link: https://kayas-mak.herokuapp.com/pages/opinions/"+req.params.client)
 .then(resp=>{
