@@ -35,7 +35,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
     
     
-   //SendMail("Server launched","onongeisaac@gmail.com","listening on port "+port)
+SendMail("Server launched","onongeisaac@gmail.com","listening on port "+port)
    
     
 }))
