@@ -10,7 +10,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const { ReturnDocument } = require('mongodb')
 const bodyParser=require('body-parser')
 
-
 const {google}=require('googleapis')
 const nodemailer=require('nodemailer')
 const oAuth2Client= new google.auth.OAuth2(process.env.mailerId, process.env.mailerSecret, process.env.redirectURI)
@@ -34,6 +33,9 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+    
+    
+   //SendMail("Server launched","onongeisaac@gmail.com","listening on port "+port)
    
     
 }))
@@ -101,15 +103,15 @@ async function inCollection(collection,arrayList){
         return false
       }
 
-        
-        }
+           }
 
-        async function SendMail(Subject,Receipients,msg){
+async function SendMail(Subject,Receipients,msg){
             try
              
             {
            
                let accessToken =await oAuth2Client.getAccessToken()
+             
                const transport=nodemailer.createTransport({
            
            service:'gmail',
@@ -118,8 +120,8 @@ async function inCollection(collection,arrayList){
            user:'kayas.makerere@gmail.com',
            clientId:process.env.mailerId,
            clientSecret:process.env.mailerSecret,
-           refreshToken:process.env.refreshToken,
-           accessToken:accessToken
+           refreshToken:accessToken.res.data.refresh_token,
+           accessToken:accessToken.res.data.access_token 
            
            
            },
@@ -921,7 +923,14 @@ inCollection(req.params.client,[parseInt(fields.contact)]).then(resp=>{
 })
 
 
+app.post('/send_opinion_emails/:client/:headline1',bodyParser.json(),(req,res)=>{
+    
+SendMail("You have just received on your w....",req.body,"A comment has been received on your website page: '"+req.params.headline1+"'. See the comment by following or tapping this link: https://kayas-mak.herokuapp.com/pages/opinions/"+req.params.client)
+.then(resp=>{
+    ;
+})
 
+})
 
 app.post('/pages/opinions/:client',(req,res)=>{
   
