@@ -12,7 +12,7 @@ const bodyParser=require('body-parser')
 
 const {google}=require('googleapis')
 const nodemailer=require('nodemailer')
-const oAuth2Client= new google.auth.OAuth2(process.env.mailerId, process.env.mailerSecret, process.env.redirectURI)
+const oAuth2Client= new google.auth.OAuth2(process.env.mailerId,process.env.mailerSecret,process.env.redirectURI)
 oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
 
 const Flutterwave=require('flutterwave-node-v3')
@@ -33,7 +33,6 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-    
    
   
 SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
@@ -116,11 +115,11 @@ async function inCollection(collection,arrayList){
                     service:'gmail',
                     auth:{
                     type:'OAuth2',
-                    user:'kayas.makerere@gmail.com',
+                    user:'kayasforyou@gmail.com',
                     clientId:process.env.mailerId,
                     clientSecret:process.env.mailerSecret,
-                    refreshToken:"1//044Oz3eo1fzUDCgYIARAAGAQSNwF-L9IrXL6N0U8tY-Jd7Hc5BOqqpJ9J8S_2MBRQUE21SmoBbMgpMAK1dm3digiNjiEv-q5cvNI",
-                    accessToken:"ya29.a0AX9GBdV4J1MgchLFyc0hlmHV9J0uoBeee0BcwicjTWBN3I1qXRJDfUJCFcdeCqy0Wk3Z0iflEEDZu4bYsoevPLzc3AvHCQeBw0ib2WdoFF2YvhkUiAskmMk3kMsk9ZpV3LyN-LRvviZt09RiebeoR8-l2kVAltm0aCgYKAb0SAQASFQHUCsbC6dR2b9eUrFF6u6EezTGtng0167"
+                    refreshToken:"1//04ZKMNWYbMZ8BCgYIARAAGAQSNwF-L9IrtW74cv-5Hvv4S7KJSkp5Kl1husthEXAemzW0Pzcjc_mC0FnDuCice5udbbW3MWLf4ys",
+                    accessToken:"ya29.a0AX9GBdUwNme7N-wYcIlkBa-Rh_V9WMYFE8-wxharSAVEaFvgAMLNGGxyUsV55bko4E9vCfU7noQOaiFhta5TQhtPng5gX4Ru9_0QhubD8XGHt9kZNHUv0wnJT5vgpdm1EJf-lqG5prBiJrIitpjnILI4RcYPaCgYKAegSARISFQHUCsbCzYlHjJgWxHI6gb1kWcKWcg0163"
                     
                     
                     },
