@@ -1869,7 +1869,7 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
         res.status(401).end();
     }
     else{
-        console.log(req.body)
+        console.log(req.body.data)
         /*
 if(req.body.data.status=="successful"){
     
