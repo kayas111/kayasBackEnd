@@ -1,7 +1,6 @@
 
 
 
-
 require('dotenv').config()
 const express=require('express')
 const app=express()
@@ -67,8 +66,8 @@ const { kMaxLength } = require('buffer');
 const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
-const registrationFee=33000;
-const hookupRegistrationFee=1
+const registrationFee=500;
+const hookupRegistrationFee=500
 
 
 
@@ -1765,8 +1764,7 @@ pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to regist
           amount:hookupRegistrationFee,
           currency: 'UGX',
           email:fields.email,
-          reason:"hookup",
-          tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
+         tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
       })
           .then(resp=>{
               console.log("Initiating payment for registration of "+fields.contact+" ........")
@@ -1802,7 +1800,6 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
 
      app.post('/collection_kayasers_register',(req,res)=>{
   
-   
             var form = new formidable.IncomingForm();
             form.parse(req, function (err, fields, files){
        //Querry to check for kayaser presence
