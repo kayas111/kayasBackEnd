@@ -1869,10 +1869,12 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
         res.status(401).end();
     }
     else{
+        console.log(req.body)
+        /*
 if(req.body.data.status=="successful"){
-    console.log(req.body)
+    
     console.log("payment for registration has been received successfully")
-   /* try{
+try{
 
         //Register because kayaser has completed payment
 db.collection('pendingregistrations').find({payerNo:req.body.data.customer.phone_number}).toArray().then(resp=>{
@@ -2048,7 +2050,7 @@ db.collection('pendingregistrations').deleteMany({contact:resp[0].contact}).then
    
     console.log("error is result from entering a wrong student number format by "+ req.body.customer.phone)
 }
-*/
+
 }else{
     console.log("payment status is not succesful")
     res.status(401).end();
@@ -2056,6 +2058,7 @@ db.collection('pendingregistrations').deleteMany({contact:resp[0].contact}).then
 }
     
     res.status(200).end()
+    */
     }
     
         })
