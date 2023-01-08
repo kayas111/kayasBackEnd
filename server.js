@@ -16,7 +16,7 @@ const oAuth2Client= new google.auth.OAuth2(process.env.mailerId,process.env.mail
 oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
 
 const Flutterwave=require('flutterwave-node-v3')
-const flw = new Flutterwave("FLWPUBK-956f708bd917bcfd2b34082f347eeae9-X", "FLWSECK-d5bdfb893c97c9c772fdf37d0da6ff2f-X");
+const flw = new Flutterwave(process.env.flwTestPublicKey,process.env.flwTestSecretKey);
 
 
 const emailValidator = require('deep-email-validator');
@@ -35,7 +35,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
    
   
-SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
+//SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
    
     
 }))
@@ -68,7 +68,7 @@ const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
 const registrationFee=33000;
-
+const hookupRegistrationFee=10000
 
 
 
@@ -1737,6 +1737,65 @@ if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
   
 })
 
+app.post('/collection_kayasers_registerToHookup',(req,res)=>{
+  
+   
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files){
+//Querry to check for kayaser presence
+db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
+const presence=array.length
+if(presence==0){
+//register
+
+try{
+
+    //Register because kayaser is absent
+
+            
+let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),payerNo:fields.payerNo,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+
+const pendingKayaser=new pendingRegistrationModel(data)
+pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to register ......."))
+
+     try {flw.MobileMoney.uganda({
+          fullname:fields.name,
+          phone_number:fields.payerNo,
+          network:"AIRTEL",
+          amount:hookupRegistrationFee,
+          currency: 'UGX',
+          email:fields.email,
+          tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
+      })
+          .then(resp=>{
+              console.log("Initiating payment for registration of "+fields.contact+" ........")
+              res.redirect(resp.meta.authorization.redirect)
+          })
+          .catch(console.log);}catch(error){
+              console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
+              console.log(error)
+          }
+
+
+
+} catch(error){
+res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
+console.log("error is result from entering a wrong student number format by "+fields.contact)
+}
+
+//register
+} 
+
+else{//Kayaser is present. Send presence message
+console.log(fields.contact+" Attempted to register with existing number")
+
+res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">You are  already registered with this contact. Please proceed wih other steps now.Thank you for registering with Kayas.<p></p>You can now proceed with any of the following:<p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')
+}
+
+})
+   })
+
+})
 
 
 
@@ -1811,8 +1870,9 @@ if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
     }
     else{
 if(req.body.data.status=="successful"){
+    console.log(req.body)
     console.log("payment for registration has been received successfully")
-    try{
+   /* try{
 
         //Register because kayaser has completed payment
 db.collection('pendingregistrations').find({payerNo:req.body.data.customer.phone_number}).toArray().then(resp=>{
@@ -1988,7 +2048,7 @@ db.collection('pendingregistrations').deleteMany({contact:resp[0].contact}).then
    
     console.log("error is result from entering a wrong student number format by "+ req.body.customer.phone)
 }
-
+*/
 }else{
     console.log("payment status is not succesful")
     res.status(401).end();
