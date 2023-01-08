@@ -16,7 +16,7 @@ const oAuth2Client= new google.auth.OAuth2(process.env.mailerId,process.env.mail
 oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
 
 const Flutterwave=require('flutterwave-node-v3')
-const flw = new Flutterwave(process.env.flwTestPublicKey,process.env.flwTestSecretKey);
+const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey);
 
 
 const emailValidator = require('deep-email-validator');
@@ -68,7 +68,7 @@ const { CodeChallengeMethod } = require('google-auth-library')
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
 const registrationFee=33000;
-const hookupRegistrationFee=10000
+const hookupRegistrationFee=1
 
 
 
@@ -1765,6 +1765,7 @@ pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to regist
           amount:hookupRegistrationFee,
           currency: 'UGX',
           email:fields.email,
+          reason:"hookup",
           tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
       })
           .then(resp=>{
@@ -1869,10 +1870,11 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
         res.status(401).end();
     }
     else{
-        console.log(req.body.data)
-        /*
-if(req.body.data.status=="successful"){
+        
     
+if(req.body.data.status=="successful"){
+    console.log(req.body.data)
+  /*  
     console.log("payment for registration has been received successfully")
 try{
 
@@ -2050,7 +2052,7 @@ db.collection('pendingregistrations').deleteMany({contact:resp[0].contact}).then
    
     console.log("error is result from entering a wrong student number format by "+ req.body.customer.phone)
 }
-
+*/
 }else{
     console.log("payment status is not succesful")
     res.status(401).end();
@@ -2058,7 +2060,7 @@ db.collection('pendingregistrations').deleteMany({contact:resp[0].contact}).then
 }
     
     res.status(200).end()
-    */
+    
     }
     
         })
