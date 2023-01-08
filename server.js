@@ -918,27 +918,27 @@ SendMail("You have just received on your w....",req.body,"A comment has been rec
 
 })
 
-app.post('/pages/opinions/:client',(req,res)=>{
+app.post('/pages/opinions/:client',bodyParser.json(),(req,res)=>{
   
+console.log(req.body)
+    
 
-    var form = new formidable.IncomingForm();
-
-    form.parse(req, function (err, fields, files){
+    
         let Opinion=mongoose.model(req.params.client,opinionSchema)
         let MonitoredOpinion=mongoose.model('monitoredopinions',monitoredOpinionSchema)
         
 try{
 
-    Opinion({name:fields.name, msg:fields.msg,contact:parseInt(fields.contact)}).save().then(resp=>{
+    Opinion({name:req.body.name,msg:req.body.msg,contact:parseInt(req.body.contact)}).save().then(resp=>{
    
         console.log("client opinion saved")
-        MonitoredOpinion({_id:resp._id,name:fields.name, msg:fields.msg,contact:parseInt(fields.contact),clientCollection:req.params.client}).save().then(resp=>{
+        MonitoredOpinion({_id:resp._id,name:req.body.name, msg:req.body.msg,contact:parseInt(req.body.contact),clientCollection:req.params.client}).save().then(resp=>{
             console.log("monitored opinion saved")
            
             
         })
     })
-    res.redirect(`/pages/opinions/${req.params.client}`)
+    res.send("successfull")
   
 
 }
@@ -948,9 +948,9 @@ catch(err){
 }
 
 
-    })
+   
 
-    
+ 
     
 })
 app.post('/pages/memeopinions/:client',(req,res)=>{
