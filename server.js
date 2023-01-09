@@ -920,10 +920,7 @@ SendMail("You have just received on your w....",req.body,"A comment has been rec
 
 app.post('/pages/opinions/:client',bodyParser.json(),(req,res)=>{
   
-console.log(req.body)
-    
-
-    
+  
         let Opinion=mongoose.model(req.params.client,opinionSchema)
         let MonitoredOpinion=mongoose.model('monitoredopinions',monitoredOpinionSchema)
         
