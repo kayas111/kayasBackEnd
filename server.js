@@ -28,8 +28,9 @@ var formidable = require('formidable');
 const path=require('path')
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
 const port=process.env.PORT || 4000
-
-mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
+app.set('views','./views')
+app.set('view engine','ejs')
+/*mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
    
@@ -38,8 +39,16 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
    
     
 }))
-
-
+*/
+app.listen(port,()=>{
+    console.log(`Listening on development port ${port}`)
+    
+   
+  
+//SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
+   
+    
+})
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number},{strict:false})
 let monitoredOpinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number,clientCollection:String},{strict:false})
@@ -201,6 +210,17 @@ app.use(express.static(path.join(__dirname,'/build')))
 
 //pages router
 app.use(pagesRouter)
+
+
+//Configuring ejs
+app.get('/ejs',(req,res)=>{
+    res.render('Home.ejs')
+})
+
+
+
+//Configuring ejs
+
 
 //access databse by get
 app.get('/collection_controls_visits', (req,res)=>{
