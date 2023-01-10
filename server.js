@@ -4,7 +4,17 @@
 require('dotenv').config()
 const express=require('express')
 const app=express()
-const expressLayouts=require('express-ejs-layouts')
+const Handlebars=require('handlebars')
+const handlebars = require('express-handlebars')
+app.set('view engine', 'handlebars');
+app.set('views','./views')
+app.engine('handlebars', handlebars.engine({
+    layoutsDir: __dirname + '/views/layouts',
+    }))
+app.use(express.static('public'))
+
+
+
 const sgMail=require("@sendgrid/mail")
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const { ReturnDocument } = require('mongodb')
@@ -29,9 +39,8 @@ var formidable = require('formidable');
 const path=require('path')
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
 const port=process.env.PORT || 4000
-app.set('view engine','ejs')
-app.use(expressLayouts)
-app.set('views','./views')
+
+
 
 /*mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
@@ -216,7 +225,7 @@ app.use(pagesRouter)
 
 
 //Configuring ejs
-app.get('/ejs',(req,res)=>{
+app.get('/hbs',(req,res)=>{
     res.render('Home')
 })
 
