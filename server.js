@@ -4,7 +4,7 @@
 require('dotenv').config()
 const express=require('express')
 const app=express()
-const Handlebars=require('handlebars')
+
 const handlebars = require('express-handlebars')
 app.set('view engine', 'handlebars');
 app.set('views','./views')
@@ -226,7 +226,7 @@ app.use(pagesRouter)
 
 //Configuring ejs
 app.get('/hbs',(req,res)=>{
-    res.render('Home')
+    res.render('./layouts/home')
 })
 
 
