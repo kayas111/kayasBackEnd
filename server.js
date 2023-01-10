@@ -226,7 +226,7 @@ app.use(pagesRouter)
 
 //Configuring ejs
 app.get('/hbs',(req,res)=>{
-    res.render('./layouts/home')
+    res.render('main',{layout:"index"})
 })
 
 
