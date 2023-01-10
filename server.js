@@ -6,13 +6,8 @@ const express=require('express')
 const app=express()
 
 const handlebars = require('express-handlebars')
-app.set('view engine', 'handlebars');
+app.set('view engine', 'ejs');
 app.set('views','./views')
-app.engine('handlebars', handlebars.engine({
-    layoutsDir: __dirname + '/views/layouts',
-    extname: 'hbs'
-    }))
-app.use(express.static('public'))
 
 
 
@@ -227,7 +222,7 @@ app.use(pagesRouter)
 
 //Configuring ejs
 app.get('/handlebars/:hbs',(req,res)=>{
-    res.render('home',{layout:"index",data:req.params.hbs})
+    res.render('index')
 })
 
 
