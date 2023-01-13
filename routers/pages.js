@@ -10,6 +10,7 @@ router.get('/pages/:page', (req,res)=>{res.sendFile(path.join(__dirname,'../buil
 
 
 router.get('/pages/:part/:page', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html')) })
+router.get('/pages/:part/:subpart/:part', (req,res)=>{res.sendFile(path.join(__dirname,'../build/index.html')) })
 
 module.exports=router
 
