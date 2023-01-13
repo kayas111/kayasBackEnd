@@ -181,6 +181,50 @@ let campusModel=mongoose.model('campus',campusSchema)
 const groupLinkSchema=new Func({campusId:Number,campus:String,groupName:String,groupAdmin:String,description:String,link:String},{strict:false})
 let groupLinkModel=mongoose.model('whatsappgrouplinks',groupLinkSchema)
 
+const pubArticleSchema=new Func({
+   
+    id:{
+        type:Number,
+        required:true
+    },
+    headline1:{
+        type:String,
+        required:true
+    },author:{
+        type:String,
+        required:true
+    },
+     contact:{
+    type:Number,
+    required:true
+    },
+    body:{
+        type:String,
+        required:true
+    },
+    pubArticleOpinions:{
+        type:[],
+       required:true
+        }
+        ,
+        showCustomerMessage:{
+            type:String,
+            required:true
+        },
+        recentCommentOnTop:{
+            type:String,
+            required:true
+        }
+        ,
+        showCustomerContact:{
+            type:String,
+            required:true
+        }
+},{timestamps:true,strict:false})
+let pubArticleModel=mongoose.model('pubarticles',pubArticleSchema)
+
+
+module.exports.pubArticleModel=pubArticleModel
 module.exports.groupLinkModel=groupLinkModel
 module.exports.recommendation=recommendationModel
 module.exports.bid=bidsModel

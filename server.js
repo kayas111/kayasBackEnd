@@ -1,14 +1,7 @@
-
-
-
+const path=require('path')
 require('dotenv').config()
 const express=require('express')
 const app=express()
-
-const handlebars = require('express-handlebars')
-app.set('view engine', 'ejs');
-app.set('views','./views')
-
 
 
 const sgMail=require("@sendgrid/mail")
@@ -32,13 +25,13 @@ const mongoose=require('mongoose')
 const bcrypt=require('bcrypt')
 
 var formidable = require('formidable');
-const path=require('path')
+
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
 const port=process.env.PORT || 4000
 
 
 
-/*mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
+mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
    
@@ -47,16 +40,8 @@ const port=process.env.PORT || 4000
    
     
 }))
-*/
-app.listen(port,()=>{
-    console.log(`Listening on development port ${port}`)
-    
-   
-  
-//SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
-   
-    
-})
+
+
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number},{strict:false})
 let monitoredOpinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number,clientCollection:String},{strict:false})
@@ -65,6 +50,7 @@ let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{typ
 const {db} = require('./models/models').comments;
 const quotesModel = require('./models/models').quotes;
 const hookupModel = require('./models/models').hookup;
+const pubArticleModel=require('./models/models').pubArticleModel;
 const groupLinkModel = require('./models/models').groupLinkModel;
 const traderModel = require('./models/models').trader;
 const recommendationModel = require('./models/models').recommendation;
@@ -220,14 +206,6 @@ app.use(express.static(path.join(__dirname,'/build')))
 app.use(pagesRouter)
 
 
-//Configuring ejs
-app.get('/handlebars/:hbs',(req,res)=>{
-    res.render('index')
-})
-
-
-
-//Configuring ejs
 
 
 //access databse by get
@@ -267,7 +245,17 @@ app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_whatsappgrouplinks_links', (req,res)=>{db.collection('whatsappgrouplinks').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/opinions/:client', (req,res)=>{db.collection(req.params.client).find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/pubarticle/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{res.send(array)})}) 
+app.get('/pubarticleopinions/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
+    if(array[0]==undefined){
+    console.log("Accessing an article that is absent")
+    }else{
+        res.send(array[0].pubArticleOpinions)
+    }
+    
 
+
+})}) 
 
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
@@ -280,6 +268,7 @@ app.get('/collection_recommendations_recommendations', (req,res)=>{
     app.get('/collection_kayasers_kayasers', (req,res)=>{
         db.collection('kayasers').find().toArray().then((array)=>{
         res.send(array)})})
+
 
 app.get('/collection_requests_requests', (req,res)=>{
     db.collection('requests').find().toArray().then((array)=>{
@@ -530,7 +519,42 @@ children.push("<span style='color:red;'>"+child+"-Not Registered</span>")
             
             })
             
- 
+
+app.post('/createArticle',bodyParser.json(),(req,res)=>{
+               
+                db.collection('pubarticles').find().toArray().then((articlesArray)=>{
+                   
+                    let articleIds=[]
+articlesArray.forEach(articleDoc=>{
+    articleIds.push(articleDoc.id)
+})
+newId=0,searchAgain=1
+
+do{if(articleIds.find(docId=>{
+    return docId==newId
+})==undefined){
+   
+    searchAgain=0
+}else{
+    newId+=1
+    searchAgain=1
+
+}}
+while(searchAgain==1)
+
+try{pubArticleModel({id:parseInt(newId),headline1:req.body.headline1,author:req.body.author,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
+.save().then((resp)=>{
+    
+    console.log(`${resp.author} has created an article with ID: ${resp.id}`)
+    res.send({msg:"Article created",id:resp.id,headline1:resp.headline1})
+})
+}catch(err){
+    console.log("Kayas the error originated from trying to create an article and it is:")
+    console.log(err)
+}
+                })
+
+            })
 app.post('/delete_client_opinion',bodyParser.urlencoded({extended:false}),(req,res)=>{
    
     db.collection(req.body.collection).deleteMany({_id:ObjectId(req.body.documentID)}).then(resp=>{
@@ -546,6 +570,29 @@ app.post('/delete_client_opinion',bodyParser.urlencoded({extended:false}),(req,r
 
 
 //posts to the database
+app.post('/verifyUser',bodyParser.json(), (req,res)=>{
+    
+   
+    db.collection('kayasers').find({contact:parseInt(req.body.contact)}).toArray().then((docArray)=>{
+      if(docArray.length==0){
+res.send({registered:false})
+
+      }else{
+        if(bcrypt.compareSync(req.body.pin,docArray[0].pin)){
+            res.send({registered:true,pin:true,details:docArray[0]})
+            
+        }else{
+            res.send({registered:true,pin:false,details:docArray[0]})
+          
+        }
+
+      }
+       
+    }
+        
+    )
+
+})
 app.post('/link_to_whatsapp_group',(req,res)=>{
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files){
@@ -1640,7 +1687,7 @@ if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
  //update admin registration code then register
  db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
 
- let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),adminRegCode:fields.adminRegCode,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+ let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
 
  const kayaser=new registrationModel(data)
  kayaser.save().then(response=>{
@@ -1677,7 +1724,7 @@ if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
              //update admin registration code then register
              db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
             
-             let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),adminRegCode:fields.adminRegCode,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+             let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
             
              const kayaser=new registrationModel(data)
              kayaser.save().then(response=>{
@@ -1761,6 +1808,18 @@ if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
   
 })
 
+app.post('/submitPubarticleOpinion/:id',bodyParser.json(),(req,res)=>{
+
+db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$push:{pubArticleOpinions:req.body}}).then(resp=>{
+    if(resp.modifiedCount==1){
+        res.send({success:1})
+    }else{
+        res.send({success:0})
+    }
+    
+})
+
+})
 app.post('/collection_kayasers_registerToHookup',(req,res)=>{
   
    
@@ -1821,6 +1880,30 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
 
 })
 
+app.post('/collection_kayasers_registerFree',bodyParser.json(),(req,res)=>{
+  
+   
+   
+try{
+
+    //Register because kayaser is absent
+
+    
+    
+ registrationModel({name:req.body.name,stdNo:req.body.stdNo,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
+ .save().then(resp=>{
+    res.send(resp)
+    console.log(resp.contact+" has registered as a Kayaser")})
+
+
+} catch(error){
+res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
+console.log("error is result from entering a wrong student number format by "+fields.contact)
+}
+
+
+
+})
 
 
      app.post('/collection_kayasers_register',(req,res)=>{
@@ -1882,6 +1965,8 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
       
     })
 
+
+    
  app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
  
     const secretHash = '1962';
