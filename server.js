@@ -8,7 +8,6 @@ const sgMail=require("@sendgrid/mail")
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const { ReturnDocument } = require('mongodb')
 const bodyParser=require('body-parser')
-
 const {google}=require('googleapis')
 const nodemailer=require('nodemailer')
 const oAuth2Client= new google.auth.OAuth2(process.env.mailerId,process.env.mailerSecret,process.env.redirectURI)
@@ -36,7 +35,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
    
   
-//SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
+SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
    
     
 }))
@@ -120,8 +119,8 @@ async function inCollection(collection,arrayList){
                     user:'kayasforyou@gmail.com',
                     clientId:process.env.mailerId,
                     clientSecret:process.env.mailerSecret,
-                    refreshToken:"1//04ZKMNWYbMZ8BCgYIARAAGAQSNwF-L9IrtW74cv-5Hvv4S7KJSkp5Kl1husthEXAemzW0Pzcjc_mC0FnDuCice5udbbW3MWLf4ys",
-                    accessToken:"ya29.a0AX9GBdUwNme7N-wYcIlkBa-Rh_V9WMYFE8-wxharSAVEaFvgAMLNGGxyUsV55bko4E9vCfU7noQOaiFhta5TQhtPng5gX4Ru9_0QhubD8XGHt9kZNHUv0wnJT5vgpdm1EJf-lqG5prBiJrIitpjnILI4RcYPaCgYKAegSARISFQHUCsbCzYlHjJgWxHI6gb1kWcKWcg0163"
+                    refreshToken:"1//04bizyJTRIjBcCgYIARAAGAQSNwF-L9IrRVTQQeHW76JFjg86jCyLQKqyybsDmKIUT7K1ZjnplGs48pI-kPF36uKGzdGbxTpwDS4",
+                    accessToken:"ya29.a0AX9GBdXQxcdMfGToDNZ43BvX9svoov4Wy75Lw0IWiTmgYTyrC5xVq--wfcitcuqsJg0j_nTILfOxQlx26j6jBPg3yYU6n5A-S9NLrvyFivhPxHaJ_Nvb4qih4JPzjkprLCcBRwaEOBxRsp8cOd848_NDetEnaCgYKASgSARISFQHUCsbCYjaxjnmoeJw9vV_tbrFIJQ0163"
                     
                     
                     },
@@ -1816,7 +1815,25 @@ db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$push:{pubA
     }else{
         res.send({success:0})
     }
-    
+   
+    try{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(articleDocArray=>{
+        if(articleDocArray.length==0){;}else{
+     
+         inCollection('kayasers',[parseInt(articleDocArray[0].contact)]).then(resp=>{
+             if(resp==true){
+                 db.collection('kayasers').find({contact:parseInt(articleDocArray[0].contact)}).toArray().then(kayasDocArray=>{
+                     let receipients=[kayasDocArray[0].email,"onongeisaac@gmail.com"]
+                     SendMail("Comment on your Kayas article",receipients,`A student has just commented on your article "${articleDocArray[0].headline1}". Please follow this link below to go and see the comment. https://kayas-mak.herokuapp.com/pages/pubarticles/article/${articleDocArray[0].id}`)
+                 })
+             }else{;}
+         })
+        }
+     })}catch(err){
+console.log("Kayas the error originated from trying to send an email to the article author because a student has commented on the article and it is:")
+console.log(err)
+
+     }
+
 })
 
 })
