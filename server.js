@@ -542,7 +542,7 @@ do{if(articleIds.find(docId=>{
 }}
 while(searchAgain==1)
 
-try{pubArticleModel({id:parseInt(newId),headline1:req.body.headline1,author:req.body.author,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
+try{pubArticleModel({id:parseInt(newId),headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
 .save().then((resp)=>{
     
     console.log(`${resp.author} has created an article with ID: ${resp.id}`)
@@ -1910,8 +1910,8 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
 })
 
 app.post('/collection_kayasers_registerFree',bodyParser.json(),(req,res)=>{
+  console.log(req.body)
   
-   
    
 try{
 
@@ -1919,7 +1919,7 @@ try{
 
     
     
- registrationModel({name:req.body.name,stdNo:req.body.stdNo,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
+ registrationModel({name:req.body.name,institution:req.body.institution,stdNo:req.body.stdNo,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
  .save().then(resp=>{
     res.send(resp)
     console.log(resp.contact+" has registered as a Kayaser")})
