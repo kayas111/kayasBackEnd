@@ -247,12 +247,15 @@ app.get('/getAllArticles', (req,res)=>{db.collection('pubarticles').find().toArr
 app.get('/opinions/:client', (req,res)=>{db.collection(req.params.client).find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/pubarticle/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{res.send(array)})}) 
 app.get('/pubarticleopinions/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
-    if(array[0]==undefined){
-    console.log("Accessing an article that is absent")
+   try{ if(array[0]==undefined){
+    console.log(`A user tried to see comments of public article ${req.params.id} that is absent`)
     }else{
         res.send(array[0].pubArticleOpinions)
     }
-    
+    }catch(err){
+    console.log("Kayas, the error originated from a user viewing public article opinions of an article that is not present and the error is:")
+    console.log(err)
+   }
 
 
 })}) 
@@ -1822,10 +1825,12 @@ if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
 app.post('/submitPubarticleOpinion/:id',bodyParser.json(),(req,res)=>{
 
 db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$push:{pubArticleOpinions:req.body}}).then(resp=>{
+   
     if(resp.modifiedCount==1){
         res.send({success:1})
     }else{
-        res.send({success:0})
+        console.log(`${req.body.contact} has tried to submit an opinion to a public article ${req.params.id} that is not present`)
+       ;// res.send({success:0})
     }
    
     try{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(articleDocArray=>{
