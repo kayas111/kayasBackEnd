@@ -52,7 +52,8 @@ const commentsSchema=new Func({
 
 let commentsModel=mongoose.model('comments',commentsSchema);
 
-
+const opinionSchema=new mongoose.Schema({id:{type:String,required:true},opinions:{type:[],required:true}},{strict:false})
+let opinionModel=mongoose.model('clientopinions',opinionSchema)
 
 const recommendationSchema=new Func({
    
@@ -222,7 +223,8 @@ const pubArticleSchema=new Func({
         }
 },{timestamps:true,strict:false})
 let pubArticleModel=mongoose.model('pubarticles',pubArticleSchema)
-
+const monitoredOpinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number,clientId:String},{strict:false})
+let monitoredOpinionsModel=mongoose.model('monitoredopinions',monitoredOpinionSchema)
 
 module.exports.pubArticleModel=pubArticleModel
 module.exports.groupLinkModel=groupLinkModel
@@ -230,13 +232,14 @@ module.exports.recommendation=recommendationModel
 module.exports.bid=bidsModel
 module.exports.requests=requestsModel
 module.exports.campus=campusModel
-
+module.exports.opinionModel=opinionModel
 module.exports.comments=commentsModel
 module.exports.registration=registrationModel
 module.exports.pendingRegistration=pendingRegistrationModel
 module.exports.quotes=quotesModel
 module.exports.trader=tradingRegistrationModel
 module.exports.hookup=hookupModel
+module.exports.monitoredOpinionsModel=monitoredOpinionsModel
 
 
 

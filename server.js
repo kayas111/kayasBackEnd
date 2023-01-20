@@ -42,14 +42,16 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
 
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
-let opinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number},{strict:false})
-let monitoredOpinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number,clientCollection:String},{strict:false})
+
+
 
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/models').comments;
 const quotesModel = require('./models/models').quotes;
+const opinionModel = require('./models/models').opinionModel;
 const hookupModel = require('./models/models').hookup;
 const pubArticleModel=require('./models/models').pubArticleModel;
+const monitoredOpinionsModel=require('./models/models').monitoredOpinionsModel;
 const groupLinkModel = require('./models/models').groupLinkModel;
 const traderModel = require('./models/models').trader;
 const recommendationModel = require('./models/models').recommendation;
@@ -226,7 +228,7 @@ app.get('/collection_controls_visits', (req,res)=>{
     app.get('/collections_opinionpolls_cand4', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:4}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand5', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:5}).toArray().then((array)=>{res.send(array)})}) 
 
-app.get('/filter_opinions/:collection', (req,res)=>{db.collection(req.params.collection).find().toArray().then((array)=>{res.send(array)})}) 
+
 app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
@@ -244,7 +246,16 @@ app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_whatsappgrouplinks_links', (req,res)=>{db.collection('whatsappgrouplinks').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/getAllArticles', (req,res)=>{db.collection('pubarticles').find().toArray().then((array)=>{array.reverse(); res.send(array)})}) 
-app.get('/opinions/:client', (req,res)=>{db.collection(req.params.client).find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/opinions/:client', (req,res)=>{db.collection('clientopinions').find({id:req.params.client}).toArray().then((clientDocArray)=>{
+    if(clientDocArray[0]==undefined){
+        res.send([])
+    }else{
+        
+        res.send(clientDocArray[0].opinions)
+    }
+    
+    
+})}) 
 app.get('/pubarticle/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{res.send(array)})}) 
 app.get('/pubarticleopinions/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
    try{ if(array[0]==undefined){
@@ -558,21 +569,29 @@ try{pubArticleModel({id:parseInt(newId),headline1:req.body.headline1,author:req.
                 })
 
             })
-app.post('/delete_client_opinion',bodyParser.urlencoded({extended:false}),(req,res)=>{
-   
-    db.collection(req.body.collection).deleteMany({_id:ObjectId(req.body.documentID)}).then(resp=>{
-       
-        db.collection('monitoredopinions').deleteMany({_id:ObjectId(req.body.documentID),clientCollection:req.body.collection}).then(resp=>{
-           res.redirect('/pages/admin/clientsmonitor')
-        })
-    })
-   
-    
-    
-})
+
 
 
 //posts to the database
+app.post('/deleteClientOpinions',bodyParser.json(),(req,res)=>{
+
+  
+    db.collection('clientopinions').find({id:req.body.clientId}).toArray().then((array)=>{
+    if(array[0]==undefined){
+       
+      res.send({presence:0})  
+    }else{
+        db.collection('clientopinions').deleteOne({id:req.body.clientId}).then(resp=>{
+            res.send({presence:1}) 
+            db.collection('monitoredopinions').deleteMany({clientId:req.body.clientId}).then(resp=>{;})
+            })
+       
+    }
+   })
+
+}) 
+
+
 app.post('/getMyArticles',bodyParser.json(),(req,res)=>{
       
     db.collection('pubarticles').find({contact:parseInt(req.body.contact)}).toArray().then((array)=>{ 
@@ -911,7 +930,7 @@ res.redirect(`/pages/politics/opinionpolls`)
 
 
 })
-app.post('/pages/trading/:client',(req,res)=>{
+app.post('/pages/tradingd/:client',(req,res)=>{
   
 
     var form = new formidable.IncomingForm();
@@ -1008,31 +1027,42 @@ SendMail("You have just received on your w....",req.body,"A comment has been rec
 })
 
 app.post('/pages/opinions/:client',bodyParser.json(),(req,res)=>{
-  
-  
-        let Opinion=mongoose.model(req.params.client,opinionSchema)
-        let MonitoredOpinion=mongoose.model('monitoredopinions',monitoredOpinionSchema)
-        
-try{
 
-    Opinion({name:req.body.name,msg:req.body.msg,contact:parseInt(req.body.contact)}).save().then(resp=>{
-   
-        console.log("client opinion saved")
-        MonitoredOpinion({_id:resp._id,name:req.body.name, msg:req.body.msg,contact:parseInt(req.body.contact),clientCollection:req.params.client}).save().then(resp=>{
-            console.log("monitored opinion saved")
-           
-            
-        })
+   function CopyToMonitoredOpinions(){
+db.collection('clientopinions').find({id:req.params.client}).toArray().then(clientOpinionDocArray=>{
+  
+
+    monitoredOpinionsModel({clientId:req.params.client,name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg,arrayPosition:clientOpinionDocArray[0].opinions.length-1}).save().then(resp=>{
+       ;
     })
-    res.send("successfull")
+})
+    
+    
+    return 1
+   }
+    
+
+
+ db.collection('clientopinions').find({id:req.params.client}).toArray().then(clientOpinionDocArray=>{
+
+if(clientOpinionDocArray.length==0){
+ 
+ opinionModel({id:req.params.client,opinions:[{name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}]}).save().then(resp=>{
+
+    res.send("succesful")
+    CopyToMonitoredOpinions()
+ })
+}else{
+    
+    db.collection('clientopinions').updateOne({id:req.params.client},{$push:{opinions:{name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}}}).then(resp=>{
+        res.send("succesful")
+        CopyToMonitoredOpinions()
+    })
+    
+}
+  })
   
-
-}
-catch(err){
-    console.log("kayas, the error oriiginated from posting a client opinion and it is here:")
-    console.log(err)
-}
-
+        
 
    
 
