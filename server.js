@@ -56,7 +56,7 @@ const groupLinkModel = require('./models/models').groupLinkModel;
 const traderModel = require('./models/models').trader;
 const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
-
+const messagerModel = require('./models/models').messagerModel;
 
 const CommentModel = require('./models/models').comments;
 const CampusModel = require('./models/models').campus;
@@ -227,6 +227,7 @@ app.get('/collection_controls_visits', (req,res)=>{
     app.get('/collections_opinionpolls_cand3', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:3}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand4', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:4}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand5', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:5}).toArray().then((array)=>{res.send(array)})}) 
+    app.get('/messagees', (req,res)=>{db.collection('messagees').find().toArray().then((array)=>{res.send(array)})}) 
 
 
 app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
@@ -573,6 +574,20 @@ try{pubArticleModel({id:parseInt(newId),headline1:req.body.headline1,author:req.
 
 
 //posts to the database
+app.post('/addToMessagingQueue',bodyParser.json(),(req,res)=>{
+ 
+    db.collection('messagees').find({contact:parseInt(req.body.contact)}).toArray().then(messageeDocArray=>{
+if(messageeDocArray.length==0){
+messagerModel({contact:parseInt(req.body.contact)}).save().then(resp=>{
+    res.send({presence:0})
+    
+})
+}else{
+   res.send({presence:1})
+}
+    })
+
+})
 app.post('/deleteClientOpinions',bodyParser.json(),(req,res)=>{
 
   
