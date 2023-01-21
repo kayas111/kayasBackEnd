@@ -580,7 +580,6 @@ app.post('/deleteMessageesList',bodyParser.json(),(req,res)=>{
             res.send({category:1}) 
          })
     }else{
-
 try{db.collection('multidocs').find({desc:req.body.categoryId}).toArray().then(resp=>{
     if(resp.length==0){
      res.send({category:0})
