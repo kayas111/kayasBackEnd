@@ -590,6 +590,7 @@ try{db.collection('multidocs').find({desc:req.body.categoryId}).toArray().then(r
  }else{ 
     db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:[]}}).then(statusresp=>{
        res.send({category:1}) 
+       
     })
      let currentMessagees=docArray[0].messagees
      currentMessagees.forEach(caseMessagee=>{
