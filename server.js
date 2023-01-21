@@ -33,7 +33,6 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-   
   
 //SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
    
@@ -227,7 +226,7 @@ app.get('/collection_controls_visits', (req,res)=>{
     app.get('/collections_opinionpolls_cand3', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:3}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand4', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:4}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand5', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:5}).toArray().then((array)=>{res.send(array)})}) 
-    app.get('/messagees', (req,res)=>{db.collection('messagees').find().toArray().then((array)=>{res.send(array)})}) 
+    app.get('/messagees', (req,res)=>{db.collection('multidocs').find({desc:"messagees"}).toArray().then((array)=>{res.send(array[0].messagees)})}) 
 
 
 app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
@@ -574,18 +573,87 @@ try{pubArticleModel({id:parseInt(newId),headline1:req.body.headline1,author:req.
 
 
 //posts to the database
-app.post('/addToMessagingQueue',bodyParser.json(),(req,res)=>{
- 
-    db.collection('messagees').find({contact:parseInt(req.body.contact)}).toArray().then(messageeDocArray=>{
-if(messageeDocArray.length==0){
-messagerModel({contact:parseInt(req.body.contact)}).save().then(resp=>{
-    res.send({presence:0})
-    
-})
-}else{
-   res.send({presence:1})
-}
+app.post('/deleteMessageesList',bodyParser.json(),(req,res)=>{
+
+    if(req.body.categoryId=='none'){
+        db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:[]}}).then(statusresp=>{
+            res.send({category:1}) 
+         })
+    }else{
+
+
+try{db.collection('multidocs').find({desc:req.body.categoryId}).toArray().then(resp=>{
+    if(resp.length==0){
+     res.send({category:0})
+    }else{
+     db.collection('multidocs').find({desc:'messagees'}).toArray().then(docArray=>{
+ if(docArray[0].messagees.length==0){
+     ;
+ }else{ 
+    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:[]}}).then(statusresp=>{
+       res.send({category:1}) 
     })
+     let currentMessagees=docArray[0].messagees
+     currentMessagees.forEach(caseMessagee=>{
+    if( resp[0].messagees.find(messagee=>{
+ return messagee==caseMessagee
+     })==undefined){
+db.collection('multidocs').updateOne({desc:req.body.categoryId},{$push:{messagees:caseMessagee}}).then(resp=>{
+;
+})
+     }else{
+;
+     }
+
+ })
+
+ }
+     })
+     
+ 
+    }
+ })
+ }catch(err){
+    console.log("kayas, the error originated from attempting to top up to an institutional contacts category and it is:")
+    console.log(err)
+ }
+
+
+    }
+
+ 
+})
+app.post('/removeMessagee',bodyParser.json(),(req,res)=>{
+  
+  db.collection('multidocs').updateOne({desc:'messagees'},{$pull:{messagees:parseInt(req.body.contact)}}).then(resp=>{
+       if(resp.modifiedCount==1){
+        res.send({presence:1})
+       }else{res.send({presence:0})}
+        
+    })
+})
+app.post('/addToMessagingQueue',bodyParser.json(),(req,res)=>{
+  
+db.collection('multidocs').find({desc:'institutionalContacts'}).toArray().then(docArray=>{
+
+  db.collection('multidocs').find({desc:'messagees'}).toArray().then(docArray=>{
+       if(docArray[0].messagees.find(messagee=>{
+            return messagee==parseInt(req.body.contact)
+        })==undefined){
+         
+ db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:parseInt(req.body.contact)}}).then(resp=>{
+        res.send({presence:0})
+        
+    })
+ 
+        }else{
+            res.send({presence:1})
+        }
+    })
+   
+
+
+})
 
 })
 app.post('/deleteClientOpinions',bodyParser.json(),(req,res)=>{
