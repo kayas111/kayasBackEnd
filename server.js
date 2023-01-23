@@ -2,8 +2,6 @@ const path=require('path')
 require('dotenv').config()
 const express=require('express')
 const app=express()
-
-
 const sgMail=require("@sendgrid/mail")
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const { ReturnDocument } = require('mongodb')
