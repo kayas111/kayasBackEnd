@@ -532,45 +532,47 @@ children.push("<span style='color:red;'>"+child+"-Not Registered</span>")
             })
             
 
+
+ 
+//posts to the database
+
+
 app.post('/createArticle',bodyParser.json(),(req,res)=>{
                
-                db.collection('pubarticles').find().toArray().then((articlesArray)=>{
-                   
-                    let articleIds=[]
+    db.collection('pubarticles').find().toArray().then((articlesArray)=>{
+       
+        let articleIds=[]
 articlesArray.forEach(articleDoc=>{
-    articleIds.push(articleDoc.id)
+articleIds.push(articleDoc.id)
 })
 newId=0,searchAgain=1
 
 do{if(articleIds.find(docId=>{
-    return docId==newId
+return docId==newId
 })==undefined){
-   
-    searchAgain=0
+
+searchAgain=0
 }else{
-    newId+=1
-    searchAgain=1
+newId+=1
+searchAgain=1
 
 }}
 while(searchAgain==1)
 
 try{pubArticleModel({id:parseInt(newId),headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
 .save().then((resp)=>{
-    
-    console.log(`${resp.author} has created an article with ID: ${resp.id}`)
-    res.send({msg:"Article created",id:resp.id,headline1:resp.headline1})
+
+console.log(`${resp.author} has created an article with ID: ${resp.id}`)
+res.send({msg:"Article created",id:resp.id,headline1:resp.headline1})
 })
 }catch(err){
-    console.log("Kayas the error originated from trying to create an article and it is:")
-    console.log(err)
+console.log("Kayas the error originated from trying to create an article and it is:")
+console.log(err)
 }
-                })
+    })
 
-            })
+})
 
-
-
-//posts to the database
 app.post('/deleteMessageesList',bodyParser.json(),(req,res)=>{
 
     if(req.body.categoryId=='none'){
@@ -630,6 +632,27 @@ app.post('/removeMessagee',bodyParser.json(),(req,res)=>{
         
     })
 })
+app.post('/addToMessagingQueueThroughAdmin',bodyParser.json(),(req,res)=>{
+    let errorMessagees=[]
+req.body.forEach(messagee=>{
+        if(messagee<700000000||messagee>799999999){
+          errorMessagees.push(messagee)
+        }else{
+           ;
+        }
+    })
+if(errorMessagees.length==0){
+   
+    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:req.body}}).then(resp=>{
+        res.send({statusOk:1})
+        
+    })
+    
+}else{
+   res.send({statusOk:0,messagees:errorMessagees})
+}
+    
+                })
 app.post('/addToMessagingQueue',bodyParser.json(),(req,res)=>{
   
 db.collection('multidocs').find({desc:'institutionalContacts'}).toArray().then(docArray=>{
@@ -649,8 +672,6 @@ db.collection('multidocs').find({desc:'institutionalContacts'}).toArray().then(d
         }
     })
    
-
-
 })
 
 })
