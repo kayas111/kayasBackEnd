@@ -49,12 +49,12 @@ const opinionModel = require('./models/models').opinionModel;
 const hookupModel = require('./models/models').hookup;
 const pubArticleModel=require('./models/models').pubArticleModel;
 const monitoredOpinionsModel=require('./models/models').monitoredOpinionsModel;
+
 const groupLinkModel = require('./models/models').groupLinkModel;
 const traderModel = require('./models/models').trader;
 const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
 const messagerModel = require('./models/models').messagerModel;
-
 const CommentModel = require('./models/models').comments;
 const CampusModel = require('./models/models').campus;
 const bidsModel = require('./models/models').bid;
@@ -237,7 +237,7 @@ app.get('/collection_orders_orders', (req,res)=>{db.collection('orders').find().
 app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_monitoredopinions_number', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_monitoredopinions_opinions', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
-
+app.get('/collection_multidocs_monitoredArticleOpinions', (req,res)=>{db.collection('multidocs').find({desc:'monitoredArticleOpinions'}).toArray().then((array)=>{res.send(array[0].opinions)})})
 
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})})  
 app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
@@ -1934,11 +1934,17 @@ if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
 })
 
 app.post('/submitPubarticleOpinion/:id',bodyParser.json(),(req,res)=>{
-
+   
+   
 db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$push:{pubArticleOpinions:req.body}}).then(resp=>{
    
     if(resp.modifiedCount==1){
         res.send({success:1})
+        db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(articleDocArray=>{
+
+            db.collection('multidocs').updateOne({desc:'monitoredArticleOpinions'},{$push:{opinions:{articleId:articleDocArray[0].id,headline1:articleDocArray[0].headline1,author:articleDocArray[0].author,authorContact:articleDocArray[0].contact,name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}}})
+                })
+       
     }else{
         console.log(`${req.body.contact} has tried to submit an opinion to a public article ${req.params.id} that is not present`)
        ;// res.send({success:0})
