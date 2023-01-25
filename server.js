@@ -642,11 +642,14 @@ req.body.forEach(messagee=>{
         }
     })
 if(errorMessagees.length==0){
-   
-    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:req.body}}).then(resp=>{
-        res.send({statusOk:1})
+    req.body.forEach(messagee=>{
+    
+    db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{
+       
         
+    })  
     })
+    res.send({statusOk:1})
     
 }else{
    res.send({statusOk:0,messagees:errorMessagees})
