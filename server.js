@@ -10,24 +10,14 @@ const {google}=require('googleapis')
 const nodemailer=require('nodemailer')
 const oAuth2Client= new google.auth.OAuth2(process.env.mailerId,process.env.mailerSecret,process.env.redirectURI)
 oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
-
 const Flutterwave=require('flutterwave-node-v3')
 const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey);
-
-
 const emailValidator = require('deep-email-validator');
-
-
 const mongoose=require('mongoose')
 const bcrypt=require('bcrypt')
-
 var formidable = require('formidable');
-
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
 const port=process.env.PORT || 4000
-
-
-
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
@@ -996,12 +986,7 @@ res.redirect(`/pages/politics/opinionpolls`)
     
     
     
-    
-    
-    
     })
-
-
 
 
 }catch(error){
@@ -1014,10 +999,6 @@ res.redirect(`/pages/politics/opinionpolls`)
                     })
 
 
-
-
-                    
-
                     
                 }else{//user is not registered
 
@@ -1027,11 +1008,6 @@ res.redirect(`/pages/politics/opinionpolls`)
 
 
         })
-
-
-
-
-
 
 
 })
