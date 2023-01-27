@@ -341,7 +341,8 @@ if(recommendation.length!=1){
 res.send(["You don't have a child. Please get child first in order to see your details"])
 
 }
-     else{                 
+     else{  
+                       
 try{
   //looking for parent
 
