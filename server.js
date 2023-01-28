@@ -346,8 +346,6 @@ res.send(["You don't have a child. Please get child first in order to see your d
         try{
   //looking for parent
 
-
-  
     db.collection('recommendations').find().toArray().then((array)=>{
 
         let presence=0,parent="You have no parent"    
