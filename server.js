@@ -342,7 +342,8 @@ res.send(["You don't have a child. Please get child first in order to see your d
 
 }
      else{  
-                       
+             
+        
 try{
   //looking for parent
 
