@@ -46,6 +46,8 @@ const recommendationModel = require('./models/models').recommendation;
 const requestsModel = require('./models/models').requests;
 const messagerModel = require('./models/models').messagerModel;
 const CommentModel = require('./models/models').comments;
+
+const articleGrantModel = require('./models/models').articleGrantModel;
 const CampusModel = require('./models/models').campus;
 const bidsModel = require('./models/models').bid;
 const registrationModel = require('./models/models').registration;
@@ -431,9 +433,6 @@ children.push("<span style='color:red;'>"+child+"-Not Registered</span>")
 
             recommendation[0].recommendee.forEach(async (child)=>{
      
-            
-         
-     
      
              await db.collection("kayasers").find({contact:child}).toArray().then((resp)=>{
                  if(resp.length==1){
@@ -526,7 +525,26 @@ children.push("<span style='color:red;'>"+child+"-Not Registered</span>")
 
  
 //posts to the database
+app.post('/perimissionToCreateArticle',bodyParser.json(),(req,res)=>{
 
+    db.collection('articlegrants').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
+    
+        if(docArray.length==0){
+articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:9}).save().then(resp=>{
+    res.send({permission:1})
+})
+        }else{
+if(docArray[0].createTokens<1){
+    res.send({permission:0})
+}else{
+    res.send({permission:1})
+    db.collection('articlegrants').updateOne({contact:parseInt(req.body.contact)},{$set:{createTokens:docArray[0].createTokens-1}})
+}
+
+        }
+    })
+    
+})
 
 app.post('/createArticle',bodyParser.json(),(req,res)=>{
                

@@ -225,10 +225,10 @@ const pubArticleSchema=new Func({
 let pubArticleModel=mongoose.model('pubarticles',pubArticleSchema)
 const monitoredOpinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number,clientId:String},{strict:false})
 let monitoredOpinionsModel=mongoose.model('monitoredopinions',monitoredOpinionSchema)
-
+let articleGrantModel=mongoose.model('articlegrants',new mongoose.Schema({name:String},{strict:false}))
 const messagerSchema=new mongoose.Schema({contact:Number},{strict:false})
 let messagerModel=mongoose.model('messagees',messagerSchema)
-
+module.exports.articleGrantModel=articleGrantModel
 module.exports.messagerModel=messagerModel
 module.exports.pubArticleModel=pubArticleModel
 module.exports.groupLinkModel=groupLinkModel
