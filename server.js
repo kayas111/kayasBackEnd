@@ -504,33 +504,63 @@ children.push("<span style='color:red;'>"+child+"-Not Registered</span>")
             
             
             })
-            
-              
-                           
+                       
                         }
                         else{
                            console.log("Attempt to view family details when not registered")
                             res.send(["Your Not Registered"])
-                        
-                        
+                                                
                         }
                      })
-            
-            
-                    
+             
             
             })
             
 
-
+app.get('/fetchArticle/:id',(req,res)=>{
+   db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(docArray=>{
+    if(docArray.length==0){
+        res.send({presence:0})
+    }else{
+        res.send({presence:1,article:docArray[0]})
+    }
+    
+   })
+})
  
 //posts to the database
+app.post('/perimissionToEditArticle',bodyParser.json(),(req,res)=>{
+    
+    try{db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(docArray=>{
+     if(docArray[0].editTokens<1){
+res.send({permission:0})
+      }else{
+db.collection('pubarticles').updateOne({id:req.body.articleId,contact:req.body.contact},{$set:{headline1:req.body.headline1,body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}]}}).then(resp=>{
+  db.collection('articlegrants').updateOne({contact:req.body.contact},{$set:{editTokens:docArray[0].editTokens-1}}).then(resp=>{
+        res.send({permission:1})
+        })
+
+
+})
+
+       
+      }
+           
+    }
+    
+    )}catch(err){
+        console.log("Kayas, the error originated from trying to edit an article and it is:")
+        console.log(err)
+    }
+    
+})
+
 app.post('/perimissionToCreateArticle',bodyParser.json(),(req,res)=>{
 
     db.collection('articlegrants').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
     
         if(docArray.length==0){
-articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:9}).save().then(resp=>{
+articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:9,editTokens:10}).save().then(resp=>{
     res.send({permission:1})
 })
         }else{
