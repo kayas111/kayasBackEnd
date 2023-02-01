@@ -746,6 +746,7 @@ app.post('/getMyArticles',bodyParser.json(),(req,res)=>{
 app.post('/verifyUser',bodyParser.json(), (req,res)=>{
     
     db.collection('kayasers').find({contact:parseInt(req.body.contact)}).toArray().then((docArray)=>{
+       
       if(docArray.length==0){
 res.send({registered:false})
 
