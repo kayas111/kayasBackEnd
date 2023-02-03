@@ -736,6 +736,7 @@ app.post('/deleteClientOpinions',bodyParser.json(),(req,res)=>{
 }) 
 
 
+
 app.post('/getMyArticles',bodyParser.json(),(req,res)=>{
       
     db.collection('pubarticles').find({contact:parseInt(req.body.contact)}).toArray().then((array)=>{ 
