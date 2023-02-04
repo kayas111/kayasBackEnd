@@ -545,15 +545,15 @@ app.get('/fetchArticle/:id',(req,res)=>{
 })
  
 //posts to the database
-app.post('/perimissionToEditArticle',bodyParser.json(),(req,res)=>{
-    
+app.post('/permissionToEditArticle',bodyParser.json(),(req,res)=>{
+  
     try{db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(docArray=>{
      if(docArray[0].editTokens<1){
 res.send({permission:0})
       }else{
 db.collection('pubarticles').updateOne({id:req.body.articleId,contact:req.body.contact},{$set:{headline1:req.body.headline1,body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}]}}).then(resp=>{
   db.collection('articlegrants').updateOne({contact:req.body.contact},{$set:{editTokens:docArray[0].editTokens-1}}).then(resp=>{
-        res.send({permission:1})
+  res.send({permission:1})
         })
 
 
