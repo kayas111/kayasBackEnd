@@ -246,7 +246,23 @@ app.get('/opinions/:client', (req,res)=>{db.collection('clientopinions').find({i
     
     
 })}) 
-app.get('/pubarticle/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{res.send(array)})}) 
+app.get('/pubarticle/:id', (req,res)=>{
+    
+    db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
+      
+        db.collection('kayasers').find({contact:array[0].contact}).toArray().then(kayaserDocArray=>{
+            if(kayaserDocArray[0].verified=='true'){
+                array[0].verified='true'
+                res.send(array)
+            }else{
+                res.send(array)
+            }
+          
+        })
+        })
+
+
+}) 
 app.get('/pubarticleopinions/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
    try{ if(array[0]==undefined){
     console.log(`A user tried to see comments of public article ${req.params.id} that is absent`)
