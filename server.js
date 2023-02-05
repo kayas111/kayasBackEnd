@@ -543,8 +543,20 @@ app.get('/fetchArticle/:id',(req,res)=>{
     
    })
 })
- 
+app.get('/messagerIntroStatement',(req,res)=>{
+db.collection('controls').find({_id:ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then(docArray=>{
+    res.send(docArray[0])
+})
+})
+
 //posts to the database
+app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
+   
+    db.collection('controls').updateOne({_id:ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.messagerIntroStatement}}).then(resp=>{
+     res.send({success:1})
+    })
+})
+
 app.post('/permissionToEditArticle',bodyParser.json(),(req,res)=>{
   
     try{db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(docArray=>{
