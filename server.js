@@ -850,112 +850,36 @@ app.post('/link_to_whatsapp_group',(req,res)=>{
     })
 
 })
-app.post('/auth_to_see_hookups',(req,res)=>{
-    var form = new formidable.IncomingForm();
-    form.parse(req, function (err, fields, files){
-inCollection("hookups",[parseInt(fields.contact)]).then(resp=>{
-if(resp==true){
-
-    db.collection("kayasers").find({contact:parseInt(fields.contact)}).toArray().then(kayaser=>{
-
-        if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
-
-            res.redirect(`/pages/hookup/seehookups`)
-
-}
-        
-        else{
-            //incorrect pin
-            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178. <p></p><a href="https://kayas-mak.herokuapp.com/pages/hookup/writeaboutself">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
-
+app.post('/redirectToSeeHookups',bodyParser.json(),(req,res)=>{
+   
+    db.collection('hookups').find({contact:req.body.contact}).toArray().then(resp=>{
+        if(resp.length==0){
+            res.send({described:0})
+        }else{
+            res.send({described:1})
         }
-
-      })
-
-
-
-
-}
-else{
-    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Allowed!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not see hookups because you have not written about yourself. Please, first write about yourself then proceed to see hookups. <p></p><a href="https://kayas-mak.herokuapp.com/pages/hookup/writeaboutself">Write about self</a> <p></p> Thank you for keeping it Kayas</div>')
-
-}
-
-})
-
-
-
-
     })
-
+   
 
 })
 
-app.post('/collection_hookups_writeaboutself',(req,res)=>{
-    var form = new formidable.IncomingForm();
-    form.parse(req, function (err, fields, files){
-inCollection("kayasers",[parseInt(fields.contact)]).then(resp=>{
-    if(resp==true){
-      db.collection("kayasers").find({contact:parseInt(fields.contact)}).toArray().then(kayaser=>{
+app.post('/collection_hookups_writeaboutself',bodyParser.json(),(req,res)=>{
+console.log(req.body)
 
-        if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
-
-          
-inCollection("hookups",[kayaser[0].contact]).then(resp=>{
-
-if(resp==true){
-
-    res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Already described!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You already described yourself before. Proceed to see friends to hookup with.<p></p><a href="https://kayas-mak.herokuapp.com/pages/hookup/seehookups">Proceed to see friends</a> <p></p> Thank you for keeping it Kayas</div>')
-
-}
-else{
-
-try{
- 
-  hookupModel({name:kayaser[0].name,campus:fields.campus,contact:kayaser[0].contact,msg:fields.msg}).save().then(resp=>{
-      console.log(kayaser[0].name+":"+kayaser[0].contact+" has submitted a hookup description")
-  })
-  
-  res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Great!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for submitting your description. You can now proceed to see friends to hookup with.<p></p><a href="https://kayas-mak.herokuapp.com/pages/hookup/seehookups">Proceed to see friends</a> <p></p> Thank you for keeping it Kayas</div>')
- 
-
-}
-catch(err){
-
-console.log("Kayas, the error has originated from saving a hookup description and it is:")
-console.log(err)
-
-}
-
-
-}
-
-
-})    
-
-
-
-}
-        //incorrect pin
-        else{
-            res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178. <p></p><a href="https://kayas-mak.herokuapp.com/pages/hookup/writeaboutself">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
-
-        }
-
-      })
-        
+try{db.collection('hookups').find().toArray().then(docArray=>{
+    if(docArray.find(hookupDesc=>{
+       return hookupDesc.contact==req.body.contact
+    })==undefined){
+        hookupModel({name:req.body.name,campus:req.body.campus,contact:req.body.contact,msg:req.body.msg}).save().then(resp=>{
+            res.send({descriptionPresent:0})
+        })
+    }else{
+res.send({descriptionPresent:1})
     }
-
-    //not registered
-    else{
-        res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not submit your description because you are not registered with Kayas. <br></br>Please register with Kayas in order to submit your description by clicking here:<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <p></p> Thank you for keeping it Kayas</div>') 
-    }
-})
-
-
-
-
-    })
+})}catch(error){
+    console.log("kayas, the error originated from trying to be described for hook ups and it is:")
+    console.log(error)
+}
 
 
 })
