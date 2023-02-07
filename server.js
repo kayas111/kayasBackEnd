@@ -849,8 +849,7 @@ app.post('/link_to_whatsapp_group',(req,res)=>{
     })
 
     
-    
-})
+    })
 app.post('/redirectToSeeHookups',bodyParser.json(),(req,res)=>{
    
     db.collection('hookups').find({contact:req.body.contact}).toArray().then(resp=>{
