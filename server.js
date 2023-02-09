@@ -8,8 +8,8 @@ const { ReturnDocument } = require('mongodb')
 const bodyParser=require('body-parser')
 const {google}=require('googleapis')
 const nodemailer=require('nodemailer')
-const oAuth2Client= new google.auth.OAuth2(process.env.mailerId,process.env.mailerSecret,process.env.redirectURI)
-oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
+//const oAuth2Client= new google.auth.OAuth2(process.env.mailerId,process.env.mailerSecret,process.env.redirectURI)
+//oAuth2Client.setCredentials({refresh_token:process.env.refreshToken})
 const Flutterwave=require('flutterwave-node-v3')
 const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey);
 const emailValidator = require('deep-email-validator');
@@ -98,7 +98,7 @@ async function inCollection(collection,arrayList){
       }
 
            }
-
+/*
  function SendMail(Subject,Receipients,msg){
             oAuth2Client.getAccessToken().then((resp)=>{
              
@@ -132,7 +132,7 @@ async function inCollection(collection,arrayList){
                 
                 
             })
-        }
+        }*/
         
         async function GetAllEmails(collection){
         
@@ -1120,8 +1120,8 @@ inCollection(req.params.client,[parseInt(fields.contact)]).then(resp=>{
 
 
 app.post('/send_opinion_emails/:client/:headline1',bodyParser.json(),(req,res)=>{
-    
-SendMail("You have just received on your w....",req.body,"A comment has been received on your website page: '"+req.params.headline1+"'. See the comment by following or tapping this link: https://kayas-mak.herokuapp.com/pages/opinions/"+req.params.client)
+  ;  
+//SendMail("You have just received on your w....",req.body,"A comment has been received on your website page: '"+req.params.headline1+"'. See the comment by following or tapping this link: https://kayas-mak.herokuapp.com/pages/opinions/"+req.params.client)
 
 })
 
@@ -1433,10 +1433,10 @@ app.post('/broadcastEmail', (req,res)=>{
     form.parse(req, function (err, fields, files){
    
       GetAllEmails("kayasers").then(res=>{
-
+/*
 SendMail(fields.subject,res,fields.msg).then(resp=>{
     console.log("broadcast email sent")
-})
+})*/
 
         })
         
@@ -1975,7 +1975,7 @@ db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$push:{pubA
              if(resp==true){
                  db.collection('kayasers').find({contact:parseInt(articleDocArray[0].contact)}).toArray().then(kayasDocArray=>{
                      let receipients=[kayasDocArray[0].email,"onongeisaac@gmail.com"]
-                     SendMail("Comment on your Kayas article",receipients,`A student has just commented on your article "${articleDocArray[0].headline1}". Please follow this link below to go and see the comment. https://kayas-mak.herokuapp.com/pages/pubarticles/article/${articleDocArray[0].id}`)
+                  //   SendMail("Comment on your Kayas article",receipients,`A student has just commented on your article "${articleDocArray[0].headline1}". Please follow this link below to go and see the comment. https://kayas-mak.herokuapp.com/pages/pubarticles/article/${articleDocArray[0].id}`)
                  })
              }else{;}
          })
