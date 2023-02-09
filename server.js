@@ -709,14 +709,28 @@ req.body.forEach(messagee=>{
         }
     })
 if(errorMessagees.length==0){
-    req.body.forEach(messagee=>{
-    
-    db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{
-       
-        
-    })  
+    db.collection('multidocs').find({desc:'nduContacts'}).toArray().then(resp=>{
+     
+        req.body.forEach(messagee=>{
+if(resp[0].messagees.find(inList=>{
+    return inList==messagee
+})==undefined){console.log("absent")
+ 
+        db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{
+           
+            
+        })  
+
+}else{console.log("present")}
+  
+   
+
+        })
+          res.send({statusOk:1})
+
     })
-    res.send({statusOk:1})
+   
+ 
     
 }else{
    res.send({statusOk:0,messagees:errorMessagees})
