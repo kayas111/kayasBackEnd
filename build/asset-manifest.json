@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.533edd12.chunk.css",
-    "main.js": "/static/js/main.9fad3b45.chunk.js",
-    "main.js.map": "/static/js/main.9fad3b45.chunk.js.map",
+    "main.js": "/static/js/main.aceae6ff.chunk.js",
+    "main.js.map": "/static/js/main.aceae6ff.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.7da7bab1.js",
     "runtime-main.js.map": "/static/js/runtime-main.7da7bab1.js.map",
     "static/js/2.24fa2d79.chunk.js": "/static/js/2.24fa2d79.chunk.js",
@@ -165,6 +165,7 @@
     "static/media/joy.7a6d1226.jpg": "/static/media/joy.7a6d1226.jpg",
     "static/media/kahu.56add7e2.jpg": "/static/media/kahu.56add7e2.jpg",
     "static/media/kahu1.e7a1433a.jpg": "/static/media/kahu1.e7a1433a.jpg",
+    "static/media/kayas.ea71c2ae.jpg": "/static/media/kayas.ea71c2ae.jpg",
     "static/media/ken1.e8a5bf32.jpg": "/static/media/ken1.e8a5bf32.jpg",
     "static/media/kenneth.b1380989.jpg": "/static/media/kenneth.b1380989.jpg",
     "static/media/kicaber.b7085ed4.jpg": "/static/media/kicaber.b7085ed4.jpg",
@@ -299,6 +300,6 @@
     "static/js/runtime-main.7da7bab1.js",
     "static/js/2.24fa2d79.chunk.js",
     "static/css/main.533edd12.chunk.css",
-    "static/js/main.9fad3b45.chunk.js"
+    "static/js/main.aceae6ff.chunk.js"
   ]
 }
