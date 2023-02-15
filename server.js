@@ -21,6 +21,8 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+    
+
   
 //SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
    
@@ -230,7 +232,7 @@ app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find(
 app.get('/collection_monitoredopinions_number', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_monitoredopinions_opinions', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_multidocs_monitoredArticleOpinions', (req,res)=>{db.collection('multidocs').find({desc:'monitoredArticleOpinions'}).toArray().then((array)=>{res.send(array[0].opinions)})})
-
+app.get('/universityContacts', (req,res)=>{ db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts']}}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})})  
 app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
@@ -605,14 +607,16 @@ if(docArray[0].createTokens<1){
 })
 
 app.post('/createArticle',bodyParser.json(),(req,res)=>{
-               
+
+try{   
     db.collection('pubarticles').find().toArray().then((articlesArray)=>{
-       
-        let articleIds=[]
+  let articleIds=[]
+     
 articlesArray.forEach(articleDoc=>{
 articleIds.push(articleDoc.id)
 })
 newId=0,searchAgain=1
+
 
 do{if(articleIds.find(docId=>{
 return docId==newId
@@ -626,17 +630,18 @@ searchAgain=1
 }}
 while(searchAgain==1)
 
-try{pubArticleModel({id:parseInt(newId),headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
-.save().then((resp)=>{
+ pubArticleModel({id:parseInt(newId),headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
+ .save().then((resp)=>{
+ 
+ console.log(`${resp.author} has created an article with ID: ${resp.id}`)
+ res.send({msg:"Article created",id:resp.id,headline1:resp.headline1})
+ })
 
-console.log(`${resp.author} has created an article with ID: ${resp.id}`)
-res.send({msg:"Article created",id:resp.id,headline1:resp.headline1})
-})
-}catch(err){
-console.log("Kayas the error originated from trying to create an article and it is:")
-console.log(err)
-}
     })
+}catch(err){
+    console.log("Kayas the error originated from trying to create an article and it is:")
+    console.log(err)
+    }
 
 })
 
@@ -710,8 +715,7 @@ req.body.forEach(messagee=>{
     })
 if(errorMessagees.length==0){
     db.collection('multidocs').find({desc:'nduContacts'}).toArray().then(resp=>{
-     
-        req.body.forEach(messagee=>{
+      req.body.forEach(messagee=>{
 if(resp[0].messagees.find(inList=>{
     return inList==messagee
 })==undefined){console.log("absent")
@@ -725,7 +729,10 @@ if(resp[0].messagees.find(inList=>{
    
     
     console.log("present")}
-  
+    db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{
+           
+            
+    }) 
   
 
 
