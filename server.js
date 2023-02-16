@@ -559,18 +559,35 @@ app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
 })
 
 app.post('/permissionToEditArticle',bodyParser.json(),(req,res)=>{
-  
+
     try{db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(docArray=>{
      if(docArray[0].editTokens<1){
 res.send({permission:0})
       }else{
-db.collection('pubarticles').updateOne({id:req.body.articleId,contact:req.body.contact},{$set:{headline1:req.body.headline1,body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}]}}).then(resp=>{
-  db.collection('articlegrants').updateOne({contact:req.body.contact},{$set:{editTokens:docArray[0].editTokens-1}}).then(resp=>{
+
+
+
+ pubArticleModel({id:req.body.articleId,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
+ .save().then((resp)=>{
+ 
+ console.log(`${resp.author} has updated an article with ID: ${resp.id}`)
+ 
+db.collection('pubarticles').deleteOne({id:req.body.articleId}).then(resp=>{
+    db.collection('articlegrants').updateOne({contact:req.body.contact},{$set:{editTokens:docArray[0].editTokens-1}}).then(resp=>{
   res.send({permission:1})
-        })
+              })
+})
 
 
 })
+
+
+
+ 
+
+
+
+        
 
        
       }
@@ -728,13 +745,7 @@ if(resp[0].messagees.find(inList=>{
    
     
     console.log("present")}
-    db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{
-           
-            
-    }) 
   
-
-
         })
           res.send({statusOk:1})
 
