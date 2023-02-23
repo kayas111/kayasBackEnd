@@ -1,6 +1,10 @@
 const path=require('path')
 require('dotenv').config()
 const express=require('express')
+const request = require('request')
+const wbm = require('wbm')
+const puppeteer=require('puppeteer')
+const WhatsappAPI = require('whatsapp-business-api')
 const app=express()
 const sgMail=require("@sendgrid/mail")
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -14,6 +18,7 @@ const Flutterwave=require('flutterwave-node-v3')
 const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey);
 const emailValidator = require('deep-email-validator');
 const mongoose=require('mongoose')
+mongoose.set('strictQuery', false)
 const bcrypt=require('bcrypt')
 var formidable = require('formidable');
 const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
@@ -21,7 +26,26 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+   /* db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
+        let send=[]
+        resp[0].messagees.forEach(mes=>{
+            send.push('256'+mes)
+        })
+        console.log(send)
+       
+    wbm.start({qrCodeData:true,sessions:true,showBrowser:true}).then(async (rep)=>{
+
+        await wbm.waitQRCode()
+        await wbm.send(send,'Hello this is Kayas, I wish to request for a moment of your time, is it okay? .k')
+      
     
+    }).catch((err)=>{
+        console.log("kayas the error is:")
+        console.log(err)
+    })
+
+
+    })*/
 
 //SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
    
@@ -200,6 +224,7 @@ app.use(pagesRouter)
 
 
 //access databse by get
+
 app.get('/collection_controls_visits', (req,res)=>{
 
     db.collection('controls').find({"_id":ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((array)=>{
@@ -551,6 +576,14 @@ db.collection('controls').find({_id:ObjectId("630e1d743deb52a6b72e7fc7")}).toArr
 })
 
 //posts to the database
+app.post('/api',bodyParser.json(),(req,res)=>{
+    console.log("generating...")
+  wbm.start().then(async ()=>{
+  
+   
+
+  }).catch(err => console.log(err))
+ })
 app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
    
     db.collection('controls').updateOne({_id:ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.messagerIntroStatement}}).then(resp=>{
