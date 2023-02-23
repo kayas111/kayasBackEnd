@@ -536,14 +536,6 @@ db.collection('controls').find({_id:ObjectId("630e1d743deb52a6b72e7fc7")}).toArr
 
 //posts to the database
 
-app.post('/api',bodyParser.json(),(req,res)=>{
-  console.log("generating...")
-wbm.start().then(async ()=>{
-
- 
-
-}).catch(err => console.log(err))
-})
 app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
  
   db.collection('controls').updateOne({_id:ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.messagerIntroStatement}}).then(resp=>{
