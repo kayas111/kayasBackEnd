@@ -591,7 +591,7 @@ app.post('/perimissionToCreateArticle',bodyParser.json(),(req,res)=>{
   db.collection('articlegrants').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
   
       if(docArray.length==0){
-articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:9,editTokens:10}).save().then(resp=>{
+articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:4,editTokens:10}).save().then(resp=>{
   res.send({permission:1})
 })
       }else{

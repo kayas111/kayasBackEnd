@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.533edd12.chunk.css",
-    "main.js": "/static/js/main.aa612f4e.chunk.js",
-    "main.js.map": "/static/js/main.aa612f4e.chunk.js.map",
+    "main.js": "/static/js/main.cf6c6688.chunk.js",
+    "main.js.map": "/static/js/main.cf6c6688.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.7da7bab1.js",
     "runtime-main.js.map": "/static/js/runtime-main.7da7bab1.js.map",
     "static/js/2.24fa2d79.chunk.js": "/static/js/2.24fa2d79.chunk.js",
@@ -134,7 +134,6 @@
     "static/media/family2.77396a73.jpg": "/static/media/family2.77396a73.jpg",
     "static/media/family3.a379a50c.jpg": "/static/media/family3.a379a50c.jpg",
     "static/media/fan.099460ed.jpg": "/static/media/fan.099460ed.jpg",
-    "static/media/feliznavidad.08111f51.mp3": "/static/media/feliznavidad.08111f51.mp3",
     "static/media/first.d5747302.jpg": "/static/media/first.d5747302.jpg",
     "static/media/goddy3.efbcbdec.jpg": "/static/media/goddy3.efbcbdec.jpg",
     "static/media/holiday.63fbbb47.jpg": "/static/media/holiday.63fbbb47.jpg",
@@ -302,6 +301,6 @@
     "static/js/runtime-main.7da7bab1.js",
     "static/js/2.24fa2d79.chunk.js",
     "static/css/main.533edd12.chunk.css",
-    "static/js/main.aa612f4e.chunk.js"
+    "static/js/main.cf6c6688.chunk.js"
   ]
 }
