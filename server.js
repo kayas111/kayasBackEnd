@@ -53,6 +53,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 }))
 
 
+
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 
 
