@@ -4,7 +4,7 @@ const express=require('express')
 const request = require('request')
 //const wbm = require('wbm')
 //const puppeteer=require('puppeteer')
-const WhatsappAPI = require('whatsapp-business-api')
+//const WhatsappAPI = require('whatsapp-business-api')
 
 const app=express()
 const sgMail=require("@sendgrid/mail")

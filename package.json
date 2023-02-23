@@ -25,8 +25,7 @@
         "mongoose": "^6.10.0",
         "node-fetch": "^2.6.9",
         "nodemailer": "^6.9.1",
-        "wbm": "^1.1.16",
-        "whatsapp-business-api": "0.0.4"
+        "wbm": "^1.1.16"
     },
     "devDependencies": {
         "nodemon": "^2.0.20"
