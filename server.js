@@ -51,25 +51,25 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
-const {db} = require('../server/models/model').comments;
-const quotesModel = require('../server/models/model').quotes;
-const opinionModel = require('../server/models/model').opinionModel;
-const hookupModel = require('../server/models/model').hookup;
-const pubArticleModel=require('../server/models/model').pubArticleModel;
-const monitoredOpinionsModel=require('../server/models/model').monitoredOpinionsModel;
+const {db} = require('./models/model').comments;
+const quotesModel = require('./models/model').quotes;
+const opinionModel = require('./models/model').opinionModel;
+const hookupModel = require('./models/model').hookup;
+const pubArticleModel=require('./models/model').pubArticleModel;
+const monitoredOpinionsModel=require('./models/model').monitoredOpinionsModel;
 
-const groupLinkModel = require('../server/models/model').groupLinkModel;
-const traderModel = require('../server/models/model').trader;
-const recommendationModel = require('../server/models/model').recommendation;
-const requestsModel = require('../server/models/model').requests;
-const messagerModel = require('../server/models/model').messagerModel;
-const CommentModel = require('../server/models/model').comments;
+const groupLinkModel = require('./models/model').groupLinkModel;
+const traderModel = require('./models/model').trader;
+const recommendationModel = require('./models/model').recommendation;
+const requestsModel = require('./models/model').requests;
+const messagerModel = require('./models/model').messagerModel;
+const CommentModel = require('./models/model').comments;
 
-const articleGrantModel = require('../server/models/model').articleGrantModel;
-const CampusModel = require('../server/models/model').campus;
-const bidsModel = require('../server/models/model').bid;
-const registrationModel = require('../server/models/model').registration;
-const pendingRegistrationModel = require('../server/models/model').pendingRegistration;
+const articleGrantModel = require('./models/model').articleGrantModel;
+const CampusModel = require('./models/model').campus;
+const bidsModel = require('./models/model').bid;
+const registrationModel = require('./models/model').registration;
+const pendingRegistrationModel = require('./models/model').pendingRegistration;
 const { ObjectId } = require('mongodb');
 const pagesRouter=require('./routers/pages')
 
