@@ -533,6 +533,7 @@ db.collection('controls').find({_id:ObjectId("630e1d743deb52a6b72e7fc7")}).toArr
 })
 
 
+
 //posts to the database
 
 app.post('/api',bodyParser.json(),(req,res)=>{
