@@ -40,10 +40,20 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     })
 
 
-    })*/
+    })
+
+
+    */
 
 //SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
-   
+  db.collection('clientopinions').find({id:'client405s'}).toArray().then(resp=>{
+    let conts=[]
+   resp[0].opinions.forEach(cont=>{
+    conts.push(cont.contact)
+   })
+
+   console.log(conts)
+  })
     
 }))
 
@@ -184,9 +194,9 @@ app.use(pagesRouter)
 
 app.get('/collection_controls_visits', (req,res)=>{
 
-    db.collection('controls').find({"_id":ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((array)=>{
+    db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((array)=>{
         let no=array[0].noOfVisits+1;
-        db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{noOfVisits:no}})
+        db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{noOfVisits:no}})
     
         res.send(array)
     
@@ -202,8 +212,8 @@ app.get('/collection_controls_visits', (req,res)=>{
     app.get('/messagees', (req,res)=>{db.collection('multidocs').find({desc:"messagees"}).toArray().then((array)=>{res.send(array[0].messagees)})}) 
 
 
-app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
-app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{res.send(array)})})
+app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
+app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_hookups', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
@@ -527,7 +537,7 @@ app.get('/fetchArticle/:id',(req,res)=>{
    })
 })
 app.get('/messagerIntroStatement',(req,res)=>{
-db.collection('controls').find({_id:ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then(docArray=>{
+db.collection('controls').find({_id:new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then(docArray=>{
     res.send(docArray[0])
 })
 })
@@ -538,7 +548,7 @@ db.collection('controls').find({_id:ObjectId("630e1d743deb52a6b72e7fc7")}).toArr
 
 app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
  
-  db.collection('controls').updateOne({_id:ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.messagerIntroStatement}}).then(resp=>{
+  db.collection('controls').updateOne({_id:new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.messagerIntroStatement}}).then(resp=>{
    res.send({success:1})
   })
 })
@@ -1457,7 +1467,7 @@ SendMail(fields.subject,res,fields.msg).then(resp=>{
   
       form.parse(req, function (err, fields, files){
      
-          db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{topPhotoMsg1:fields.topPhotoMsg1,topPhotoMsg2:fields.topPhotoMsg2,topPhotoMsg3:fields.topPhotoMsg3,topPhotoMsg4:fields.topPhotoMsg4,topPhotoMsg5:fields.topPhotoMsg5}})
+          db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{topPhotoMsg1:fields.topPhotoMsg1,topPhotoMsg2:fields.topPhotoMsg2,topPhotoMsg3:fields.topPhotoMsg3,topPhotoMsg4:fields.topPhotoMsg4,topPhotoMsg5:fields.topPhotoMsg5}})
           res.redirect('/pages/admin/controls')
           res.end() 
            })
@@ -1469,7 +1479,7 @@ SendMail(fields.subject,res,fields.msg).then(resp=>{
       
           form.parse(req, function (err, fields, files){
          
-              db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{noOfVisits:parseInt(fields.value)}})
+              db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{noOfVisits:parseInt(fields.value)}})
               res.redirect('/pages/admin/controls')
               res.end() 
                })
@@ -1480,7 +1490,7 @@ SendMail(fields.subject,res,fields.msg).then(resp=>{
           
               form.parse(req, function (err, fields, files){
              
-    db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:fields.adminRegCode}}).then(resp=>{
+    db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:fields.adminRegCode}}).then(resp=>{
       console.log("Admin registration code  reset")
      
     })
@@ -1494,7 +1504,7 @@ app.post('/collection_controls_wish', (req,res)=>{
 
   form.parse(req, function (err, fields, files){
  
-      db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{refName:fields.refName,writersName:fields.writersName,writersMsg:fields.writersMsg}})
+      db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{refName:fields.refName,writersName:fields.writersName,writersMsg:fields.writersMsg}})
       res.redirect('/pages/admin/controls')
       res.end() 
        })
@@ -1509,7 +1519,7 @@ app.post('/collection_controls_kayasurl', (req,res)=>{
 
   form.parse(req, function (err, fields, files){
  
-      db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{kayas:fields.kayas,kayasurl:fields.kayasurl}})
+      db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{kayas:fields.kayas,kayasurl:fields.kayasurl}})
       res.redirect('/pages/admin/controls')
       res.end() 
        })
@@ -1522,7 +1532,7 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
 
   form.parse(req, function (err, fields, files){
  
-      db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{topNavQuote:fields.topNavQuote}})
+      db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{topNavQuote:fields.topNavQuote}})
       res.redirect('/pages/admin/controls')
       res.end() 
        })
@@ -1535,7 +1545,7 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
   
       form.parse(req, function (err, fields, files){
      
-          db.collection('controls').updateOne({"_id":ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{biddingMsg:fields.biddingMsg}})
+          db.collection('controls').updateOne({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{biddingMsg:fields.biddingMsg}})
           res.redirect('/pages/admin/controls')
           res.end() 
            })
@@ -1547,7 +1557,7 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
       
           form.parse(req, function (err, fields, files){
          
-              db.collection('controls').updateOne({"_id":ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{price:fields.price}})
+              db.collection('controls').updateOne({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{price:fields.price}})
               res.redirect('/pages/admin/controls')
               res.end() 
                })
@@ -1558,7 +1568,7 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
           
               form.parse(req, function (err, fields, files){
              
-                  db.collection('controls').updateOne({"_id":ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{biddingHeadline:fields.biddingHeadline}})
+                  db.collection('controls').updateOne({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{biddingHeadline:fields.biddingHeadline}})
                   res.redirect('/pages/admin/controls')
                   res.end() 
                    })
@@ -1570,7 +1580,7 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
   
       form.parse(req, function (err, fields, files){
      
-          db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{topNavQuote2:fields.topNavQuote2}})
+          db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{topNavQuote2:fields.topNavQuote2}})
           res.redirect('/pages/admin/controls')
           res.end() 
            })
@@ -1831,10 +1841,10 @@ db.collection('recommendations').find().toArray().then((array)=>{
   
   if(presence==1){//recommendee present
       //register
-      db.collection('controls').find({"_id":ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
+      db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
 if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
 //update admin registration code then register
-db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
+db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
 
 let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
 
@@ -1868,10 +1878,10 @@ kayaser.save().then(response=>{
                      console.log("Kayas has been added as a recommender with recommendee: "+fields.contact)
                      //all processes proceed from here
                       //register
-      db.collection('controls').find({"_id":ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
+      db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
           if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
            //update admin registration code then register
-           db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
+           db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
           
            let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
           
@@ -1905,10 +1915,10 @@ kayaser.save().then(response=>{
      try{db.collection('recommendations').updateOne({recommender:703852178},{$push:{recommendee:parseInt(fields.contact)}}).then(resp=>{
   //all processes proceed from here
      //register
-     db.collection('controls').find({"_id":ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
+     db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
       if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
        //update admin registration code then register
-       db.collection('controls').updateOne({"_id":ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
+       db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
       
        let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),adminRegCode:fields.adminRegCode,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
       
