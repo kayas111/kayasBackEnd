@@ -46,14 +46,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     */
 
 //SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
-  db.collection('clientopinions').find({id:'client405s'}).toArray().then(resp=>{
-    let conts=[]
-   resp[0].opinions.forEach(cont=>{
-    conts.push(cont.contact)
-   })
-
-   console.log(conts)
-  })
+ 
     
 }))
 
@@ -211,7 +204,7 @@ app.get('/collection_controls_visits', (req,res)=>{
     app.get('/collections_opinionpolls_cand5', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:5}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/messagees', (req,res)=>{db.collection('multidocs').find({desc:"messagees"}).toArray().then((array)=>{res.send(array[0].messagees)})}) 
 
-
+   
 app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
@@ -545,7 +538,14 @@ db.collection('controls').find({_id:new ObjectId("630e1d743deb52a6b72e7fc7")}).t
 
 
 //posts to the database
+app.post('/resetPubArticlesNewCommentsNumb',bodyParser.json(), (req,res)=>{
 
+  console.log(req.body)
+  db.collection('pubarticles').updateOne({id:parseInt(req.body.id)},{$set:{newCommentsNumb:0}}).then(resp=>{
+          
+  })
+
+})
 app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
  
   db.collection('controls').updateOne({_id:new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.messagerIntroStatement}}).then(resp=>{
@@ -1968,16 +1968,32 @@ kayaser.save().then(response=>{
 })
 
 app.post('/submitPubarticleOpinion/:id',bodyParser.json(),(req,res)=>{
- 
- 
-db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$push:{pubArticleOpinions:req.body}}).then(resp=>{
+ db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$push:{pubArticleOpinions:req.body}}).then(resp=>{
  
   if(resp.modifiedCount==1){
       res.send({success:1})
-      db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(articleDocArray=>{
 
+      db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
+        if(resp[0].newCommentsNumb==undefined){
+          db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{newCommentsNumb:1}}).then(resp=>{
+          
+          })
+    
+        }else{
+          db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
+        
+            db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{newCommentsNumb:resp[0].newCommentsNumb+1}})
+    
+          })
+        }
+    
+        db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(articleDocArray=>{
+    
           db.collection('multidocs').updateOne({desc:'monitoredArticleOpinions'},{$push:{opinions:{articleId:articleDocArray[0].id,headline1:articleDocArray[0].headline1,author:articleDocArray[0].author,authorContact:articleDocArray[0].contact,name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}}})
               })
+    
+      })
+    
      
   }else{
       console.log(`${req.body.contact} has tried to submit an opinion to a public article ${req.params.id} that is not present`)
