@@ -619,6 +619,7 @@ if(docArray[0].createTokens<1){
 
 app.post('/createArticle',bodyParser.json(),(req,res)=>{
 
+  
 try{   
   db.collection('pubarticles').find().toArray().then((articlesArray)=>{
 let articleIds=[]
