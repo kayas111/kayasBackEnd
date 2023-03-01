@@ -21,6 +21,9 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+
+    
+   
    /* db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
         let send=[]
         resp[0].messagees.forEach(mes=>{
@@ -619,7 +622,7 @@ if(docArray[0].createTokens<1){
 
 app.post('/createArticle',bodyParser.json(),(req,res)=>{
 
-  
+
 try{   
   db.collection('pubarticles').find().toArray().then((articlesArray)=>{
 let articleIds=[]
@@ -726,8 +729,9 @@ req.body.forEach(messagee=>{
       }
   })
 if(errorMessagees.length==0){
-  db.collection('multidocs').find({desc:'nduContacts'}).toArray().then(resp=>{
-    req.body.forEach(messagee=>{
+  let category='mukContacts';
+  db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
+  req.body.forEach(messagee=>{
 if(resp[0].messagees.find(inList=>{
   return inList==messagee
 })==undefined){console.log("absent")
@@ -738,13 +742,15 @@ if(resp[0].messagees.find(inList=>{
       })  
 
 }else{
- 
-  
+
   console.log("present")}
   
-
+  db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{
+         
+          
+  })  
       })
-        res.send({statusOk:1})
+        res.send({statusOk:1,category:category})
 
   })
  
