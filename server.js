@@ -634,7 +634,6 @@ db.collection('registers').updateOne({contact:req.body.registrarContact,register
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
   try{
 
-
     db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=>{
 
    if(resp.length==0){
