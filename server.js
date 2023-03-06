@@ -24,29 +24,6 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
     
    
-   /* db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
-        let send=[]
-        resp[0].messagees.forEach(mes=>{
-            send.push('256'+mes)
-        })
-        console.log(send)
-       
-    wbm.start({qrCodeData:true,sessions:true,showBrowser:true}).then(async (rep)=>{
-
-        await wbm.waitQRCode()
-        await wbm.send(send,'Hello this is Kayas, I wish to request for a moment of your time, is it okay? .k')
-      
-    
-    }).catch((err)=>{
-        console.log("kayas the error is:")
-        console.log(err)
-    })
-
-
-    })
-
-
-    */
 
 //SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
  
@@ -54,7 +31,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 }))
 
 
-
+let maxAttendeeRegisters=5
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/model').comments;
@@ -62,6 +39,8 @@ const quotesModel = require('./models/model').quotes;
 const opinionModel = require('./models/model').opinionModel;
 const hookupModel = require('./models/model').hookup;
 const pubArticleModel=require('./models/model').pubArticleModel;
+const permissionTokensModel=require('./models/model').permissionTokensModel;
+const registerModel=require('./models/model').registerModel;
 const monitoredOpinionsModel=require('./models/model').monitoredOpinionsModel;
 
 const groupLinkModel = require('./models/model').groupLinkModel;
@@ -187,7 +166,23 @@ app.use(pagesRouter)
 
 
 //access databse by get
+app.get('/attendees/:registrarContact/:id', (req,res)=>{
 
+ try{
+  db.collection('registers').find({contact:parseInt(req.params.registrarContact),registerId:parseInt(req.params.id)}).toArray().then(resp=>{
+    if(resp.length==0){
+      ;
+    }else{
+      res.send(resp[0].attendees)
+    }
+   
+  
+  })
+}catch(err){
+  console.log(err)
+}
+
+})
 app.get('/collection_controls_visits', (req,res)=>{
 
     db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((array)=>{
@@ -206,8 +201,18 @@ app.get('/collection_controls_visits', (req,res)=>{
     app.get('/collections_opinionpolls_cand4', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:4}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand5', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:5}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/messagees', (req,res)=>{db.collection('multidocs').find({desc:"messagees"}).toArray().then((array)=>{res.send(array[0].messagees)})}) 
+    
+app.get('/attendanceregs/:registrar/:id', (req,res)=>{db.collection('registers').find({contact:parseInt(req.params.registrar),registerId:parseInt(req.params.id)}).toArray().then((array)=>{
+  if(array.length==0){
+    res.send({presence:0})
+  }else{ 
+ 
+res.send({name:array[0].name,institution:array[0].institution,registerTitle:array[0].registerTitle,contact:array[0].contact})
+  }
+  
+  
+})})
 
-   
 app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
@@ -219,7 +224,7 @@ app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find(
 app.get('/collection_monitoredopinions_number', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_monitoredopinions_opinions', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_multidocs_monitoredArticleOpinions', (req,res)=>{db.collection('multidocs').find({desc:'monitoredArticleOpinions'}).toArray().then((array)=>{res.send(array[0].opinions)})})
-app.get('/universityContacts', (req,res)=>{ db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts']}}).toArray().then((array)=>{res.send(array)})})
+app.get('/universityContacts', (req,res)=>{ db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts','mubsContacts']}}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})})  
 app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
@@ -541,6 +546,194 @@ db.collection('controls').find({_id:new ObjectId("630e1d743deb52a6b72e7fc7")}).t
 
 
 //posts to the database
+app.post('/removeFromAttendeesRegister',bodyParser.json(),(req,res)=>{
+ 
+  try{
+    db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
+if(resp.length==0){
+  res.send({registerPresent:0})
+}else{
+
+  if(resp[0].attendees.find(attendee=>{return attendee==req.body.contact})==undefined){
+    res.send({attendeeInList:0})
+   }else{
+ 
+   let newAttendees=[]
+resp[0].attendees.forEach(attendee=>{
+  if(attendee==req.body.contact){
+;
+  }else{
+newAttendees.push(attendee)
+  }
+})
+db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{attendees:newAttendees}}).then(resp=>{
+
+  if(resp.modifiedCount==1){
+    res.send({success:1})
+  }else{
+;
+  }
+  
+})
+
+
+   }
+
+
+}
+    
+
+
+    })
+
+
+
+  }catch(err){
+    console.log("kayas the error originated from trying to remove attendees register and it is:")
+    console.log(err)
+  }
+ 
+  })
+
+
+
+
+
+app.post('/addToAttendeesRegister',bodyParser.json(),(req,res)=>{
+try{
+
+db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
+  if(resp.length==0){
+    res.send({registerPresent:0})
+  }else{
+if(resp[0].attendees.find(attendee=>{return attendee==req.body.contact})==undefined){
+db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$push:{attendees:req.body.contact}}).then(resp=>{
+ if(resp.modifiedCount==1){
+  res.send({success:1})
+ }else{
+  res.send({success:'updateDidntTakePlace'})
+ }
+})
+}else{
+  res.send({success:"memberPresent"})
+}
+  }
+})
+
+}catch(err){
+  console.log("kayas the error originated from trying to add to attendees register and it is:")
+  console.log(err)
+}
+
+})
+
+
+
+
+
+app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
+  try{
+
+
+    db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=>{
+
+   if(resp.length==0){
+registerModel({registerId:0,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
+  attendees:[req.body.contact]
+}).save().then(resp=>{
+  res.send({success:1,registerId:0,registerTitle:req.body.registerTitle,contact:req.body.contact})
+})
+
+   }else if(resp.length<maxAttendeeRegisters){
+
+db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=>{
+  let registerIds=[]
+  resp.forEach(register=>{
+    registerIds.push(register.registerId)
+  })
+
+
+  newId=0,searchAgain=1
+  
+  
+  do{if(registerIds.find(registerId=>{
+  return registerId==newId
+  })==undefined){
+  
+  searchAgain=0
+  }else{
+  newId+=1
+  searchAgain=1
+  
+  }}
+  while(searchAgain==1)
+
+  registerModel({registerId:newId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
+    attendees:[req.body.contact]
+  }).save().then(resp=>{res.send({success:1,registerId:newId,registerTitle:req.body.registerTitle,contact:req.body.contact})})
+
+
+
+ })
+
+   }
+else{
+res.send({registerLimitReached:1})
+}
+
+
+    })
+
+
+  }catch(err){
+    console.log("Kayas the error originated from trying to create a Register and it is:")
+    console.log(err)
+    }
+  
+  })
+  
+  app.post('/perimissionToCreateRegister',bodyParser.json(),(req,res)=>{
+function PermissionToCreateAttendanceRegister(){
+  db.collection('permissiontokens').find({contact:req.body.contact}).toArray().then(docArray=>{
+    if(docArray[0].createAttendanceRegister==undefined){
+    
+    db.collection('permissiontokens').updateOne({contact:req.body.contact},{$set:{createAttendanceRegister:5}}).then(resp=>{
+      res.send({permission:1})
+      })
+    }else{
+      db.collection('permissiontokens').find({contact:req.body.contact}).toArray().then(docArray=>{
+        if(docArray[0].createAttendanceRegister<1){
+       
+          res.send({permission:0})
+        }else{
+          res.send({permission:1})
+                       
+        }
+      
+      
+      })
+    }
+    
+    })
+    
+}
+
+db.collection('permissiontokens').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
+  if(docArray.length==0){//not present in the permissiontokens collection
+        
+permissionTokensModel({name:req.body.name,institution:req.body.institution,contact:req.body.contact}).save().then(resp=>{
+  PermissionToCreateAttendanceRegister()
+})
+
+}else{ 
+  PermissionToCreateAttendanceRegister()
+      }
+    })
+    
+  })
+
+
+
 app.post('/resetPubArticlesNewCommentsNumb',bodyParser.json(), (req,res)=>{
 
   console.log(req.body)
@@ -554,6 +747,24 @@ app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
   db.collection('controls').updateOne({_id:new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.messagerIntroStatement}}).then(resp=>{
    res.send({success:1})
   })
+})
+app.post('/editAttendeeRegister',bodyParser.json(),(req,res)=>{
+
+db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
+  if(resp.length==0){
+res.send({registerPresent:0})
+  }else{
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{registerTitle:req.body.registerTitle,attendees:[req.body.registrarContact]}}).then(resp=>{
+      if(resp.modifiedCount==1){
+res.send({success:1})
+      }else{
+        res.send({success:0})
+      }
+    })
+
+  }
+})
+
 })
 
 app.post('/permissionToEditArticle',bodyParser.json(),(req,res)=>{
@@ -579,13 +790,6 @@ res.send({permission:1})
 
 })
 
-
-
-
-
-
-
-      
 
      
     }
@@ -621,8 +825,6 @@ if(docArray[0].createTokens<1){
 })
 
 app.post('/createArticle',bodyParser.json(),(req,res)=>{
-
-
 try{   
   db.collection('pubarticles').find().toArray().then((articlesArray)=>{
 let articleIds=[]
@@ -729,7 +931,7 @@ req.body.forEach(messagee=>{
       }
   })
 if(errorMessagees.length==0){
-  let category='mukContacts';
+  let category='mubsContacts';
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
   req.body.forEach(messagee=>{
 if(resp[0].messagees.find(inList=>{
@@ -743,12 +945,13 @@ if(resp[0].messagees.find(inList=>{
 
 }else{
 
-  console.log("present")}
+  console.log("present")
+
+
   
-  db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{
-         
-          
-  })  
+}
+  
+  
       })
         res.send({statusOk:1,category:category})
 
@@ -801,7 +1004,11 @@ app.post('/deleteClientOpinions',bodyParser.json(),(req,res)=>{
 
 }) 
 
-
+app.post('/getMyRegisters',bodyParser.json(),(req,res)=>{
+   db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=>{
+ res.send(resp)
+ })
+}) 
 
 app.post('/getMyArticles',bodyParser.json(),(req,res)=>{
     
