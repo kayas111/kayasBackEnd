@@ -1939,34 +1939,81 @@ res.redirect('pages/admin/controls')
 
       })
 
-      app.post('/admin_setPin', (req,res)=>{
-
-          var form = new formidable.IncomingForm();
-          form.parse(req, function (err, fields, files){
-
-db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
-
-if(array.length==1){
-
-db.collection('kayasers').updateOne({contact:parseInt(fields.contact)},{$set:{pin:bcrypt.hashSync(fields.pin,10)}})
-res.redirect('pages/admin/controls')
-
-
-}else{
-
-  res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Doesnt exist as a kayaser</div>')
-
+      app.post('/admin_updateDetails',bodyParser.json(),(req,res)=>{
+      try{
+      db.collection('kayasers').find({contact:req.body.contact}).toArray().then(resp=>{
+if(resp.length==0){res.send({presence:0})}else{
+switch(req.body.fieldToUpdate){
+  case 'name':{
+    db.collection('kayasers').updateOne({contact:req.body.contact},{$set:{name:req.body.fieldValue}}).then(resp=>{
+     if(resp.modifiedCount==1){
+        res.send({success:1})
+      }else{
+        res.send({success:0})
+      }
+    })
+    break;
+  }
+  case 'stdNo':{
+    db.collection('kayasers').updateOne({contact:req.body.contact},{$set:{stdNo:parseInt(req.body.fieldValue)}}).then(resp=>{
+     if(resp.modifiedCount==1){
+        res.send({success:1})
+      }else{
+        res.send({success:0})
+      }
+    })
+    break;
+  }
+  case 'email':{
+    db.collection('kayasers').updateOne({contact:req.body.contact},{$set:{email:req.body.fieldValue}}).then(resp=>{
+     if(resp.modifiedCount==1){
+        res.send({success:1})
+      }else{
+        res.send({success:0})
+      }
+    })
+    break;
+  }
+  case 'contact':{
+    db.collection('kayasers').updateOne({contact:req.body.contact},{$set:{contact:parseInt(req.body.fieldValue)}}).then(resp=>{
+     if(resp.modifiedCount==1){
+        res.send({success:1})
+      }else{
+        res.send({success:0})
+      }
+    })
+    break;
+  }
+  case 'pin':{
+    db.collection('kayasers').updateOne({contact:req.body.contact},{$set:{pin:bcrypt.hashSync(req.body.fieldValue,10)}}).then(resp=>{
+     if(resp.modifiedCount==1){
+        res.send({success:1})
+      }else{
+        res.send({success:0})
+      }
+    })
+    break;
+  }
+  case 'institution':{
+    db.collection('kayasers').updateOne({contact:req.body.contact},{$set:{institution:req.body.fieldValue}}).then(resp=>{
+     if(resp.modifiedCount==1){
+        res.send({success:1})
+      }else{
+        res.send({success:0})
+      }
+    })
+    break;
+  }
+  default:{
+    res.send({fieldPresent:0})
+  }
 }
 
-
-
-
-})
-
-
-
-
-          })
+}
+        })
+      }catch(err){
+        console.log(err)
+      }
 
 
       })
