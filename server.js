@@ -1354,8 +1354,7 @@ app.post('/send_opinion_emails/:client/:headline1',bodyParser.json(),(req,res)=>
 })
 
 app.post('/pages/opinions/:client',bodyParser.json(),(req,res)=>{
-
- function CopyToMonitoredOpinions(){
+function CopyToMonitoredOpinions(){
 db.collection('clientopinions').find({id:req.params.client}).toArray().then(clientOpinionDocArray=>{
 
 
