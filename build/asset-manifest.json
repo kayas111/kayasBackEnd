@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.533edd12.chunk.css",
-    "main.js": "/static/js/main.878fcb6e.chunk.js",
-    "main.js.map": "/static/js/main.878fcb6e.chunk.js.map",
+    "main.js": "/static/js/main.9acb7f20.chunk.js",
+    "main.js.map": "/static/js/main.9acb7f20.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.7da7bab1.js",
     "runtime-main.js.map": "/static/js/runtime-main.7da7bab1.js.map",
     "static/js/2.9fdc1e97.chunk.js": "/static/js/2.9fdc1e97.chunk.js",
@@ -119,6 +119,9 @@
     "static/media/client606s.d20f3139.jpg": "/static/media/client606s.d20f3139.jpg",
     "static/media/client6s.7e7faa9a.jpg": "/static/media/client6s.7e7faa9a.jpg",
     "static/media/client7s.4c746c32.jpg": "/static/media/client7s.4c746c32.jpg",
+    "static/media/client8s.dca1180a.jpg": "/static/media/client8s.dca1180a.jpg",
+    "static/media/client8s1.fbf54d3e.jpg": "/static/media/client8s1.fbf54d3e.jpg",
+    "static/media/client8s2.a5866874.jpg": "/static/media/client8s2.a5866874.jpg",
     "static/media/craft1.5ae8733d.jpg": "/static/media/craft1.5ae8733d.jpg",
     "static/media/craft10.2dc8c95c.jpg": "/static/media/craft10.2dc8c95c.jpg",
     "static/media/craft11.851cfaa5.jpg": "/static/media/craft11.851cfaa5.jpg",
@@ -311,6 +314,6 @@
     "static/js/runtime-main.7da7bab1.js",
     "static/js/2.9fdc1e97.chunk.js",
     "static/css/main.533edd12.chunk.css",
-    "static/js/main.878fcb6e.chunk.js"
+    "static/js/main.9acb7f20.chunk.js"
   ]
 }
