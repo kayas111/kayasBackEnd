@@ -243,15 +243,27 @@ app.get('/pubarticle/:id', (req,res)=>{
     
     db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
       
-        db.collection('kayasers').find({contact:array[0].contact}).toArray().then(kayaserDocArray=>{
-            if(kayaserDocArray[0].verified=='true'){
-                array[0].verified='true'
-                res.send(array)
-            }else{
-                res.send(array)
-            }
-          
-        })
+if(array.length==0){
+  res.send(array)
+}else{
+
+  db.collection('kayasers').find({contact:array[0].contact}).toArray().then(kayaserDocArray=>{
+    if(kayaserDocArray[0].verified=='true'){
+        array[0].verified='true'
+        res.send(array)
+    }else{
+        res.send(array)
+    }
+
+  
+})
+
+db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{visits:array[0].visits+1}}).then(resp=>{;})
+
+
+}
+
+       
         })
 
 
@@ -772,9 +784,7 @@ app.post('/permissionToEditArticle',bodyParser.json(),(req,res)=>{
 res.send({permission:0})
     }else{
 
-
-
-pubArticleModel({id:req.body.articleId,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
+pubArticleModel({id:req.body.articleId,visits:0,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
 .save().then((resp)=>{
 
 console.log(`${resp.author} has updated an article with ID: ${resp.id}`)
@@ -798,7 +808,7 @@ res.send({permission:1})
       console.log("Kayas, the error originated from trying to edit an article and it is:")
       console.log(err)
 
-      
+
   }
   
 })
@@ -847,7 +857,7 @@ searchAgain=1
 }}
 while(searchAgain==1)
 
-pubArticleModel({id:parseInt(newId),headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
+pubArticleModel({id:parseInt(newId),visits:0,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
 .save().then((resp)=>{
 
 console.log(`${resp.author} has created an article with ID: ${resp.id}`)
