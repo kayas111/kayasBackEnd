@@ -797,6 +797,8 @@ res.send({permission:1})
   )}catch(err){
       console.log("Kayas, the error originated from trying to edit an article and it is:")
       console.log(err)
+
+      
   }
   
 })
@@ -806,7 +808,7 @@ app.post('/perimissionToCreateArticle',bodyParser.json(),(req,res)=>{
   db.collection('articlegrants').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
   
       if(docArray.length==0){
-articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:3,editTokens:3}).save().then(resp=>{
+articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:6,editTokens:10}).save().then(resp=>{
   res.send({permission:1})
 })
       }else{
