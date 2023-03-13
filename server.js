@@ -1950,7 +1950,7 @@ res.redirect('pages/admin/controls')
       })
 
       app.post('/admin_updateDetails',bodyParser.json(),(req,res)=>{
-      try{
+       try{
       db.collection('kayasers').find({contact:req.body.contact}).toArray().then(resp=>{
 if(resp.length==0){res.send({presence:0})}else{
 switch(req.body.fieldToUpdate){
