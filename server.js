@@ -275,7 +275,9 @@ if(array.length==0){
   
 })
 
-db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{visits:array[0].visits+1}}).then(resp=>{;})
+db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{visits:array[0].visits+1}}).then(resp=>{
+  console.log("viewing Article "+req.params.id+" .......................")
+  ;})
 
 
 }
