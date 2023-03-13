@@ -239,6 +239,23 @@ app.get('/opinions/:client', (req,res)=>{db.collection('clientopinions').find({i
     
     
 })}) 
+app.get('/updateOpinionVisits/:client', (req,res)=>{db.collection('clientopinions').find({id:req.params.client}).toArray().then((clientDocArray)=>{
+
+  if(clientDocArray[0]==undefined){
+    opinionModel({id:req.params.client,opinionVisits:2,opinions:[]}).save().then(resp=>{
+      res.send({visits:1})
+    })
+      
+  }else{
+    db.collection('clientopinions').updateOne({id:req.params.client},{$set:{opinionVisits:clientDocArray[0].opinionVisits+1}}).then(resp=>{
+    console.log("viewing "+req.params.client+" ..........................................")
+      res.send({visits:clientDocArray[0].opinionVisits})
+    })
+    
+  }
+  
+  
+})}) 
 app.get('/pubarticle/:id', (req,res)=>{
     
     db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
@@ -620,7 +637,11 @@ db.collection('registers').find({contact:req.body.registrarContact,registerId:re
 if(resp[0].attendees.find(attendee=>{return attendee==req.body.contact})==undefined){
 db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$push:{attendees:req.body.contact}}).then(resp=>{
  if(resp.modifiedCount==1){
-  res.send({success:1})
+  db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
+  
+    res.send({success:1,attendees:resp[0].attendees})
+  })
+
  }else{
   res.send({success:'updateDidntTakePlace'})
  }
