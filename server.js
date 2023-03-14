@@ -23,7 +23,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
 
 
-//SendMail("Kayas Server launched","onongeisaac@gmail.com","listening on port "+port)
+
  
     
 }))
@@ -40,6 +40,7 @@ const pubArticleModel=require('./models/model').pubArticleModel;
 const permissionTokensModel=require('./models/model').permissionTokensModel;
 const registerModel=require('./models/model').registerModel;
 const monitoredOpinionsModel=require('./models/model').monitoredOpinionsModel;
+const articleAssessmentModel=require('./models/model').articleAssessmentModel;
 
 const groupLinkModel = require('./models/model').groupLinkModel;
 const traderModel = require('./models/model').trader;
@@ -326,8 +327,24 @@ app.get('/collection_requests_number', (req,res)=>{
         app.get('/collection_kayasers_number', (req,res)=>{
             db.collection('kayasers').find().toArray().then((array)=>{
             res.send(array)})})
+ app.get('/admin_deleteKayaser/:contact', (req,res)=>{
 
-
+           db.collection("kayasers").find({contact:parseInt(req.params.contact)}).toArray().then(resp=>{
+              
+              if(resp.length==0){
+              
+                  res.send(["Doesn't exist as a Kayaser"])
+              }else{
+              db.collection('kayasers').deleteOne({contact:parseInt(req.params.contact)}).then(resp=>{
+                if(resp.deletedCount==1){res.send(["Successful"])}else{res.send(["Error must have occurred, try again"])}
+              
+              })
+              }
+              
+              })
+           
+                              
+                          })
 app.get('/admin_getDetails/:contact', (req,res)=>{
    
 db.collection("kayasers").find({contact:parseInt(req.params.contact)}).toArray().then(resp=>{
@@ -775,11 +792,19 @@ app.post('/resetPubArticlesNewCommentsNumb',bodyParser.json(), (req,res)=>{
   })
 
 })
-app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
+app.post('/deleteArticle',bodyParser.json(),(req,res)=>{
+
+ db.collection('pubarticles').find({id:req.body.articleId}).toArray().then(resp=>{
+  if(resp.length==0){
+res.send({presence:0})
+  }else{
+    db.collection('pubarticles').deleteOne({id:req.body.articleId}).then(resp=>{
+      res.send({presence:1})
+      db.collection('articleassessments').deleteMany({articleId:req.body.articleId}).then(resp=>{;})
+    })
+  }
  
-  db.collection('controls').updateOne({_id:new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.messagerIntroStatement}}).then(resp=>{
-   res.send({success:1})
-  })
+})
 })
 app.post('/editAttendeeRegister',bodyParser.json(),(req,res)=>{
 
@@ -817,7 +842,7 @@ db.collection('pubarticles').deleteOne({id:req.body.articleId}).then(resp=>{
 res.send({permission:1})
             })
 })
-
+db.collection('articleassessments').deleteMany({articleId:req.body.articleId}).then(resp=>{;})
 
 })
 
@@ -841,7 +866,7 @@ app.post('/perimissionToCreateArticle',bodyParser.json(),(req,res)=>{
   db.collection('articlegrants').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
   
       if(docArray.length==0){
-articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:3,editTokens:3}).save().then(resp=>{
+articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:2,editTokens:3}).save().then(resp=>{
   res.send({permission:1})
 })
       }else{
@@ -858,6 +883,14 @@ if(docArray[0].createTokens<1){
 })
 
 app.post('/createArticle',bodyParser.json(),(req,res)=>{
+
+db.collection('pubarticles').find({contact:req.body.contact}).toArray().then(resp=>{
+
+if(resp.length>9){
+  res.send({limitReached:1})
+}else{
+
+
 try{   
   db.collection('pubarticles').find().toArray().then((articlesArray)=>{
 let articleIds=[]
@@ -893,6 +926,10 @@ res.send({msg:"Article created",id:resp.id,headline1:resp.headline1})
   console.log(err)
   }
 
+
+
+}
+})
 })
 
 app.post('/deleteMessageesList',bodyParser.json(),(req,res)=>{
@@ -1042,6 +1079,13 @@ app.post('/getMyRegisters',bodyParser.json(),(req,res)=>{
  res.send(resp)
  })
 }) 
+app.post('/articleAssessments',bodyParser.json(),(req,res)=>{
+db.collection('articleassessments').find({authorContact:req.body.contact}).toArray().then(resp=>{
+ res.send(resp)
+})
+
+})
+
 
 app.post('/getMyArticles',bodyParser.json(),(req,res)=>{
     
@@ -1972,6 +2016,64 @@ res.redirect('pages/admin/controls')
 
       })
 
+      app.post('/admin_updatePermissionToken',bodyParser.json(),(req,res)=>{
+
+try{
+  switch(req.body.fieldToUpdate){
+    case 'editArticle':{
+      db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(resp=>{
+        if(resp.length==0){res.send(['Does not exit in collection articlegrants'])}else{
+          db.collection('articlegrants').updateOne({contact:req.body.contact},{$set:{editTokens:parseInt(req.body.fieldValue)}}).then(resp=>{
+          if(resp.modifiedCount==1){
+            res.send(['Successful!'])
+          }else if(resp.modifiedCount==0){
+            res.send(['You entered a value already uptodate!'])
+          }else{
+
+            res.send(['An error must have occure, try again'])
+          }
+          })
+        }
+            })
+    break;
+    }
+    
+    case 'createArticle':{
+      db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(resp=>{
+        if(resp.length==0){res.send(['Does not exit in collection articlegrants'])}else{
+          db.collection('articlegrants').updateOne({contact:req.body.contact},{$set:{createTokens:parseInt(req.body.fieldValue)}}).then(resp=>{
+          if(resp.modifiedCount==1){
+            res.send(['Successful!'])
+          }else if(resp.modifiedCount==0){
+            res.send(['You entered a value already uptodate!'])
+          }else{
+
+            res.send(['An error must have occure, try again'])
+          }
+          })
+        }
+            })
+    break;
+    }
+    default:{
+    res.send(['Incorrect  permission type'])
+    }
+    }
+    
+
+  }catch(err){
+    console.log(err)
+  }
+
+
+
+
+
+
+
+      })
+
+
       app.post('/admin_updateDetails',bodyParser.json(),(req,res)=>{
        try{
       db.collection('kayasers').find({contact:req.body.contact}).toArray().then(resp=>{
@@ -2286,6 +2388,28 @@ app.post('/submitPubarticleOpinion/:id',bodyParser.json(),(req,res)=>{
               })
     
       })
+
+  db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
+
+try{
+  let articleAssessmentDoc={articleId:resp[0].id,headline1:resp[0].headline1,author:resp[0].author,authorContact:resp[0].contact}
+ articleAssessmentDoc.commenter=req.body.name,articleAssessmentDoc.commenterContact=req.body.contact,articleAssessmentDoc.msg=req.body.msg
+
+articleAssessmentModel(articleAssessmentDoc).save().then(resp=>{
+;
+})
+
+
+}catch(err){
+  console.log("Kayas, error originated from tryin to register an article assessment document and it is: ")
+  console.log(err)
+}
+
+
+
+
+  })
+
     
      
   }else{
@@ -2293,23 +2417,7 @@ app.post('/submitPubarticleOpinion/:id',bodyParser.json(),(req,res)=>{
      ;// res.send({success:0})
   }
  
-  try{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(articleDocArray=>{
-      if(articleDocArray.length==0){;}else{
-   
-       inCollection('kayasers',[parseInt(articleDocArray[0].contact)]).then(resp=>{
-           if(resp==true){
-               db.collection('kayasers').find({contact:parseInt(articleDocArray[0].contact)}).toArray().then(kayasDocArray=>{
-                   let receipients=[kayasDocArray[0].email,"onongeisaac@gmail.com"]
-                //   SendMail("Comment on your Kayas article",receipients,`A student has just commented on your article "${articleDocArray[0].headline1}". Please follow this link below to go and see the comment. https://kayas-mak.herokuapp.com/pages/pubarticles/article/${articleDocArray[0].id}`)
-               })
-           }else{;}
-       })
-      }
-   })}catch(err){
-console.log("Kayas the error originated from trying to send an email to the article author because a student has commented on the article and it is:")
-console.log(err)
-
-   }
+ 
 
 })
 
