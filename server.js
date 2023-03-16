@@ -866,7 +866,7 @@ app.post('/perimissionToCreateArticle',bodyParser.json(),(req,res)=>{
   db.collection('articlegrants').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
   
       if(docArray.length==0){
-articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:2,editTokens:3}).save().then(resp=>{
+articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:2,editTokens:2}).save().then(resp=>{
   res.send({permission:1})
 })
       }else{
@@ -886,7 +886,7 @@ app.post('/createArticle',bodyParser.json(),(req,res)=>{
 
 db.collection('pubarticles').find({contact:req.body.contact}).toArray().then(resp=>{
 
-if(resp.length>9){
+if(resp.length>19){
   res.send({limitReached:1})
 }else{
 
@@ -1001,7 +1001,7 @@ req.body.forEach(messagee=>{
       }
   })
 if(errorMessagees.length==0){
-  let category='mubsContacts';
+  let category='nduContacts';
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
   req.body.forEach(messagee=>{
 if(resp[0].messagees.find(inList=>{
@@ -1014,7 +1014,10 @@ if(resp[0].messagees.find(inList=>{
       })  
 
 }else{
-
+  db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{
+         
+          
+  }) 
   console.log("present")
 
 
