@@ -29,7 +29,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 }))
 
 
-let maxAttendeeRegisters=5
+let maxAttendeeRegisters=2
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/model').comments;
@@ -172,7 +172,10 @@ app.get('/attendees/:registrarContact/:id', (req,res)=>{
     if(resp.length==0){
       ;
     }else{
-      res.send(resp[0].attendees)
+    
+    res.send(resp[0].attendees)
+  
+
     }
    
   
@@ -601,13 +604,13 @@ if(resp.length==0){
   res.send({registerPresent:0})
 }else{
 
-  if(resp[0].attendees.find(attendee=>{return attendee==req.body.contact})==undefined){
+  if(resp[0].attendees.find(attendee=>{return attendee.contact==req.body.contact})==undefined){
     res.send({attendeeInList:0})
    }else{
  
    let newAttendees=[]
 resp[0].attendees.forEach(attendee=>{
-  if(attendee==req.body.contact){
+  if(attendee.contact==req.body.contact){
 ;
   }else{
 newAttendees.push(attendee)
@@ -647,14 +650,16 @@ db.collection('registers').updateOne({contact:req.body.registrarContact,register
 
 
 app.post('/addToAttendeesRegister',bodyParser.json(),(req,res)=>{
+
+ 
 try{
 
 db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
   if(resp.length==0){
     res.send({registerPresent:0})
   }else{
-if(resp[0].attendees.find(attendee=>{return attendee==req.body.contact})==undefined){
-db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$push:{attendees:req.body.contact}}).then(resp=>{
+if(resp[0].attendees.find(attendee=>{return attendee.contact==req.body.contact})==undefined){
+db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$push:{attendees:{name:req.body.name,contact:req.body.contact}}}).then(resp=>{
  if(resp.modifiedCount==1){
   db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
   
@@ -689,12 +694,13 @@ app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
 
    if(resp.length==0){
 registerModel({registerId:0,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-  attendees:[req.body.contact]
+  attendees:[{name:req.body.name,contact:req.body.contact}]
 }).save().then(resp=>{
   res.send({success:1,registerId:0,registerTitle:req.body.registerTitle,contact:req.body.contact})
 })
 
-   }else if(resp.length<maxAttendeeRegisters){
+   }else {
+    if(resp.length<=maxAttendeeRegisters-1||req.body.contact==703852178||req.body.contact==755643774){
 
 db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=>{
   let registerIds=[]
@@ -719,7 +725,7 @@ db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=
   while(searchAgain==1)
 
   registerModel({registerId:newId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-    attendees:[req.body.contact]
+    attendees:[{name:req.body.name,contact:req.body.contact}]
   }).save().then(resp=>{res.send({success:1,registerId:newId,registerTitle:req.body.registerTitle,contact:req.body.contact})})
 
 
@@ -731,7 +737,7 @@ else{
 res.send({registerLimitReached:1})
 }
 
-
+    }
     })
 
 
@@ -808,11 +814,14 @@ res.send({presence:0})
 })
 app.post('/editAttendeeRegister',bodyParser.json(),(req,res)=>{
 
+
 db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
+
+
   if(resp.length==0){
 res.send({registerPresent:0})
   }else{
-    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{registerTitle:req.body.registerTitle,attendees:[req.body.registrarContact]}}).then(resp=>{
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{registerTitle:req.body.registerTitle,attendees:[{name:resp[0].name,contact:req.body.registrarContact}]}}).then(resp=>{
       if(resp.modifiedCount==1){
 res.send({success:1})
       }else{
