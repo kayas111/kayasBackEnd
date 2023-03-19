@@ -22,9 +22,6 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
 
-
-
- 
     
 }))
 
@@ -596,6 +593,38 @@ db.collection('controls').find({_id:new ObjectId("630e1d743deb52a6b72e7fc7")}).t
 
 
 //posts to the database
+app.post('/mapAttendanceRegisterToMessager',bodyParser.json(),(req,res)=>{
+
+try{
+db.collection('registers').find({contact:req.body.registerAdminContact,registerId:req.body.registerId}).toArray().then(resp=>{
+if(resp.length==0){
+  res.send(["Register does not exist"])
+}else{
+  db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:resp[0].attendees}}).then(resp=>{
+if(resp.modifiedCount==1){
+  res.send(["successful"])
+
+}else{
+  res.send(["Update was not successful because you are updating to what is uptodate!"])
+}
+
+  })
+}
+
+
+
+})
+
+
+
+
+
+}catch(err){
+  console.log("Kayas error originated from trying map attendance Register to Messager and it is: ")
+  console.log(err)
+}
+
+})
 app.post('/removeFromAttendeesRegister',bodyParser.json(),(req,res)=>{
  
   try{
