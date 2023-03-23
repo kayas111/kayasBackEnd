@@ -26,7 +26,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 }))
 
 
-let maxAttendeeRegisters=2
+let maxAttendeeRegisters=10
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/model').comments;
@@ -711,10 +711,61 @@ db.collection('registers').updateOne({contact:req.body.registrarContact,register
 }
 
 })
+app.post('/updateDndList',bodyParser.json(),(req,res)=>{
+  console.log(req.body)
+  try{
+db.collection('controls').find({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(resp=>{
+  console.log(resp[0].dndContactsArray)
+  if(req.body.action=="add"){
+    if(resp[0].dndContactsArray.find(dndContact=>{return dndContact==req.body.contact})==undefined){
+      db.collection('controls').updateOne({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")},{$push:{dndContactsArray:req.body.contact}}).then(resp=>{
+        if(resp.modifiedCount==1){
+          res.send(["Successful"])
+        }else{
+          ;
+        }
+      })
+    }else{
+      res.send(["Already in the list"])
+
+    }
+  }else if(req,body.action=="remove"){}else{
+    ;
+  }
 
 
+})
+
+  }catch(err){
+    console.log("kayas, error originated from updating DND list it is: ")
+    console.log(err)
+  }
+})
 
 
+app.post('/mapFromCategoryToMessager',bodyParser.json(),(req,res)=>{
+
+  try{
+db.collection('multidocs').find({desc:req.body.category}).toArray().then(resp=>{
+  if(resp.length==0){
+    res.send(["category does not exist"])
+  }else{
+    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:resp[0].messagees}}).then(resp=>{
+      if(resp.modifiedCount==1){res.send(["Successful"])}else if(resp.modifiedCount==0){
+res.send(["Messagees is already uptodate!!"])
+      }else{
+        res.send(["Error must have occured, please try again"])
+      }
+    })
+  
+  }
+})
+
+  }catch(err){
+    console.log("kayas, error originated from mapping from a category to messager and it is: ")
+    console.log(err)
+  }
+})
 
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
   try{
@@ -2111,6 +2162,23 @@ try{
       db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(resp=>{
         if(resp.length==0){res.send(['Does not exit in collection articlegrants'])}else{
           db.collection('articlegrants').updateOne({contact:req.body.contact},{$set:{createTokens:parseInt(req.body.fieldValue)}}).then(resp=>{
+          if(resp.modifiedCount==1){
+            res.send(['Successful!'])
+          }else if(resp.modifiedCount==0){
+            res.send(['You entered a value already uptodate!'])
+          }else{
+
+            res.send(['An error must have occure, try again'])
+          }
+          })
+        }
+            })
+    break;
+    }
+    case 'createAttendanceRegister':{
+      db.collection('permissiontokens').find({contact:req.body.contact}).toArray().then(resp=>{
+        if(resp.length==0){res.send(['Does not exit in collection permissionTokens'])}else{
+          db.collection('permissiontokens').updateOne({contact:req.body.contact},{$set:{createAttendanceRegister:parseInt(req.body.fieldValue)}}).then(resp=>{
           if(resp.modifiedCount==1){
             res.send(['Successful!'])
           }else if(resp.modifiedCount==0){
