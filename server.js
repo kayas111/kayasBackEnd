@@ -224,7 +224,7 @@ app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find(
 app.get('/collection_monitoredopinions_number', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_monitoredopinions_opinions', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_multidocs_monitoredArticleOpinions', (req,res)=>{db.collection('multidocs').find({desc:'monitoredArticleOpinions'}).toArray().then((array)=>{res.send(array[0].opinions)})})
-app.get('/universityContacts', (req,res)=>{ db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts','mubsContacts']}}).toArray().then((array)=>{res.send(array)})})
+app.get('/universityContacts', (req,res)=>{ db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts','mubsContacts','mukEducation']}}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})})  
 app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
@@ -782,7 +782,7 @@ function PermissionToCreateAttendanceRegister(){
   db.collection('permissiontokens').find({contact:req.body.contact}).toArray().then(docArray=>{
     if(docArray[0].createAttendanceRegister==undefined){
     
-    db.collection('permissiontokens').updateOne({contact:req.body.contact},{$set:{createAttendanceRegister:5}}).then(resp=>{
+    db.collection('permissiontokens').updateOne({contact:req.body.contact},{$set:{createAttendanceRegister:1}}).then(resp=>{
       res.send({permission:1})
       })
     }else{
@@ -817,7 +817,41 @@ permissionTokensModel({name:req.body.name,institution:req.body.institution,conta
     
   })
 
+  app.post('/removeMessagee',bodyParser.json(), (req,res)=>{
 
+db.collection('multidocs').find({desc:req.body.desc}).toArray().then(resp=>{
+  if(resp.length==0){
+    res.send(["Document of that description does not exist......"])
+  }else{
+let originalNumb=resp[0].messagees.length,newMessagees=[]
+if(resp[0].messagees.find(messagee=>{return messagee==req.body.contact})==undefined){
+ res.send([req.body.contact+" Does not exist among the messagees of "+req.body.desc+" document"])
+}else{
+resp[0].messagees.forEach(messagee=>{
+    if(messagee==req.body.contact){
+    ;
+    }else{
+      newMessagees.push(messagee)
+    }
+  })
+  console.log(originalNumb)
+console.log(newMessagees.length)
+db.collection('multidocs').updateOne({desc:req.body.desc},{$set:{messagees:newMessagees}}).then(resp=>{
+if(resp.modifiedCount==1){
+  res.send(["Successful from "+originalNumb+" contacts to "+newMessagees.length])
+}else{
+  res.send(["An error must have occured, please try again..."])
+}
+
+})
+
+}
+
+
+  }
+})
+
+  })
 
 app.post('/resetPubArticlesNewCommentsNumb',bodyParser.json(), (req,res)=>{
 
@@ -1039,24 +1073,18 @@ req.body.forEach(messagee=>{
       }
   })
 if(errorMessagees.length==0){
-  let category='nduContacts';
+  let category='mukContacts';
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
   req.body.forEach(messagee=>{
 if(resp[0].messagees.find(inList=>{
   return inList==messagee
 })==undefined){console.log("absent")
 
-      db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{
-         
-          
-      })  
+      db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{})  
 
 }else{
-  db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{
-         
-          
-  }) 
-  console.log("present")
+// db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{}) 
+console.log("present")
 
 
   
