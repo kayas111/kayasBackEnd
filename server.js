@@ -712,10 +712,10 @@ db.collection('registers').updateOne({contact:req.body.registrarContact,register
 
 })
 app.post('/updateDndList',bodyParser.json(),(req,res)=>{
-  console.log(req.body)
+
   try{
 db.collection('controls').find({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(resp=>{
-  console.log(resp[0].dndContactsArray)
+
   if(req.body.action=="add"){
     if(resp[0].dndContactsArray.find(dndContact=>{return dndContact==req.body.contact})==undefined){
       db.collection('controls').updateOne({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")},{$push:{dndContactsArray:req.body.contact}}).then(resp=>{
@@ -729,7 +729,35 @@ db.collection('controls').find({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")}).t
       res.send(["Already in the list"])
 
     }
-  }else if(req,body.action=="remove"){}else{
+  }else if(req.body.action=="remove"){
+    if(resp[0].dndContactsArray.find(dndContact=>{return dndContact==req.body.contact})==undefined){
+      res.send(["Not present in the list......."])
+    }else{
+ 
+let updatedList=[]
+resp[0].dndContactsArray.forEach(dndContact=>{
+if(dndContact==req.body.contact){
+  ;
+}else{
+  updatedList.push(dndContact)
+}
+
+})
+
+
+db.collection('controls').updateOne({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{dndContactsArray:updatedList}}).then(resp=>{
+
+  if(resp.modifiedCount==1){
+    res.send(["Successful"])
+  }else{
+    res.send(["Error must have occured, try again........."])
+  }
+})
+
+
+    }
+
+  }else{
     ;
   }
 
