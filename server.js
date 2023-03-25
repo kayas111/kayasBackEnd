@@ -734,6 +734,7 @@ db.collection('controls').find({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")}).t
       res.send(["Not present in the list......."])
     }else{
  
+      
 let updatedList=[]
 resp[0].dndContactsArray.forEach(dndContact=>{
 if(dndContact==req.body.contact){
