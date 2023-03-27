@@ -734,7 +734,7 @@ db.collection('controls').find({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")}).t
       res.send(["Not present in the list......."])
     }else{
  
-      
+
 let updatedList=[]
 resp[0].dndContactsArray.forEach(dndContact=>{
 if(dndContact==req.body.contact){
@@ -1153,7 +1153,7 @@ req.body.forEach(messagee=>{
       }
   })
 if(errorMessagees.length==0){
-  let category='mukContacts';
+  let category='nduContacts';
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
   req.body.forEach(messagee=>{
 if(resp[0].messagees.find(inList=>{
@@ -1163,7 +1163,7 @@ if(resp[0].messagees.find(inList=>{
       db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{})  
 
 }else{
-// db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{}) 
+db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{}) 
 console.log("present")
 
 
