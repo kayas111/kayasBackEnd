@@ -64,6 +64,36 @@ const hookupRegistrationFee=500
 
 
 //functions start
+
+function mapContactsArrayFromMessageeToRegister(registrarContact,registerId){
+  db.collection('registers').find({contact:parseInt(registrarContact),registerId:parseInt(registerId)}).toArray().then(resp=>{
+
+   if(resp.length==0){
+    ;
+   }else{ let registerContacts=resp[0].attendees
+
+     db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
+       resp[0].messagees.forEach(messagee=>{
+
+        if( registerContacts.find(detail=>{return detail.contact==messagee})==undefined){
+   
+       registerContacts.push({ name: '', contact: messagee})
+
+        }else{
+      ;
+        }
+       })
+
+     
+       db.collection('registers').updateOne({contact:parseInt(registrarContact),registerId:parseInt(registerId)},{$set:{attendees:registerContacts}}).then(resp=>{
+         console.log(resp)
+       })
+
+
+     })}
+
+   })
+}
 async function inCollection(collection,arrayList){
     let length=arrayList.length,lengthCheck=0
    
@@ -195,7 +225,7 @@ app.get('/collection_controls_visits', (req,res)=>{
     
     }) 
 
-    
+
 
     app.get('/collection_registers_registers', (req,res)=>{db.collection('registers').find().toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand1', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:1}).toArray().then((array)=>{res.send(array)})}) 
@@ -1096,6 +1126,8 @@ app.post('/deleteMessageesList',bodyParser.json(),(req,res)=>{
   }else{
 try{db.collection('multidocs').find({desc:req.body.categoryId}).toArray().then(resp=>{
   if(resp.length==0){
+    
+   mapContactsArrayFromMessageeToRegister(0703852178,1)
    res.send({category:0})
   }else{
    db.collection('multidocs').find({desc:'messagees'}).toArray().then(docArray=>{
