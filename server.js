@@ -931,6 +931,7 @@ permissionTokensModel({name:req.body.name,institution:req.body.institution,conta
   })
 
   app.post('/removeMessagee',bodyParser.json(), (req,res)=>{
+ 
 
 db.collection('multidocs').find({desc:req.body.desc}).toArray().then(resp=>{
   if(resp.length==0){
@@ -1169,16 +1170,44 @@ db.collection('multidocs').updateOne({desc:req.body.categoryId},{$push:{messagee
 
 
 })
-app.post('/removeMessagee',bodyParser.json(),(req,res)=>{
+app.post('/removeMessageeInMessager',bodyParser.json(),(req,res)=>{
 
-db.collection('multidocs').updateOne({desc:'messagees'},{$pull:{messagees:parseInt(req.body.contact)}}).then(resp=>{
-     if(resp.modifiedCount==1){
-      res.send({presence:1})
-     }else{res.send({presence:0})}
-      
-  })
+try{db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
+  let newMessagees=[]
+if(resp[0].messagees.find(messagee=>{return messagee==req.body.contact})==undefined){
+
+  res.send({presence:0})
+}else{
+
+resp[0].messagees.forEach(messagee=>{
+  if(messagee==req.body.contact){
+  ;
+  
+  }else{
+    newMessagees.push(messagee)
+  
+  }
+  
+    })
+  
+    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:newMessagees}}).then(resp=>{
+  res.send({success:1})
+  
+    })
+
+}
+
+
+
+
+})
+}catch(err){
+  console.log(err)
+}
+
 })
 app.post('/addToMessagingQueueThroughAdmin',bodyParser.json(),(req,res)=>{
+
   let errorMessagees=[]
 req.body.forEach(messagee=>{
       if(messagee<700000000||messagee>799999999){
@@ -1188,17 +1217,19 @@ req.body.forEach(messagee=>{
       }
   })
 if(errorMessagees.length==0){
-  let category='nduContacts';
+  let category='mukContacts';
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
+    let newMessagees=[]
   req.body.forEach(messagee=>{
 if(resp[0].messagees.find(inList=>{
   return inList==messagee
 })==undefined){console.log("absent")
-
-      db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{})  
+newMessagees.push(messagee)
+      
 
 }else{
-db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:messagee}}).then(resp=>{}) 
+  newMessagees.push(messagee)
+
 console.log("present")
 
 
@@ -1207,7 +1238,31 @@ console.log("present")
   
   
       })
-        res.send({statusOk:1,category:category})
+
+db.collection("multidocs").find({desc:'messagees'}).toArray().then(resp=>{
+  let finalMessagees=resp[0].messagees
+  newMessagees.forEach(testMessagee=>{
+    if(finalMessagees.find(messagee=>{return messagee==testMessagee})==undefined){
+      finalMessagees.push(testMessagee)
+    }else{
+;
+    }
+
+  })
+
+db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:finalMessagees}}).then(resp=>{
+  res.send({statusOk:1,category:category})
+
+}) 
+
+
+
+
+})
+
+
+
+      
 
   })
  
