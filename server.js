@@ -21,7 +21,7 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-
+//DndFilter([755643774,755643774])
     
 }))
 
@@ -64,6 +64,24 @@ const hookupRegistrationFee=500
 
 
 //functions start
+async function DndFilter(contactsArray){
+
+  let result =[]
+ await db.collection('controls').find({ _id: new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(resp=>{
+
+  contactsArray.forEach(contact=>{
+    if(resp[0].dndContactsArray.find(dndContact=>{return dndContact==contact})==undefined){
+      result.push(contact)
+    }else{;}
+
+  })
+
+})
+
+return result
+
+}
+
 
 function mapContactsArrayFromMessageeToRegister(registrarContact,registerId){
   db.collection('registers').find({contact:parseInt(registrarContact),registerId:parseInt(registerId)}).toArray().then(resp=>{
@@ -895,7 +913,7 @@ function PermissionToCreateAttendanceRegister(){
   db.collection('permissiontokens').find({contact:req.body.contact}).toArray().then(docArray=>{
     if(docArray[0].createAttendanceRegister==undefined){
     
-    db.collection('permissiontokens').updateOne({contact:req.body.contact},{$set:{createAttendanceRegister:1}}).then(resp=>{
+    db.collection('permissiontokens').updateOne({contact:req.body.contact},{$set:{createAttendanceRegister:0}}).then(resp=>{
       res.send({permission:1})
       })
     }else{
