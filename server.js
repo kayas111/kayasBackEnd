@@ -251,7 +251,18 @@ app.get('/collection_controls_visits', (req,res)=>{
     app.get('/collections_opinionpolls_cand3', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:3}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand4', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:4}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand5', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:5}).toArray().then((array)=>{res.send(array)})}) 
-    app.get('/messagees', (req,res)=>{db.collection('multidocs').find({desc:"messagees"}).toArray().then((array)=>{res.send(array[0].messagees)})}) 
+    app.get('/messagees', (req,res)=>{db.collection('multidocs').find({desc:"messagees"}).toArray().then((array)=>{
+     
+      db.collection('controls').find({_id:new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then(docArray=>{
+      
+        res.send({messagees:array[0].messagees,introStatement:docArray[0].messagerIntroStatement})
+    })
+      
+   
+    
+    
+    
+    })}) 
     
 app.get('/attendanceregs/:registrar/:id', (req,res)=>{db.collection('registers').find({contact:parseInt(req.params.registrar),registerId:parseInt(req.params.id)}).toArray().then((array)=>{
   if(array.length==0){
@@ -635,15 +646,17 @@ app.get('/fetchArticle/:id',(req,res)=>{
     
    })
 })
-app.get('/messagerIntroStatement',(req,res)=>{
-db.collection('controls').find({_id:new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then(docArray=>{
-    res.send(docArray[0])
-})
-})
 
 
 
 //posts to the database
+app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
+  
+ db.collection('controls').updateOne({_id:new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.statement}}).then(resp=>{
+    res.send(["Successful"])
+  })
+  })
+
 app.post('/mapAttendanceRegisterToMessager',bodyParser.json(),(req,res)=>{
 
 try{
