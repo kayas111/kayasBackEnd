@@ -653,6 +653,8 @@ app.get('/fetchArticle/:id',(req,res)=>{
 
 
 
+
+
 //posts to the database
 app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
   
