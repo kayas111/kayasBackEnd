@@ -21,10 +21,10 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-    db.collection("clientopinions").updateOne({id:"client2s"},{$set:{opinionVisits:0}}).then(resp=>{
+   /* db.collection("clientopinions").updateOne({id:"client2s"},{$set:{opinionVisits:0}}).then(resp=>{
 console.log(resp)
 
-    })
+    })*/
 //DndFilter([755643774,755643774])
     
 }))
