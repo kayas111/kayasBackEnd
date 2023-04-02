@@ -21,6 +21,10 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+    db.collection("clientopinions").updateOne({id:"client2s"},{$set:{opinionVisits:0}}).then(resp=>{
+console.log(resp)
+
+    })
 //DndFilter([755643774,755643774])
     
 }))
@@ -635,7 +639,6 @@ children.push("<span style='color:red;'>"+child+"-Not Registered</span>")
             
             })
             
-
 app.get('/fetchArticle/:id',(req,res)=>{
    db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(docArray=>{
     if(docArray.length==0){
