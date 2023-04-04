@@ -21,13 +21,10 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-   /* db.collection("clientopinions").updateOne({id:"client2s"},{$set:{opinionVisits:0}}).then(resp=>{
-console.log(resp)
 
-    })*/
-//DndFilter([755643774,755643774])
-    
+  
 }))
+
 
 
 
@@ -69,22 +66,22 @@ const hookupRegistrationFee=500
 
 
 //functions start
-async function DndFilter(contactsArray){
-
+async function DndFilter(contactsArray,callBackFunction){
   let result =[]
- await db.collection('controls').find({ _id: new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(resp=>{
-
-  contactsArray.forEach(contact=>{
+  await db.collection('controls').find({ _id: new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(resp=>{
+    contactsArray.forEach(contact=>{
     if(resp[0].dndContactsArray.find(dndContact=>{return dndContact==contact})==undefined){
       result.push(contact)
-    }else{;}
+    }else{;
+
+    }
 
   })
 
+
 })
 
-return result
-
+callBackFunction({dndFilteredArray:result})
 }
 
 
@@ -660,6 +657,76 @@ app.get('/fetchArticle/:id',(req,res)=>{
 
 
 //posts to the database
+
+app.post('/pushToAttendanceRegister',bodyParser.json(),(req,res)=>{
+
+  try{db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
+    if(resp.length==0){
+res.send(["Register does not exist."])
+    }else{
+let registerAttendees=resp[0].attendees
+db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
+ 
+ if(resp[0].messagees.length==0){
+  res.send(["Messagees list is empty"])
+ }else if (resp[0].messagees[0].name==undefined){
+
+  resp[0].messagees.forEach(messageeContact=>{
+    if(registerAttendees.find(registerAttendee=>{return registerAttendee.contact==messageeContact})==undefined){
+
+      registerAttendees.push({name:"",contact:messageeContact})
+    }else{
+;
+
+    }
+  }) 
+
+
+
+db.collection("registers").updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{attendees:registerAttendees}}).then(resp=>{
+
+if(resp.modifiedCount==1){
+  res.send(["succesfully added more."])
+}else{
+  res.send(["Already upto date!"])
+}
+})
+
+ }else{
+
+  resp[0].messagees.forEach(attendeeDoc=>{
+    if(registerAttendees.find(registerAttendee=>{return registerAttendee.contact==attendeeDoc.contact})==undefined){
+
+      registerAttendees.push(attendeeDoc)
+    }else{
+;
+
+    }
+  }) 
+  db.collection("registers").updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{attendees:registerAttendees}}).then(resp=>{
+
+    if(resp.modifiedCount==1){
+      res.send(["succesfully added more."])
+    }else{
+      res.send(["Already upto date!"])
+    }
+    })
+
+
+
+
+
+ }
+})
+
+
+    }
+   
+  
+  })}catch(err){
+    console.log(err)
+  }
+})
 app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
   
  db.collection('controls').updateOne({_id:new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.statement}}).then(resp=>{
