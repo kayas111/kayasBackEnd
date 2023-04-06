@@ -22,7 +22,6 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
 
-  
 }))
 
 
@@ -399,7 +398,7 @@ app.get('/collection_requests_number', (req,res)=>{
               
                   res.send(["Doesn't exist as a Kayaser"])
               }else{
-              db.collection('kayasers').deleteOne({contact:parseInt(req.params.contact)}).then(resp=>{
+              db.collection('kayasers').deleteMany({contact:parseInt(req.params.contact)}).then(resp=>{
                 if(resp.deletedCount==1){res.send(["Successful"])}else{res.send(["Error must have occurred, try again"])}
               
               })
@@ -1236,7 +1235,7 @@ app.post('/deleteMessageesList',bodyParser.json(),(req,res)=>{
 try{db.collection('multidocs').find({desc:req.body.categoryId}).toArray().then(resp=>{
   if(resp.length==0){
     
-   mapContactsArrayFromMessageeToRegister(0703852178,1)
+   
    res.send({category:0})
   }else{
    db.collection('multidocs').find({desc:'messagees'}).toArray().then(docArray=>{
@@ -1244,7 +1243,7 @@ if(docArray[0].messagees.length==0){
    ;
 }else{ 
   db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:[]}}).then(statusresp=>{
-     res.send({category:1}) 
+   
      
      
   })
@@ -1253,14 +1252,17 @@ if(docArray[0].messagees.length==0){
   if( resp[0].messagees.find(messagee=>{
 return messagee==caseMessagee
    })==undefined){
-db.collection('multidocs').updateOne({desc:req.body.categoryId},{$push:{messagees:caseMessagee}}).then(resp=>{
-;
-})
+    resp[0].messagees.push(caseMessagee)
    }else{
 ;
    }
 
 })
+
+db.collection('multidocs').updateOne({desc:req.body.categoryId},{$set:{messagees:resp[0].messagees}}).then(resp=>{
+  res.send({category:1}) 
+  })
+
 
 }
    })
@@ -1314,6 +1316,11 @@ resp[0].messagees.forEach(messagee=>{
 }
 
 })
+
+app.get('/registerClick',bodyParser.json(),(req,res)=>{
+  console.log("clicked")
+})
+
 app.post('/addToMessagingQueueThroughAdmin',bodyParser.json(),(req,res)=>{
 
   let errorMessagees=[]
@@ -1336,7 +1343,7 @@ newMessagees.push(messagee)
       
 
 }else{
-  newMessagees.push(messagee)
+newMessagees.push(messagee)
 
 console.log("present")
 
