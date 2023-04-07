@@ -1317,7 +1317,7 @@ resp[0].messagees.forEach(messagee=>{
 
 })
 
-app.get('/registerClick',bodyParser.json(),(req,res)=>{
+app.post('/registerClick',bodyParser.json(),(req,res)=>{
   console.log("clicked")
 })
 
@@ -1338,14 +1338,16 @@ if(errorMessagees.length==0){
   req.body.forEach(messagee=>{
 if(resp[0].messagees.find(inList=>{
   return inList==messagee
-})==undefined){console.log("absent")
-newMessagees.push(messagee)
+})==undefined){
+  console.log("absent")
+    newMessagees.push(messagee)
       
 
 }else{
-newMessagees.push(messagee)
+  console.log("present")
+    newMessagees.push(messagee)
 
-console.log("present")
+
 
 
   
