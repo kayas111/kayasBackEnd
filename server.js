@@ -211,6 +211,25 @@ app.use(pagesRouter)
 
 
 //access databse by get
+app.get('/attendeesMessage/:registrarContact/:id', (req,res)=>{
+
+  try{
+   db.collection('registers').find({contact:parseInt(req.params.registrarContact),registerId:parseInt(req.params.id)}).toArray().then(resp=>{
+     if(resp.length==0){
+       ;
+     }else{
+     res.send(resp[0])
+
+ 
+     }
+    
+   
+   })
+ }catch(err){
+   console.log(err)
+ }
+ 
+ })
 app.get('/attendees/:registrarContact/:id', (req,res)=>{
 
  try{
@@ -1319,6 +1338,20 @@ resp[0].messagees.forEach(messagee=>{
 
 app.post('/registerClick',bodyParser.json(),(req,res)=>{
   console.log("clicked")
+})
+
+app.post('/setAttendeeRegisterMessagee',bodyParser.json(),(req,res)=>{
+
+  db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{message:req.body.message}}).then(resp=>{
+  if(resp.modifiedCount==1){
+      res.send(["<div style='color:green;'>Successful, please tap the display/refresh button to send updated message.</div>"])
+    }else if(resp.modifiedCount==0){
+      res.send(["<div style='color:green;'>Already upto date!</div>"])
+    }else{
+      res.send(["<div style='color:red;'>Error must have occured, please try again !!</div>"])
+    }
+   
+  })
 })
 
 app.post('/addToMessagingQueueThroughAdmin',bodyParser.json(),(req,res)=>{
