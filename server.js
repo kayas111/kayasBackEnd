@@ -873,8 +873,6 @@ db.collection('registers').updateOne({contact:req.body.registrarContact,register
 
 
 app.post('/addToAttendeesRegister',bodyParser.json(),(req,res)=>{
-
- 
 try{
 
 db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
