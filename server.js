@@ -21,6 +21,37 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+    let category="mukEducation"
+    db.collection("multidocs").find({desc:category}).toArray().then(resp=>{
+      let index=0,index2=0,final=[]
+      resp[0].messagees.forEach(messagee=>{
+if(messagee.name==undefined){
+final.push({name:"",contact:messagee})
+}else{
+final.push(messagee)
+}
+        
+   
+        index++
+
+
+      })
+/*
+   final.forEach(obj=>{
+   
+console.log(index2)
+console.log(obj)
+index2++
+
+   })  
+    */
+   /*
+   db.collection("multidocs").updateOne({desc:category},{$set:{messagees:final}}).then(resp=>{
+console.log(resp)
+
+   })
+*/
+    })
 
 }))
 
@@ -306,7 +337,11 @@ app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find(
 app.get('/collection_monitoredopinions_number', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_monitoredopinions_opinions', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_multidocs_monitoredArticleOpinions', (req,res)=>{db.collection('multidocs').find({desc:'monitoredArticleOpinions'}).toArray().then((array)=>{res.send(array[0].opinions)})})
-app.get('/universityContacts', (req,res)=>{ db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts','mubsContacts','mukEducation']}}).toArray().then((array)=>{res.send(array)})})
+app.get('/universityContacts', (req,res)=>{
+
+db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts','mubsContacts','mukEducation']}}).toArray().then((array)=>{
+
+  res.send(array)})})
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})})  
 app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
@@ -1065,19 +1100,21 @@ db.collection('multidocs').find({desc:req.body.desc}).toArray().then(resp=>{
     res.send(["Document of that description does not exist......"])
   }else{
 let originalNumb=resp[0].messagees.length,newMessagees=[]
-if(resp[0].messagees.find(messagee=>{return messagee==req.body.contact})==undefined){
+if(resp[0].messagees.find(messagee=>{return messagee.contact==req.body.contact})==undefined){
  res.send([req.body.contact+" Does not exist among the messagees of "+req.body.desc+" document"])
 }else{
 resp[0].messagees.forEach(messagee=>{
-    if(messagee==req.body.contact){
+    if(messagee.contact==req.body.contact){
+   
     ;
     }else{
-      newMessagees.push(messagee)
+    
+      newMessagees.push({name:'',contact:messagee.contact})
     }
   })
-  console.log(originalNumb)
-console.log(newMessagees.length)
+ 
 db.collection('multidocs').updateOne({desc:req.body.desc},{$set:{messagees:newMessagees}}).then(resp=>{
+ 
 if(resp.modifiedCount==1){
   res.send(["Successful from "+originalNumb+" contacts to "+newMessagees.length])
 }else{
@@ -1262,15 +1299,14 @@ try{db.collection('multidocs').find({desc:req.body.categoryId}).toArray().then(r
 if(docArray[0].messagees.length==0){
    ;
 }else{ 
+  /*
   db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:[]}}).then(statusresp=>{
    
-     
-     
-  })
+  })*/
    let currentMessagees=docArray[0].messagees
    currentMessagees.forEach(caseMessagee=>{
   if( resp[0].messagees.find(messagee=>{
-return messagee==caseMessagee
+return messagee.contact==caseMessagee.contact
    })==undefined){
     resp[0].messagees.push(caseMessagee)
    }else{
@@ -1356,8 +1392,7 @@ app.post('/setAttendeeRegisterMessagee',bodyParser.json(),(req,res)=>{
 })
 
 app.post('/addToMessagingQueueThroughAdmin',bodyParser.json(),(req,res)=>{
-
-  let errorMessagees=[]
+let errorMessagees=[]
 req.body.forEach(messagee=>{
       if(messagee<700000000||messagee>799999999){
         errorMessagees.push(messagee)
@@ -1369,9 +1404,11 @@ if(errorMessagees.length==0){
   let category='mukContacts';
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
     let newMessagees=[]
+    
+   
   req.body.forEach(messagee=>{
 if(resp[0].messagees.find(inList=>{
-  return inList==messagee
+  return inList.contact==messagee
 })==undefined){
   console.log("absent")
     newMessagees.push(messagee)
@@ -1382,24 +1419,22 @@ if(resp[0].messagees.find(inList=>{
     newMessagees.push(messagee)
 
 
-
-
   
 }
-  
-  
-      })
+   })
+
 
 db.collection("multidocs").find({desc:'messagees'}).toArray().then(resp=>{
   let finalMessagees=resp[0].messagees
   newMessagees.forEach(testMessagee=>{
-    if(finalMessagees.find(messagee=>{return messagee==testMessagee})==undefined){
-      finalMessagees.push(testMessagee)
+    if(finalMessagees.find(messageeDoc=>{return messageeDoc.contact==testMessagee})==undefined){
+      finalMessagees.push({name:'',contact:testMessagee})
     }else{
 ;
     }
 
   })
+
 
 db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:finalMessagees}}).then(resp=>{
   res.send({statusOk:1,category:category})
@@ -1426,14 +1461,15 @@ db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:finalMe
               })
 app.post('/addToMessagingQueue',bodyParser.json(),(req,res)=>{
 
-db.collection('multidocs').find({desc:'institutionalContacts'}).toArray().then(docArray=>{
+
 
 db.collection('multidocs').find({desc:'messagees'}).toArray().then(docArray=>{
-     if(docArray[0].messagees.find(messagee=>{
-          return messagee==parseInt(req.body.contact)
+     if(docArray[0].messagees.find(messageeDoc=>{
+          return messageeDoc.contact==parseInt(req.body.contact)
       })==undefined){
-       
-db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:parseInt(req.body.contact)}}).then(resp=>{
+ 
+      
+db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:{name:"",contact:parseInt(req.body.contact)}}}).then(resp=>{
       res.send({presence:0})
       
   })
@@ -1443,7 +1479,7 @@ db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:parseI
       }
   })
  
-})
+
 
 })
 app.post('/deleteClientOpinions',bodyParser.json(),(req,res)=>{
