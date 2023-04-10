@@ -967,6 +967,7 @@ registerModel({registerId:0,registerTitle:req.body.registerTitle,institution:req
   res.send({success:1,registerId:0,registerTitle:req.body.registerTitle,contact:req.body.contact})
 })
 
+
    }else {
     if(resp.length<=maxAttendeeRegisters-1||req.body.contact==703852178||req.body.contact==755643774){
 
