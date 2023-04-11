@@ -21,37 +21,8 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-    let category="mukEducation"
-    db.collection("multidocs").find({desc:category}).toArray().then(resp=>{
-      let index=0,index2=0,final=[]
-      resp[0].messagees.forEach(messagee=>{
-if(messagee.name==undefined){
-final.push({name:"",contact:messagee})
-}else{
-final.push(messagee)
-}
-        
-   
-        index++
 
-
-      })
-/*
-   final.forEach(obj=>{
-   
-console.log(index2)
-console.log(obj)
-index2++
-
-   })  
-    */
-   /*
-   db.collection("multidocs").updateOne({desc:category},{$set:{messagees:final}}).then(resp=>{
-console.log(resp)
-
-   })
-*/
-    })
+  
 
 }))
 
