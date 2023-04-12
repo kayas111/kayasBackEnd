@@ -248,6 +248,7 @@ module.exports.permissionTokensModel=mongoose.model('permissiontokens',new mongo
 module.exports.registerModel=mongoose.model('registers',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.articleAssessmentModel=mongoose.model('articleassessments',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.mukOpinionPollsModel=mongoose.model('mukopinionpolls',new mongoose.Schema({dynamic:String},{strict:false}))
+module.exports.mubsOpinionPollsModel=mongoose.model('mubsopinionpolls',new mongoose.Schema({dynamic:String},{strict:false}))
 
 
 

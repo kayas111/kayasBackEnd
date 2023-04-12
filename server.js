@@ -50,6 +50,7 @@ const requestsModel = require('./models/model').requests;
 const messagerModel = require('./models/model').messagerModel;
 const CommentModel = require('./models/model').comments;
 const mukOpinionPollsModel = require('./models/model').mukOpinionPollsModel;
+const mubsOpinionPollsModel = require('./models/model').mubsOpinionPollsModel;
 
 const articleGrantModel = require('./models/model').articleGrantModel;
 const CampusModel = require('./models/model').campus;
@@ -690,20 +691,56 @@ res.send({count:resp.length})
 app.post('/submitOpinionpoll/:collection',bodyParser.json(),(req,res)=>{
 try{
   
-db.collection(req.params.collection).find({contact:req.body.contact}).toArray().then(resp=>{
-if(resp.length==0){
-mukOpinionPollsModel(req.body).save().then(resp=>{
-
-res.send(["<div style='color:green;'>Please forward to other groups too and check for the polls after 30 minutes. Thanks for submitting</div>"])
-
-})
-
-
-}else{
-  res.send(["<div style='color:red;'>You already submitted, please forward to other groups and check for the polls after 30 minutes.</div>"])
+switch(req.params.collection){
+case 'mukopinionpolls':{
+  db.collection(req.params.collection).find({contact:req.body.contact}).toArray().then(resp=>{
+    if(resp.length==0){
+    mukOpinionPollsModel(req.body).save().then(resp=>{
+    
+    res.send(["<div style='color:green;'>Please forward to other groups too and check for the polls after 30 minutes. Thanks for submitting</div>"])
+    
+    })
+    
+    
+    }else{
+      res.send(["<div style='color:red;'>You already submitted, please forward to other groups and check for the polls after 30 minutes.</div>"])
+    }
+    
+    })
+    break ;
 }
 
-})
+case 'mubsopinionpolls':{
+  db.collection(req.params.collection).find({contact:req.body.contact}).toArray().then(resp=>{
+    if(resp.length==0){
+    mubsOpinionPollsModel(req.body).save().then(resp=>{
+    
+    res.send(["<div style='color:green;'>Please forward to other groups too and check for the polls after 30 minutes. Thanks for submitting</div>"])
+    
+    })
+    
+    
+    }else{
+      res.send(["<div style='color:red;'>You already submitted, please forward to other groups and check for the polls after 30 minutes.</div>"])
+    }
+    
+    })
+    break ;
+}
+
+
+
+
+
+
+default:{
+res.send(["Error must have occured, please try again later"])
+
+}
+
+
+
+}
  
 
   
