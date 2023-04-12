@@ -34,6 +34,7 @@ let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Num
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/model').comments;
 const quotesModel = require('./models/model').quotes;
+
 const opinionModel = require('./models/model').opinionModel;
 const hookupModel = require('./models/model').hookup;
 const pubArticleModel=require('./models/model').pubArticleModel;
@@ -48,6 +49,7 @@ const recommendationModel = require('./models/model').recommendation;
 const requestsModel = require('./models/model').requests;
 const messagerModel = require('./models/model').messagerModel;
 const CommentModel = require('./models/model').comments;
+const mukOpinionPollsModel = require('./models/model').mukOpinionPollsModel;
 
 const articleGrantModel = require('./models/model').articleGrantModel;
 const CampusModel = require('./models/model').campus;
@@ -672,16 +674,44 @@ app.get('/fetchArticle/:id',(req,res)=>{
    })
 })
 
+app.get('/opinionpolls/:collection/:candId',(req,res)=>{
+db.collection(req.params.collection).find({candId:parseInt(req.params.candId)}).toArray().then(resp=>{
+res.send({count:resp.length})
+
+})
 
 
 
-
-
-
+})
 
 
 //posts to the database
 
+app.post('/submitOpinionpoll/:collection',bodyParser.json(),(req,res)=>{
+try{
+  
+db.collection(req.params.collection).find({contact:req.body.contact}).toArray().then(resp=>{
+if(resp.length==0){
+mukOpinionPollsModel(req.body).save().then(resp=>{
+
+res.send(["<div style='color:green;'>Please forward to other groups too and check for the polls after 30 minutes. Thanks for submitting</div>"])
+
+})
+
+
+}else{
+  res.send(["<div style='color:red;'>You already submitted, please forward to other groups and check for the polls after 30 minutes.</div>"])
+}
+
+})
+ 
+
+  
+
+}catch(err){
+  console.log(err)
+}
+})
 app.post('/pushToAttendanceRegister',bodyParser.json(),(req,res)=>{
 
   try{db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
