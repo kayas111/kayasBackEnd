@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.533edd12.chunk.css",
-    "main.js": "/static/js/main.dc2b3181.chunk.js",
-    "main.js.map": "/static/js/main.dc2b3181.chunk.js.map",
+    "main.js": "/static/js/main.9f99e567.chunk.js",
+    "main.js.map": "/static/js/main.9f99e567.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.7da7bab1.js",
     "runtime-main.js.map": "/static/js/runtime-main.7da7bab1.js.map",
     "static/js/2.9fdc1e97.chunk.js": "/static/js/2.9fdc1e97.chunk.js",
@@ -133,6 +133,7 @@
     "static/media/client2s5.58ae5a71.jpg": "/static/media/client2s5.58ae5a71.jpg",
     "static/media/client2s6.d0910d7a.jpg": "/static/media/client2s6.d0910d7a.jpg",
     "static/media/client2s7.a017674f.jpg": "/static/media/client2s7.a017674f.jpg",
+    "static/media/client2s8.315fad9b.jpg": "/static/media/client2s8.315fad9b.jpg",
     "static/media/client2saud.5044fda6.mp3": "/static/media/client2saud.5044fda6.mp3",
     "static/media/client2saud1.9c014b12.mp3": "/static/media/client2saud1.9c014b12.mp3",
     "static/media/client2saud2.72bd5f4a.mp3": "/static/media/client2saud2.72bd5f4a.mp3",
@@ -386,6 +387,6 @@
     "static/js/runtime-main.7da7bab1.js",
     "static/js/2.9fdc1e97.chunk.js",
     "static/css/main.533edd12.chunk.css",
-    "static/js/main.dc2b3181.chunk.js"
+    "static/js/main.9f99e567.chunk.js"
   ]
 }

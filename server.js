@@ -238,18 +238,26 @@ app.get('/attendeesMessage/:registrarContact/:id', (req,res)=>{
 app.get('/attendees/:registrarContact/:id', (req,res)=>{
 
  try{
-  db.collection('registers').find({contact:parseInt(req.params.registrarContact),registerId:parseInt(req.params.id)}).toArray().then(resp=>{
-    if(resp.length==0){
-      ;
-    }else{
-    
-    res.send(resp[0].attendees)
-  
-
-    }
+  db.collection('controls').find({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(docArray=>{
    
+    db.collection('registers').find({contact:parseInt(req.params.registrarContact),registerId:parseInt(req.params.id)}).toArray().then(resp=>{
+      if(resp.length==0){
+        ;
+      }else{
+      res.send({brandTop:docArray[0].brandTop,attendees:resp[0].attendees})
+      
+    
   
-  })
+      }
+     
+    
+    })   
+    
+})
+
+
+
+ 
 }catch(err){
   console.log(err)
 }
