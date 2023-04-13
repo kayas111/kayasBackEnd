@@ -684,10 +684,16 @@ app.get('/fetchArticle/:id',(req,res)=>{
 })
 
 app.get('/opinionpolls/:collection/:candId',(req,res)=>{
-db.collection(req.params.collection).find({candId:parseInt(req.params.candId)}).toArray().then(resp=>{
-res.send({count:resp.length})
+  db.collection(req.params.collection).find().toArray().then(arrayOfVotesCast=>{
+    db.collection(req.params.collection).find({candId:parseInt(req.params.candId)}).toArray().then(resp=>{
 
-})
+      res.send({count:(resp.length/arrayOfVotesCast.length)*100})
+      
+      })
+
+  })
+
+
 
 
 
