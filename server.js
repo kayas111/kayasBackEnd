@@ -1047,7 +1047,7 @@ app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
 
    if(resp.length==0){
 registerModel({registerId:0,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-  attendees:[{name:req.body.name,contact:req.body.contact}],message:""
+  attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?"
 }).save().then(resp=>{
   res.send({success:1,registerId:0,registerTitle:req.body.registerTitle,contact:req.body.contact})
 })
@@ -1079,8 +1079,7 @@ db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=
   while(searchAgain==1)
 
   registerModel({registerId:newId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-    attendees:[{name:req.body.name,contact:req.body.contact}],message:""
-  }).save().then(resp=>{res.send({success:1,registerId:newId,registerTitle:req.body.registerTitle,contact:req.body.contact})})
+    attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?"}).save().then(resp=>{res.send({success:1,registerId:newId,registerTitle:req.body.registerTitle,contact:req.body.contact})})
 
 
 
