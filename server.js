@@ -7,7 +7,7 @@ const sgMail=require("@sendgrid/mail")
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const { ReturnDocument } = require('mongodb')
 const bodyParser=require('body-parser')
-const {google}=require('googleapis')
+const {google}=require('googleapis') 
 const nodemailer=require('nodemailer')
 const Flutterwave=require('flutterwave-node-v3')
 const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey)
@@ -701,7 +701,46 @@ app.get('/opinionpolls/:collection/:candId',(req,res)=>{
 
 
 //posts to the database
+app.post('/updateAttendanceRegDetails',bodyParser.json(),(req,res)=>{
 
+  db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
+ 
+  if(resp.length==0){
+    res.send(['<div style="color:red;">Register does not exist!</div>'])
+  }else{
+
+switch(req.body.fieldToUpdate){
+  case 'name':{
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{name:req.body.fieldValue}}).then(resp=>{
+      if(resp.modifiedCount==1){
+        res.send(['<div style="color:green;">Successful!</div>'])
+      }else{
+        res.send(['<div style="color:red;">Upto date!</div>'])
+
+      }
+    })
+    break;
+  }
+default:{
+  res.send(['<div style="color:red;">Field does not exist!</div>'])
+}
+}
+
+
+
+  }
+  })
+  
+  })
+
+app.post('/getAttendanceRegDetails',bodyParser.json(),(req,res)=>{
+
+ db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
+
+  res.send(resp)
+ })
+ 
+ })
 app.post('/submitOpinionpoll/:collection',bodyParser.json(),(req,res)=>{
 try{
   
