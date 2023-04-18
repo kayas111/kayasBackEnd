@@ -21,7 +21,10 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+//
 
+
+//
   
 
 }))
@@ -244,7 +247,7 @@ app.get('/attendees/:registrarContact/:id', (req,res)=>{
       if(resp.length==0){
         ;
       }else{
-      res.send({brandTop:docArray[0].brandTop,attendees:resp[0].attendees})
+      res.send({brandTop:docArray[0].brandTop,attendees:resp[0].attendees,closed:resp[0].closed})
       
     
   
@@ -741,6 +744,23 @@ app.post('/getAttendanceRegDetails',bodyParser.json(),(req,res)=>{
  })
  
  })
+
+ app.post('/closeopenAttendanceReg',bodyParser.json(),(req,res)=>{
+
+  db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
+ 
+ if(resp[0].closed==true){
+  db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{closed:false}}).then(resp=>{
+    res.send(['Openned succesfully'])
+  })
+ }else{
+  db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{closed:true}}).then(resp=>{
+    res.send(['Closed succesfully'])
+  })
+ }
+  })
+  
+  })
 app.post('/submitOpinionpoll/:collection',bodyParser.json(),(req,res)=>{
 try{
   
@@ -1080,18 +1100,28 @@ res.send(["Messagees is already uptodate!!"])
 })
 
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
+  function CreateAttendanceRegister(registerId){
+    registerModel({registerId:registerId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
+      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?",closed:false
+    }).save().then(resp=>{
+      res.send({success:1,registerId,registerTitle:req.body.registerTitle,contact:req.body.contact})
+    })
+
+  }
   try{
 
     db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=>{
 
    if(resp.length==0){
+    /*
 registerModel({registerId:0,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-  attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?"
+  attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?",closed:false
 }).save().then(resp=>{
   res.send({success:1,registerId:0,registerTitle:req.body.registerTitle,contact:req.body.contact})
 })
 
-
+*/
+CreateAttendanceRegister(0)
    }else {
     if(resp.length<=maxAttendeeRegisters-1||req.body.contact==703852178||req.body.contact==755643774){
 
@@ -1116,13 +1146,14 @@ db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=
   
   }}
   while(searchAgain==1)
-
+/*
   registerModel({registerId:newId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-    attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?"}).save().then(resp=>{res.send({success:1,registerId:newId,registerTitle:req.body.registerTitle,contact:req.body.contact})})
+    attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?",closed:false}).save().then(resp=>{
+      res.send({success:1,registerId:newId,registerTitle:req.body.registerTitle,contact:req.body.contact})})
+ */
+      CreateAttendanceRegister(newId)
 
-
-
- })
+    })
 
    }
 else{
@@ -1489,7 +1520,7 @@ req.body.forEach(messagee=>{
       }
   })
 if(errorMessagees.length==0){
-  let category='mukContacts';
+  let category='mubsContacts';
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
     let newMessagees=[]
     
@@ -1503,8 +1534,8 @@ if(resp[0].messagees.find(inList=>{
       
 
 }else{
-  console.log("present")
-    newMessagees.push(messagee)
+ // console.log("present")
+    //newMessagees.push(messagee)
 
 
   
