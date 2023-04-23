@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const fs=require('fs')
 const path=require('path')
 require('dotenv').config()
 const request = require('request')
@@ -22,6 +23,10 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
 //
+
+
+//GenerateSmsContacts([1,2,3,4],3,4,'./files/sms')
+
 
 
 //
@@ -73,6 +78,36 @@ const hookupRegistrationFee=500
 
 
 //functions start
+
+function GenerateSmsContacts(contactsArray,fromPosition,toPosition,storageDirectory){
+  
+ try{
+  if(fromPosition<1){ console.log("From position must be greater than zero")}else{
+    console.log("Starting.....")
+    do{
+      console.log(fromPosition)
+      fs.appendFile(storageDirectory,'256'+contactsArray[fromPosition-1]+'\n', err => {
+          if (err) {
+            console.error(err);
+          }else{
+            ;
+          }
+        
+        })
+        fromPosition++
+    
+    }while(fromPosition<=toPosition)
+    console.log("Completed")
+  }
+
+  }catch(err){
+
+  console.log(err)
+ }
+
+
+}
+
 async function DndFilter(contactsArray,callBackFunction){
   let result =[]
   await db.collection('controls').find({ _id: new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(resp=>{
@@ -215,9 +250,6 @@ app.use(express.static(path.join(__dirname,'/build')))
 //pages router
 app.use(pagesRouter)
 
-
-
-
 //access databse by get
 app.get('/attendeesMessage/:registrarContact/:id', (req,res)=>{
 
@@ -279,8 +311,6 @@ app.get('/collection_controls_visits', (req,res)=>{
     
     }) 
 
-
-
     app.get('/collection_registers_registers', (req,res)=>{db.collection('registers').find().toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand1', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:1}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand2', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:2}).toArray().then((array)=>{res.send(array)})}) 
@@ -295,8 +325,6 @@ app.get('/collection_controls_visits', (req,res)=>{
     })
       
    
-    
-    
     
     })}) 
     
@@ -704,6 +732,39 @@ app.get('/opinionpolls/:collection/:candId',(req,res)=>{
 
 
 //posts to the database
+/*
+app.post('/testbackend',bodyParser.json(),(req,res)=>{
+console.log("..........")
+request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+  method:"SendSms",
+  userdata:{
+     username:"kayas",
+     password:"onongeopio"
+  },
+  msgdata:[
+     {
+        number:"256774643854",
+        message:"testing the api",
+        senderid:"1111111111"
+     },
+     {
+      number:"256785271418",
+      message:"logan with janet",
+      senderid:"1111111111"
+   }
+  ]
+}}, function (error, response, body) {
+  if (!error && response.statusCode == 201) {
+      console.log(body);
+  }else{
+    console.log(body)
+  }
+}
+
+)
+
+})
+*/
 app.post('/updateAttendanceRegDetails',bodyParser.json(),(req,res)=>{
 
   db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
@@ -747,19 +808,29 @@ app.post('/getAttendanceRegDetails',bodyParser.json(),(req,res)=>{
 
  app.post('/closeopenAttendanceReg',bodyParser.json(),(req,res)=>{
 
+try{
   db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
- 
- if(resp[0].closed==true){
-  db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{closed:false}}).then(resp=>{
-    res.send(['Openned succesfully'])
-  })
- }else{
-  db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{closed:true}}).then(resp=>{
-    res.send(['Closed succesfully'])
-  })
- }
-  })
   
+ if(resp.length==0){
+ res.send(["Register absent"])
+ }else{
+  if(resp[0].closed==true){
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{closed:false}}).then(resp=>{
+      res.send(['Openned succesfully'])
+    })
+   }else{
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{closed:true}}).then(resp=>{
+      res.send(['Closed succesfully'])
+    })
+   }
+ }
+    
+  
+   
+     })
+}catch(err){
+  console.log(err)
+}
   })
 app.post('/submitOpinionpoll/:collection',bodyParser.json(),(req,res)=>{
 try{
@@ -1281,7 +1352,7 @@ db.collection('registers').find({contact:req.body.registrarContact,registerId:re
   if(resp.length==0){
 res.send({registerPresent:0})
   }else{
-    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{registerTitle:req.body.registerTitle,attendees:[{name:resp[0].name,contact:req.body.registrarContact}]}}).then(resp=>{
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{registerTitle:req.body.registerTitle,attendees:[{name:resp[0].name,contact:req.body.registrarContact}],message:"🔥Can I speak to you briefly if you do not mind?"}}).then(resp=>{
       if(resp.modifiedCount==1){
 res.send({success:1})
       }else{
@@ -1534,8 +1605,8 @@ if(resp[0].messagees.find(inList=>{
       
 
 }else{
- // console.log("present")
-    //newMessagees.push(messagee)
+ console.log("present")
+    newMessagees.push(messagee)
 
 
   
