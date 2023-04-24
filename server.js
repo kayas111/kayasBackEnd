@@ -14,6 +14,9 @@ const Flutterwave=require('flutterwave-node-v3')
 const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey)
 const emailValidator = require('deep-email-validator');
 const mongoose=require('mongoose')
+const webpush=require('web-push')
+
+
 mongoose.set('strictQuery', false)
 const bcrypt=require('bcrypt')
 var formidable = require('formidable');
@@ -22,9 +25,8 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+
 //
-
-
 
 
 //GenerateSmsContacts([1,2,3,4],3,4,'./files/sms')
@@ -35,7 +37,6 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
   
 
 }))
-
 
 
 
@@ -734,9 +735,18 @@ app.get('/opinionpolls/:collection/:candId',(req,res)=>{
 
 
 //posts to the database
-/*
+
 app.post('/testbackend',bodyParser.json(),(req,res)=>{
-console.log("..........")
+let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
+webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
+const subscription=req.body
+const payLoad=JSON.stringify({title:'PUSH TEST',body:'best man'})
+webpush.sendNotification(subscription,payLoad).then(resp=>{
+console.log("Push notification sent.........")
+
+}).catch(err=>console.log(err))
+})
+/*
 request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
   method:"SendSms",
   userdata:{
@@ -765,8 +775,18 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
 )
 
-})
 */
+
+app.post('/getPushNotification',bodyParser.json(),(req,res)=>{
+  let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
+  webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
+  const subscription=req.body
+  const payLoad=JSON.stringify({title:'Kayas update!',body:'We now offer SMS notifications as well! Please contact us'})
+  webpush.sendNotification(subscription,payLoad).then(resp=>{
+ 
+  
+  }).catch(err=>console.log(err))
+  })
 app.post('/updateAttendanceRegDetails',bodyParser.json(),(req,res)=>{
 
   db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
