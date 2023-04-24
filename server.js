@@ -777,25 +777,17 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
 */
 
-function SendPushNotification(){
- 
+app.post('/getPushNotification',bodyParser.json(),(req,res)=>{
   try{
 
     let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
     webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
-   
+   let subscription=req.body
     db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then(docArray=>{
   
   
       const payLoad=JSON.stringify({title:'🔥Kayas: '+docArray[0].notification.title,body:docArray[0].notification.body})
-      webpush.sendNotification({
-        endpoint: 'https://fcm.googleapis.com/fcm/send/fpYrA6wQi40:APA91bFkHKVePCdQbVSIQcM8tHDEAQAmTImmo5PEeV1asl8zybXErfi5IXLQnKxdwVP69RMPZ5BU9PuPOo4G18m2qFn1pm8p3H2186zcsAgf-7NgMm0uFLuP7rjtNzBaAG75egSbFGKH',
-        expirationTime: null,
-        keys: {
-          p256dh: 'BE7Q-To84aBJDzvUZvP3EMu3yfBWFuiZxkAC3ORFs6-k3y6mxeAiy08RB8BqRjeyiyodNVzZN94U6l_niGqdY4Y',
-          auth: 'fK8wQeK4mkvyl9LC7qETsg'
-        }
-      },payLoad).then(resp=>{
+      webpush.sendNotification(subscription,payLoad).then(resp=>{
      
       
       }).catch(err=>console.log(err))
@@ -811,12 +803,6 @@ function SendPushNotification(){
     console.log(err)
    }
   
-   
-
-}
-
-app.post('/getPushNotification',bodyParser.json(),(req,res)=>{
-  SendPushNotification()
   })
 app.post('/updateAttendanceRegDetails',bodyParser.json(),(req,res)=>{
 
