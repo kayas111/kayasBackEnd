@@ -777,6 +777,23 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
 */
 
+
+
+app.post('/setPushNotification',bodyParser.json(),(req,res)=>{
+ 
+db.collection('controls').updateOne({_id:new ObjectId("6446c593a0c184843ed48174")},{$set:{notification:req.body}}).then(resp=>{
+if(resp.modifiedCount==1){
+
+  res.send(["Succesfull"])
+}else{
+  res.send(["Upto date!"])
+
+}
+
+})
+
+})
+
 app.post('/getPushNotification',bodyParser.json(),(req,res)=>{
   try{
 
