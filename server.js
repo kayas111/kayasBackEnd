@@ -37,8 +37,8 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
   
 
 }))
-
-
+let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
+webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
 
 let maxAttendeeRegisters=10
 let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
@@ -46,6 +46,7 @@ let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{typ
 const {db} = require('./models/model').comments;
 const quotesModel = require('./models/model').quotes;
 
+const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const opinionModel = require('./models/model').opinionModel;
 const hookupModel = require('./models/model').hookup;
 const pubArticleModel=require('./models/model').pubArticleModel;
@@ -313,7 +314,7 @@ app.get('/collection_controls_visits', (req,res)=>{
        
     
     }) 
-
+    app.get('/firstPushNotificationTime', (req,res)=>{db.collection('controls').find({_id:new ObjectId('6446c593a0c184843ed48174')}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collection_registers_registers', (req,res)=>{db.collection('registers').find().toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand1', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:1}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand2', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:2}).toArray().then((array)=>{res.send(array)})}) 
@@ -794,26 +795,52 @@ if(resp.modifiedCount==1){
 
 })
 
-app.post('/getPushNotification',bodyParser.json(),(req,res)=>{
-  try{
 
-    let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
-    webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
-   let subscription=req.body
+app.post('/subscribeForWebPush',bodyParser.json(),(req,res)=>{
+
+try{  let subscription=req.body
+  db.collection('webpushsubscriptions').find({endpoint:subscription.endpoint}).toArray().then(resp=>{
+ if(resp.length==0){
+   webPushSubscriptionModel(subscription).save().then(resp=>{
+;
+   })
+ 
+ }else{
+ ;
+ }
+ 
+ 
+ 
+ })
+ }catch(err){
+  console.log(err)
+}
+
+})
+
+
+app.post('/sendPushNotifications',bodyParser.json(),(req,res)=>{
+  try{
     db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then(docArray=>{
-  
-  
-      const payLoad=JSON.stringify({title:'🔥Kayas: '+docArray[0].notification.title,body:docArray[0].notification.body})
-      webpush.sendNotification(subscription,payLoad).then(resp=>{
-     
+  const payLoad=JSON.stringify({title:'🔥Kayas: '+docArray[0].notification.title,body:docArray[0].notification.body})
+
+
       
-      }).catch(err=>console.log(err))
-  
+      db.collection('webpushsubscriptions').find().toArray().then(resp=>{
+if(resp.length==0){
+  ;
+}else{
+let subscriptions=resp
+
+subscriptions.forEach(subscription=>{
+  webpush.sendNotification(subscription,payLoad).then(resp=>{}).catch(err=>console.log(err))
+})
+
+
+}
+  })
+     
     })
-  
-  
-  
-  
   
   
    }catch(err){

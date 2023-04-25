@@ -244,6 +244,7 @@ module.exports.quotes=quotesModel
 module.exports.trader=tradingRegistrationModel
 module.exports.hookup=hookupModel
 module.exports.monitoredOpinionsModel=monitoredOpinionsModel
+module.exports.webPushSubscriptionModel=mongoose.model('webpushsubscriptions',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.permissionTokensModel=mongoose.model('permissiontokens',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.registerModel=mongoose.model('registers',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.articleAssessmentModel=mongoose.model('articleassessments',new mongoose.Schema({dynamic:String},{strict:false}))
