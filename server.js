@@ -863,6 +863,30 @@ try{  let subscription=req.body
 
 })
 
+app.post('/getPushNotification',bodyParser.json(),(req,res)=>{
+
+  try{
+    let subscription=req.body
+
+    db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then(docArray=>{
+  const payLoad=JSON.stringify({title:'🔥Kayas: '+docArray[0].notification.title,body:docArray[0].notification.body})
+
+
+
+  webpush.sendNotification(subscription,payLoad).then(resp=>{}).catch(err=>console.log(err))
+
+
+
+
+     
+    })
+  
+  
+   }catch(err){
+    console.log(err)
+   }
+  
+  }) 
 
 
 app.post('/updateAttendanceRegDetails',bodyParser.json(),(req,res)=>{
