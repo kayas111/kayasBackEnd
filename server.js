@@ -331,7 +331,39 @@ app.get('/collection_controls_visits', (req,res)=>{
    
     
     })}) 
-    
+
+
+    app.get('/getCurrentPushNotification', (req,res)=>{db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then((array)=>{res.send(array)})})
+ app.get('/sendPushNotifications',bodyParser.json(),(req,res)=>{
+  try{
+    db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then(docArray=>{
+  const payLoad=JSON.stringify({title:'🔥Kayas: '+docArray[0].notification.title,body:docArray[0].notification.body})
+
+
+      
+      db.collection('webpushsubscriptions').find().toArray().then(resp=>{
+
+if(resp.length==0){
+  ;
+}else{
+let subscriptions=resp
+
+subscriptions.forEach(subscription=>{
+  webpush.sendNotification(subscription,payLoad).then(resp=>{}).catch(err=>console.log(err))
+})
+
+
+}
+  })
+     
+    })
+  
+  
+   }catch(err){
+    console.log(err)
+   }
+  
+  })   
 app.get('/attendanceregs/:registrar/:id', (req,res)=>{db.collection('registers').find({contact:parseInt(req.params.registrar),registerId:parseInt(req.params.id)}).toArray().then((array)=>{
   if(array.length==0){
     res.send({presence:0})
@@ -802,6 +834,19 @@ try{  let subscription=req.body
   db.collection('webpushsubscriptions').find({endpoint:subscription.endpoint}).toArray().then(resp=>{
  if(resp.length==0){
    webPushSubscriptionModel(subscription).save().then(resp=>{
+
+
+   webpush.sendNotification( {
+    endpoint: 'https://fcm.googleapis.com/fcm/send/d86RwTKjf1s:APA91bGuOL16beGUDPOFZSpi0xrCZLKl0jq13D10L5smZ7rpGT6vQ-cXysSY3L-mVgpbadZ1mMlqoY0G0l_F6kZJvdjeT8DpeY-SB1I1niCcf58B6PUNJV1dNeZC8h3fQ2Up0L7-zpu9',
+    expirationTime: null,
+    keys: {
+      p256dh: 'BC6_Ev_kyW3IheRjIEdDzLAzTl4kvDjyiYZsJgjM2R87tx34vufJ2X3eH4H1ubDIMu0Ymot9Uf-bIck6rAEjW6I',
+      auth: '3ZXaRWD67-UYiOu9Tj-36w'
+    },
+    __v: 0,
+    contact: 755643774
+  },JSON.stringify({title:'🔥Kayas: New subscriber received!',body:'Keep it Kayas!'})).then(resp=>{}).catch(err=>console.log(err))
+
 ;
    })
  
@@ -819,35 +864,7 @@ try{  let subscription=req.body
 })
 
 
-app.post('/sendPushNotifications',bodyParser.json(),(req,res)=>{
-  try{
-    db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then(docArray=>{
-  const payLoad=JSON.stringify({title:'🔥Kayas: '+docArray[0].notification.title,body:docArray[0].notification.body})
 
-
-      
-      db.collection('webpushsubscriptions').find().toArray().then(resp=>{
-if(resp.length==0){
-  ;
-}else{
-let subscriptions=resp
-
-subscriptions.forEach(subscription=>{
-  webpush.sendNotification(subscription,payLoad).then(resp=>{}).catch(err=>console.log(err))
-})
-
-
-}
-  })
-     
-    })
-  
-  
-   }catch(err){
-    console.log(err)
-   }
-  
-  })
 app.post('/updateAttendanceRegDetails',bodyParser.json(),(req,res)=>{
 
   db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
