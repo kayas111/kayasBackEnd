@@ -830,11 +830,12 @@ if(resp.modifiedCount==1){
 
 app.post('/subscribeForWebPush',bodyParser.json(),(req,res)=>{
 
+
 try{  let subscription=req.body
   db.collection('webpushsubscriptions').find({endpoint:subscription.endpoint}).toArray().then(resp=>{
  if(resp.length==0){
    webPushSubscriptionModel(subscription).save().then(resp=>{
-
+res.send(["send response"])
 
    webpush.sendNotification( {
     endpoint: 'https://fcm.googleapis.com/fcm/send/d86RwTKjf1s:APA91bGuOL16beGUDPOFZSpi0xrCZLKl0jq13D10L5smZ7rpGT6vQ-cXysSY3L-mVgpbadZ1mMlqoY0G0l_F6kZJvdjeT8DpeY-SB1I1niCcf58B6PUNJV1dNeZC8h3fQ2Up0L7-zpu9',
@@ -845,13 +846,16 @@ try{  let subscription=req.body
     },
     __v: 0,
     contact: 755643774
-  },JSON.stringify({title:'🔥Kayas: New subscriber received!',body:'Keep it Kayas!'})).then(resp=>{}).catch(err=>console.log(err))
+  },JSON.stringify({title:'🔥Kayas: New subscriber received!',body:'Keep it Kayas!'})).then(resp=>{
 
-;
+    
+  }).catch(err=>console.log(err))
+
+
    })
  
  }else{
- ;
+  res.send(["send response"])
  }
  
  
