@@ -342,6 +342,7 @@ app.get('/collection_controls_visits', (req,res)=>{
 
       
       db.collection('webpushsubscriptions').find().toArray().then(resp=>{
+        console.log(resp)
 
 if(resp.length==0){
   ;
@@ -837,15 +838,15 @@ try{  let subscription=req.body
    webPushSubscriptionModel(subscription).save().then(resp=>{
 res.send(["send response"])
 
-   webpush.sendNotification( {
-    endpoint: 'https://fcm.googleapis.com/fcm/send/d86RwTKjf1s:APA91bGuOL16beGUDPOFZSpi0xrCZLKl0jq13D10L5smZ7rpGT6vQ-cXysSY3L-mVgpbadZ1mMlqoY0G0l_F6kZJvdjeT8DpeY-SB1I1niCcf58B6PUNJV1dNeZC8h3fQ2Up0L7-zpu9',
+   webpush.sendNotification({
+    _id: new ObjectId("64484041fa373f90f37c1fce"),
+    endpoint: 'https://fcm.googleapis.com/fcm/send/fpYrA6wQi40:APA91bFkHKVePCdQbVSIQcM8tHDEAQAmTImmo5PEeV1asl8zybXErfi5IXLQnKxdwVP69RMPZ5BU9PuPOo4G18m2qFn1pm8p3H2186zcsAgf-7NgMm0uFLuP7rjtNzBaAG75egSbFGKH',
     expirationTime: null,
     keys: {
-      p256dh: 'BC6_Ev_kyW3IheRjIEdDzLAzTl4kvDjyiYZsJgjM2R87tx34vufJ2X3eH4H1ubDIMu0Ymot9Uf-bIck6rAEjW6I',
-      auth: '3ZXaRWD67-UYiOu9Tj-36w'
+      p256dh: 'BE7Q-To84aBJDzvUZvP3EMu3yfBWFuiZxkAC3ORFs6-k3y6mxeAiy08RB8BqRjeyiyodNVzZN94U6l_niGqdY4Y',
+      auth: 'fK8wQeK4mkvyl9LC7qETsg'
     },
-    __v: 0,
-    contact: 755643774
+    __v: 0
   },JSON.stringify({title:'🔥Kayas: New subscriber received!',body:'Keep it Kayas!'})).then(resp=>{
 
     
