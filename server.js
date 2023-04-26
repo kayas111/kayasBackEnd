@@ -342,7 +342,7 @@ app.get('/collection_controls_visits', (req,res)=>{
 
       
       db.collection('webpushsubscriptions').find().toArray().then(resp=>{
-        console.log(resp)
+     
 
 if(resp.length==0){
   ;
@@ -830,8 +830,6 @@ if(resp.modifiedCount==1){
 
 
 app.post('/subscribeForWebPush',bodyParser.json(),(req,res)=>{
-
-
 try{  let subscription=req.body
   db.collection('webpushsubscriptions').find({endpoint:subscription.endpoint}).toArray().then(resp=>{
  if(resp.length==0){
@@ -839,14 +837,15 @@ try{  let subscription=req.body
 res.send(["send response"])
 
    webpush.sendNotification({
-    _id: new ObjectId("64484041fa373f90f37c1fce"),
-    endpoint: 'https://fcm.googleapis.com/fcm/send/fpYrA6wQi40:APA91bFkHKVePCdQbVSIQcM8tHDEAQAmTImmo5PEeV1asl8zybXErfi5IXLQnKxdwVP69RMPZ5BU9PuPOo4G18m2qFn1pm8p3H2186zcsAgf-7NgMm0uFLuP7rjtNzBaAG75egSbFGKH',
+    _id: new ObjectId("6448c710f019e4aafbda6f7b"),
+    endpoint: 'https://fcm.googleapis.com/fcm/send/c8iYt7U2iVo:APA91bE2wVqgPY2L2Ia86uYX9ycrrQjdRjJmDSzdroGYXucAu2x-gKQau1yCxTKcOa7RgUsGXvWWjJ1j_UVHTtmQ2nx9lHn126egNJ2wAIhq45Fis8ebDzHWYsh7iFfsVjPHdbkU10IT',
     expirationTime: null,
     keys: {
-      p256dh: 'BE7Q-To84aBJDzvUZvP3EMu3yfBWFuiZxkAC3ORFs6-k3y6mxeAiy08RB8BqRjeyiyodNVzZN94U6l_niGqdY4Y',
-      auth: 'fK8wQeK4mkvyl9LC7qETsg'
+      p256dh: 'BFuPmmkLruLDIkodmSdSbnZY0tZGitWTRZ3pK5poRHL0dqxAMaygyxspXNqeIQkSNAw5_Fo0N90yJUG0nH98VXo',
+      auth: 'L5m0UPPo5Ku8GFs9pt7AAw'
     },
-    __v: 0
+    __v: 0,
+    contact: 703852178
   },JSON.stringify({title:'🔥Kayas: New subscriber received!',body:'Keep it Kayas!'})).then(resp=>{
 
     
