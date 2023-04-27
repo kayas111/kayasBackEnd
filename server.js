@@ -1719,7 +1719,7 @@ req.body.forEach(messagee=>{
       }
   })
 if(errorMessagees.length==0){
-  let category='mubsContacts';
+  let category='mukEducation';
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
     let newMessagees=[]
     
