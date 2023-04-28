@@ -344,8 +344,41 @@ app.get('/collection_controls_visits', (req,res)=>{
  
     
       db.collection('webpushsubscriptions').find().toArray().then(resp=>{
-      let numbOfNotified=0;
-let subscriptionNumb=resp.length,count
+      let numbOfNotified=0,numbOfErrors=0,count=0;
+let subscriptionNumb=resp.length
+
+function SendReport(subscribers,success,errors){
+  if(subscriptionNumb==count){;
+  
+    webpush.sendNotification({
+       _id: new ObjectId("6448c710f019e4aafbda6f7b"),
+       endpoint: 'https://fcm.googleapis.com/fcm/send/c8iYt7U2iVo:APA91bE2wVqgPY2L2Ia86uYX9ycrrQjdRjJmDSzdroGYXucAu2x-gKQau1yCxTKcOa7RgUsGXvWWjJ1j_UVHTtmQ2nx9lHn126egNJ2wAIhq45Fis8ebDzHWYsh7iFfsVjPHdbkU10IT',
+       expirationTime: null,
+       keys: {
+         p256dh: 'BFuPmmkLruLDIkodmSdSbnZY0tZGitWTRZ3pK5poRHL0dqxAMaygyxspXNqeIQkSNAw5_Fo0N90yJUG0nH98VXo',
+         auth: 'L5m0UPPo5Ku8GFs9pt7AAw'
+       },
+       __v: 0,
+       contact: 703852178
+     },JSON.stringify({title:`🔥Kayas: Subscribers: ${subscribers} `,body:`Notified ${success}, Errors: ${errors}`})).then(resp=>{
+     
+       
+     }).catch(err=>console.log(err))
+    
+   
+   
+   }else{
+  
+    ;
+   
+    
+   }
+}
+
+
+
+
+
 if(resp.length==0){
   ;
 }else{
@@ -353,10 +386,12 @@ let subscriptions=resp
 
 subscriptions.forEach((subscription)=>{
   webpush.sendNotification(subscription,payLoad).then(resp=>{
-
 if(resp.statusCode==201){
   numbOfNotified+=1
+  count+=1
+  SendReport(subscriptionNumb,numbOfNotified,numbOfErrors)
 
+/*
 if(subscriptionNumb==numbOfNotified){;
  webpush.sendNotification({
     _id: new ObjectId("6448c710f019e4aafbda6f7b"),
@@ -382,14 +417,34 @@ if(subscriptionNumb==numbOfNotified){;
  
 }
 
+*/
+  
+}else{
+  
+  
+  
+  
+  
+  
+  ;
+
+
+
+}
+  }).catch(err=>{
+    numbOfErrors+=1
+    count+=1
+    
+    console.log("Invalid endpoint for webpush subscriptions")
 
   
-}else{;}
-  }).catch(err=>{
-    console.log("Was an error with invalid enpoint for webpush subscriptions")
-   db.collection('webpushsubscriptions').deleteOne({endpoint:err.endpoint}).then(resp=>{
+    db.collection('webpushsubscriptions').deleteOne({endpoint:err.endpoint}).then(resp=>{
       ;
     })
+
+    SendReport(subscriptionNumb,numbOfNotified,numbOfErrors)
+
+
   
   })
 })
