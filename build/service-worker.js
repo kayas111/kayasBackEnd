@@ -16,3 +16,10 @@ self.registration.showNotification(data.title,{body:data.body,icon:''})
 
 
 })
+
+self.addEventListener(
+  "pushsubscriptionchange",
+  (e) => {
+console.log(e)
+
+  })

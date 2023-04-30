@@ -30,7 +30,6 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 //
 
 
-
 //GenerateSmsContacts([1,2,3,4],3,4,'./files/sms')
 
 
@@ -1017,6 +1016,24 @@ switch(req.body.fieldToUpdate){
     })
     break;
   }
+
+  case 'permissionToAddContactTokens':{
+   
+
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{permissionToAddContactTokens:parseInt(req.body.fieldValue)}}).then(resp=>{
+      if(resp.modifiedCount==1){
+        res.send(['<div style="color:green;">Successful!</div>'])
+      }else{
+        res.send(['<div style="color:red;">Upto date!</div>'])
+
+      }
+      })
+
+    break;
+  }
+
+  
+
 default:{
   res.send(['<div style="color:red;">Field does not exist!</div>'])
 }
@@ -1290,17 +1307,24 @@ app.post('/addToAttendeesRegister',bodyParser.json(),(req,res)=>{
 try{
 
 db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
+
   if(resp.length==0){
     res.send({registerPresent:0})
-  }else{
+  }
+  else if(resp[0].permissionToAddContactTokens<1 && resp[0].contact!=(703852178||755643774)){
+    res.send({permissionToAddContact:0})
+  }
+  else{
 if(resp[0].attendees.find(attendee=>{return attendee.contact==req.body.contact})==undefined){
 db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$push:{attendees:{name:req.body.name,contact:req.body.contact}}}).then(resp=>{
  if(resp.modifiedCount==1){
   db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
   
     res.send({success:1,attendees:resp[0].attendees})
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{permissionToAddContactTokens:resp[0].permissionToAddContactTokens-1}}).then(resp=>{;})
   })
 
+  
  }else{
   res.send({success:'updateDidntTakePlace'})
  }
@@ -1405,7 +1429,7 @@ res.send(["Messagees is already uptodate!!"])
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
   function CreateAttendanceRegister(registerId){
     registerModel({registerId:registerId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?",closed:false
+      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?",permissionToAddContactTokens:1,closed:false
     }).save().then(resp=>{
       res.send({success:1,registerId,registerTitle:req.body.registerTitle,contact:req.body.contact})
     })
@@ -1416,14 +1440,7 @@ app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
     db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=>{
 
    if(resp.length==0){
-    /*
-registerModel({registerId:0,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-  attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?",closed:false
-}).save().then(resp=>{
-  res.send({success:1,registerId:0,registerTitle:req.body.registerTitle,contact:req.body.contact})
-})
 
-*/
 CreateAttendanceRegister(0)
    }else {
     if(resp.length<=maxAttendeeRegisters-1||req.body.contact==703852178||req.body.contact==755643774){
@@ -1449,11 +1466,7 @@ db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=
   
   }}
   while(searchAgain==1)
-/*
-  registerModel({registerId:newId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-    attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?",closed:false}).save().then(resp=>{
-      res.send({success:1,registerId:newId,registerTitle:req.body.registerTitle,contact:req.body.contact})})
- */
+
       CreateAttendanceRegister(newId)
 
     })
