@@ -136,29 +136,8 @@ const registrationSchema=new Func({
 let pendingRegistrationModel=mongoose.model('pendingregistrations',registrationSchema)
 let registrationModel=mongoose.model('kayasers',registrationSchema)
 
-const bidsSchema=new Func({
-   
-   
-    contact:{
-        type:String,
-        required:true
-    },
-     amount:{
-    type:Number,
-    required:true
-    },
-tradingId:{
-        type:String,
-        required:true
-    },
-    traderName:{
-        type:String,
-        required:true
-    }
-   
-    
-},{timestamps:true})
-let bidsModel=mongoose.model('bids',bidsSchema)
+
+
 
 
 const campusSchema=new Func({
@@ -233,7 +212,7 @@ module.exports.messagerModel=messagerModel
 module.exports.pubArticleModel=pubArticleModel
 module.exports.groupLinkModel=groupLinkModel
 module.exports.recommendation=recommendationModel
-module.exports.bid=bidsModel
+
 module.exports.requests=requestsModel
 module.exports.campus=campusModel
 module.exports.opinionModel=opinionModel
@@ -244,6 +223,7 @@ module.exports.quotes=quotesModel
 module.exports.trader=tradingRegistrationModel
 module.exports.hookup=hookupModel
 module.exports.monitoredOpinionsModel=monitoredOpinionsModel
+module.exports.bid=bidsModel=mongoose.model('bids',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.webPushSubscriptionModel=mongoose.model('webpushsubscriptions',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.permissionTokensModel=mongoose.model('permissiontokens',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.registerModel=mongoose.model('registers',new mongoose.Schema({dynamic:String},{strict:false}))

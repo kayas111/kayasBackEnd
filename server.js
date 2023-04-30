@@ -476,7 +476,7 @@ res.send({name:array[0].name,institution:array[0].institution,registerTitle:arra
 
 app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
 app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{res.send(array)})})
-app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({amount:-1}).toArray().then((array)=>{res.send(array)})})     
+app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({bidAmount:-1}).toArray().then((array)=>{res.send(array)})})     
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_hookups', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
@@ -2424,74 +2424,17 @@ app.post('/deleteAllOrders', (req,res)=>{
 
   }
 )})
-app.post('/collection_bids_bid', (req,res)=>{
-  var form = new formidable.IncomingForm();
+app.post('/submitBid',bodyParser.json(), (req,res)=>{
 
-  form.parse(req, function (err, fields, files){
- 
-  inCollection("traders",[parseInt(fields.tradingId)]).then(resp=>{
+  bidsModel(req.body).save().then(resp=>{
+   if(resp.length==0){
+    res.send(['Error must have occured'])
+   }else{
+res.send([`<div style="color:green;">Thanks ${resp.name} for submitting. Scroll down to see</div>`])
 
-if(resp==true){
-db.collection("traders").find({contact:parseInt(fields.tradingId)}).toArray().then(trader=>{
-
-
-
-  if(bcrypt.compareSync(fields.tradingCode,trader[0].tradingCode)){
-      
-
-try{
-  let data={contact:fields.contact,amount:parseInt(fields.bidAmount),tradingId:parseInt(fields.tradingId),traderName:trader[0].name}
-  const bid=new bidsModel(data)
-  bid.save().then(res=>console.log(fields.contact+" has submitted a bid"))
- 
-  res.redirect('/pages/bids/bidshome')
-  res.end() 
-
-
-
-}
-      catch(error){
-          console.log("Kayas, an error occured due to submitting a bid and its below: ")
-          console.log(error)
-          
-          }
-    
-  }else{
-
-
-      res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong trading code</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your trading code is incorrect. Incase you dont know the trading code, contact the student who sent this message to you.<p></p><a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
-
-
-
-  }
-
-
-
-
-
-
-
-
-
-
-})
-
-
-}
-else{
-  res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Wrong trading ID</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not post your amount because you entered a wrong trading ID. Incase you dont know the trading ID, contact the student who sent this message to you. <p></p><a href="https://kayas-mak.herokuapp.com/pages/bids/bidshome">Try again</a> <p></p> Thank you for keeping it Kayas</div>')
-}
-
-
-     
-
+   }
   })
-
-
-
-     
-       })
-
+ 
   });
 
 
