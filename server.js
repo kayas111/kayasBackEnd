@@ -67,7 +67,7 @@ const mubsOpinionPollsModel = require('./models/model').mubsOpinionPollsModel;
 
 const articleGrantModel = require('./models/model').articleGrantModel;
 const CampusModel = require('./models/model').campus;
-const bidsModel = require('./models/model').bid;
+const bidsModel = require('./models/model').bidsModel;
 const registrationModel = require('./models/model').registration;
 const pendingRegistrationModel = require('./models/model').pendingRegistration;
 const { ObjectId } = require('mongodb');
