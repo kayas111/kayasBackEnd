@@ -254,7 +254,7 @@ app.use(express.static(path.join(__dirname,'/build')))
 
 //pages router
 app.use(pagesRouter)
-
+app.use(bodyParser.json())
 //access databse by get
 app.get('/attendeesMessage/:registrarContact/:id', (req,res)=>{
 
@@ -315,6 +315,20 @@ app.get('/collection_controls_visits', (req,res)=>{
        
     
     }) 
+    app.get('/deleteAllBids', (req,res)=>{
+    
+
+          db.collection("bids").deleteMany({}).then(resp=>{
+              console.log("Bids deleted")
+              res.send(['Succesful'])
+          })
+
+      
+   })
+
+
+
+
     app.get('/pushNotificationDelays', (req,res)=>{db.collection('controls').find({_id:new ObjectId('6446c593a0c184843ed48174')}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collection_registers_registers', (req,res)=>{db.collection('registers').find().toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand1', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:1}).toArray().then((array)=>{res.send(array)})}) 
@@ -2367,19 +2381,7 @@ catch(err){
 })
 
 
-app.post('/deleteAllBids', (req,res)=>{
-  var form = new formidable.IncomingForm();
 
-  form.parse(req, function (err, fields, files){
-
-      db.collection("bids").deleteMany({}).then(resp=>{
-          console.log("Bids deleted")
-      })
-      res.redirect('/pages/admin/controls')
-
-  }
-
-)})
 
 app.post('/deleteAllDocuments', (req,res)=>{
   var form = new formidable.IncomingForm();
@@ -2426,6 +2428,13 @@ app.post('/deleteAllOrders', (req,res)=>{
 )})
 app.post('/submitBid',bodyParser.json(), (req,res)=>{
 
+db.collection('controls').find({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(docArray=>{
+
+if(req.body.bidAmount<docArray[0].price){
+  res.send([`<div style="color:red;">Starting price is ${docArray[0].price}, try again....</div>`])
+
+}else{
+
   bidsModel(req.body).save().then(resp=>{
    if(resp.length==0){
     res.send(['Error must have occured'])
@@ -2434,6 +2443,12 @@ res.send([`<div style="color:green;">Thanks ${resp.name} for submitting. Scroll 
 
    }
   })
+}
+
+
+})
+
+
  
   });
 
@@ -2635,37 +2650,38 @@ app.post('/collection_controls_topNavQuote', (req,res)=>{
 
 
   app.post('/collection_controls_biddingMsg', (req,res)=>{
-      var form = new formidable.IncomingForm();
   
-      form.parse(req, function (err, fields, files){
      
-          db.collection('controls').updateOne({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{biddingMsg:fields.biddingMsg}})
-          res.redirect('/pages/admin/controls')
-          res.end() 
-           })
+       db.collection('controls').updateOne({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{biddingMsg:req.body.biddingMessage}}).then(resp=>{
+        res.send(['Succesful!'])
+       })
+        
   
       });
 
-      app.post('/collection_controls_setBiddingPrice', (req,res)=>{
-          var form = new formidable.IncomingForm();
-      
-          form.parse(req, function (err, fields, files){
+      app.post('/collection_controls_setBiddingPrice',(req,res)=>{
          
-              db.collection('controls').updateOne({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{price:fields.price}})
-              res.redirect('/pages/admin/controls')
-              res.end() 
-               })
+        
+         db.collection('controls').updateOne({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{price:req.body.biddingPrice}}).then(resp=>{
+if(resp.modifiedCount==1){
+res.send(['Successful'])
+
+}else{
+  res.send(['Upto date!'])
+}
+
+
+         })
+           
       
           });
-          app.post('/collection_controls_setBiddingHeadline', (req,res)=>{
-              var form = new formidable.IncomingForm();
-          
-              form.parse(req, function (err, fields, files){
+app.post('/collection_controls_setBiddingHeadline', (req,res)=>{
+      
              
-                  db.collection('controls').updateOne({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{biddingHeadline:fields.biddingHeadline}})
-                  res.redirect('/pages/admin/controls')
-                  res.end() 
-                   })
+               db.collection('controls').updateOne({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")},{$set:{biddingHeadline:req.body.biddingHeadline}}).then(resp=>{
+                res.send(['Successful!'])
+               })
+                
           
               });
 
@@ -2821,6 +2837,7 @@ res.redirect('pages/admin/controls')
       })
 
       app.post('/admin_updatePermissionToken',bodyParser.json(),(req,res)=>{
+     
 
 try{
   switch(req.body.fieldToUpdate){
