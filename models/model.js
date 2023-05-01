@@ -16,29 +16,6 @@ const quotesSchema=new Func({
 },{timestamps:true})
 let quotesModel=mongoose.model('quotes',quotesSchema);
 
-
-const requestsSchema=new Func({
-    name:{
-        type:String,
-        required:true
-        },
-        stdNo:{
-            type:Number,
-            required:true
-        },
-    contact:{
-    type:Number,
-    required:true
-    },
-   
-    serviceType:{
-        type:String,
-        required:true
-    }
-},{timestamps:true})
-
-let requestsModel=mongoose.model('requests',requestsSchema);
-
 const commentsSchema=new Func({
     contact:{
     type:Number,
@@ -213,7 +190,7 @@ module.exports.pubArticleModel=pubArticleModel
 module.exports.groupLinkModel=groupLinkModel
 module.exports.recommendation=recommendationModel
 
-module.exports.requests=requestsModel
+
 module.exports.campus=campusModel
 module.exports.opinionModel=opinionModel
 module.exports.comments=commentsModel
@@ -223,7 +200,8 @@ module.exports.quotes=quotesModel
 module.exports.trader=tradingRegistrationModel
 module.exports.hookup=hookupModel
 module.exports.monitoredOpinionsModel=monitoredOpinionsModel
-module.exports.bid=bidsModel=mongoose.model('bids',new mongoose.Schema({dynamic:String},{strict:false}))
+module.exports.requestsModel=mongoose.model('requests',new mongoose.Schema({dynamic:String},{strict:false}))
+module.exports.bidsModel=mongoose.model('bids',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.webPushSubscriptionModel=mongoose.model('webpushsubscriptions',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.permissionTokensModel=mongoose.model('permissiontokens',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.registerModel=mongoose.model('registers',new mongoose.Schema({dynamic:String},{strict:false}))

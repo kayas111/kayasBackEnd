@@ -59,7 +59,7 @@ const articleAssessmentModel=require('./models/model').articleAssessmentModel;
 const groupLinkModel = require('./models/model').groupLinkModel;
 const traderModel = require('./models/model').trader;
 const recommendationModel = require('./models/model').recommendation;
-const requestsModel = require('./models/model').requests;
+const requestsModel = require('./models/model').requestsModel;
 const messagerModel = require('./models/model').messagerModel;
 const CommentModel = require('./models/model').comments;
 const mukOpinionPollsModel = require('./models/model').mukOpinionPollsModel;
@@ -3417,56 +3417,11 @@ if(req.body.data.status=="successful"){
   
       })
          
-  app.post('/collection_requests_service', (req,res)=>{
-   
-          var form = new formidable.IncomingForm();
-          form.parse(req, function (err, fields, files){
-inCollection('kayasers',[parseInt(fields.contact)]).then(resp=>{
-  if(resp==true){
-db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then(kayaser=>{
-
-  if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
-
-    try{
-
-requestsModel({name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,serviceType:fields.serviceType}).save().then(res=>console.log("request received"))
-                 
-             
-res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for sending your message. Please be patient as you will be contacted through your WhatsApp line by our business line 0703852178 or Isaac on 0755643774.<p></p><a href="https://kayas-mak.herokuapp.com/">Back to Kayas</a><p></p>Thank you.</div>')
-
-
-console.log(kayaser[0].contact+" has sent a request")
-
-
-
-
-
-    }catch(error){
-      console.log("Kayas, the error originated from sending a request for service message and it is:")
-      console.log(error)
-    }
-
-
-
-
-
-  }else{
-      res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Please try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/message">Try again</a>  <p></p> Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>')
-
-  }
-
-
-})
-  
-  }
-  else{
-      res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>') 
-  }
-})
-
-
-          })
+  app.post('/submitMessage',bodyParser.json(), (req,res)=>{
      
+          requestsModel(req.body).save().then(resp=>{
+            res.send({success:1})
+          })
       
       })
 
