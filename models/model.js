@@ -111,7 +111,7 @@ const registrationSchema=new Func({
     
 },{timestamps:true,strict:false})
 let pendingRegistrationModel=mongoose.model('pendingregistrations',registrationSchema)
-let registrationModel=mongoose.model('kayasers',registrationSchema)
+
 
 
 
@@ -194,12 +194,13 @@ module.exports.recommendation=recommendationModel
 module.exports.campus=campusModel
 module.exports.opinionModel=opinionModel
 module.exports.comments=commentsModel
-module.exports.registration=registrationModel
+module.exports.registrationModel=mongoose.model('kayasers',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.pendingRegistration=pendingRegistrationModel
 module.exports.quotes=quotesModel
 module.exports.trader=tradingRegistrationModel
 module.exports.hookup=hookupModel
 module.exports.monitoredOpinionsModel=monitoredOpinionsModel
+
 module.exports.requestsModel=mongoose.model('requests',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.bidsModel=mongoose.model('bids',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.webPushSubscriptionModel=mongoose.model('webpushsubscriptions',new mongoose.Schema({dynamic:String},{strict:false}))

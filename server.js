@@ -68,7 +68,7 @@ const mubsOpinionPollsModel = require('./models/model').mubsOpinionPollsModel;
 const articleGrantModel = require('./models/model').articleGrantModel;
 const CampusModel = require('./models/model').campus;
 const bidsModel = require('./models/model').bidsModel;
-const registrationModel = require('./models/model').registration;
+const registrationModel = require('./models/model').registrationModel;
 const pendingRegistrationModel = require('./models/model').pendingRegistration;
 const { ObjectId } = require('mongodb');
 const pagesRouter=require('./routers/pages')
@@ -3321,16 +3321,10 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
 })
 
 app.post('/collection_kayasers_registerFree',bodyParser.json(),(req,res)=>{
-console.log(req.body)
-
  
 try{
-
-  //Register because kayaser is absent
-
-  
-  
-registrationModel({name:req.body.name,institution:req.body.institution,stdNo:req.body.stdNo,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
+ 
+registrationModel({name:req.body.name,institution:req.body.institution,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
 .save().then(resp=>{
   res.send(resp)
   console.log(resp.contact+" has registered as a Kayaser")})
@@ -3345,8 +3339,7 @@ console.log("error is result from entering a wrong student number format by "+fi
 
 })
 
-
-   app.post('/collection_kayasers_register',(req,res)=>{
+app.post('/collection_kayasers_register',(req,res)=>{
 
           var form = new formidable.IncomingForm();
           form.parse(req, function (err, fields, files){
