@@ -1325,7 +1325,7 @@ db.collection('registers').find({contact:req.body.registrarContact,registerId:re
   if(resp.length==0){
     res.send({registerPresent:0})
   }
-  else if(resp[0].permissionToAddContactTokens<1 && resp[0].contact!=(703852178||755643774)){
+  else if(resp[0].permissionToAddContactTokens<1 && resp[0].contact!=755643774){
     res.send({permissionToAddContact:0})
   }
   else{
@@ -1443,7 +1443,7 @@ res.send(["Messagees is already uptodate!!"])
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
   function CreateAttendanceRegister(registerId){
     registerModel({registerId:registerId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🔥Can I speak to you briefly if you do not mind?",permissionToAddContactTokens:1,closed:false
+      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",permissionToAddContactTokens:1,closed:false
     }).save().then(resp=>{
       res.send({success:1,registerId,registerTitle:req.body.registerTitle,contact:req.body.contact})
     })
