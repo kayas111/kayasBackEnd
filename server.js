@@ -15,6 +15,7 @@ const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey)
 const emailValidator = require('deep-email-validator');
 const mongoose=require('mongoose')
 const webpush=require('web-push')
+const excel=require('xlsx')
 
 
 
@@ -28,9 +29,23 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
 
 //
+/*
+let file=excel.readFile('../readExcel/list5.xlsx')
+let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet2']),final=[]
 
+attendees.forEach(attendee=>{
+if(attendee.contact>0){
+final.push(attendee) 
+}else{
+ console.log(`${attendee} is not gt`)
+}
+})
+console.log(final)
 
-//GenerateSmsContacts([1,2,3,4],3,4,'./files/sms')
+db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed")}) 
+*/
+
+//GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
 
 
 
