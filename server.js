@@ -68,6 +68,7 @@ const hookupModel = require('./models/model').hookup;
 const pubArticleModel=require('./models/model').pubArticleModel;
 const permissionTokensModel=require('./models/model').permissionTokensModel;
 const registerModel=require('./models/model').registerModel;
+const pendingSmsNotificationsModel=require('./models/model').pendingSmsNotificationsModel;
 const monitoredOpinionsModel=require('./models/model').monitoredOpinionsModel;
 const articleAssessmentModel=require('./models/model').articleAssessmentModel;
 
@@ -290,6 +291,14 @@ app.get('/attendeesMessage/:registrarContact/:id', (req,res)=>{
  }
  
  })
+ app.get('/pendingForSmsNotifications', (req,res)=>{
+ db.collection('pendingsmsnotifications').find().toArray().then(resp=>{
+res.send(resp)
+ })
+
+
+})
+
 app.get('/attendees/:registrarContact/:id', (req,res)=>{
 
  try{
@@ -1839,6 +1848,22 @@ resp[0].messagees.forEach(messagee=>{
 
 app.post('/registerClick',bodyParser.json(),(req,res)=>{
   console.log("clicked")
+})
+app.post('/subscribeforsmsnotifications',(req,res)=>{
+  db.collection('smssubscribers').find({contact:req.body.contact}).toArray().then(resp=>{
+    console.log(resp)
+    if(resp.length==0){
+
+      pendingSmsNotificationsModel(req.body).save().then(resp=>{
+        console.log(resp)
+        res.send(['<div style="color:green;">Successful <span class="fa fa-check"></span> Thank you.</div>'])
+      })
+
+
+    }else{
+;
+    }
+  })
 })
 
 app.post('/setAttendeeRegisterMessagee',bodyParser.json(),(req,res)=>{

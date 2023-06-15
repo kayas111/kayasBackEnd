@@ -200,7 +200,7 @@ module.exports.quotes=quotesModel
 module.exports.trader=tradingRegistrationModel
 module.exports.hookup=hookupModel
 module.exports.monitoredOpinionsModel=monitoredOpinionsModel
-
+module.exports.pendingSmsNotificationsModel=mongoose.model('pendingsmsnotifications',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.requestsModel=mongoose.model('requests',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.bidsModel=mongoose.model('bids',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.webPushSubscriptionModel=mongoose.model('webpushsubscriptions',new mongoose.Schema({dynamic:String},{strict:false}))
