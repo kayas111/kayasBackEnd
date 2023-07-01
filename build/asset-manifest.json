@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/static/css/main.533edd12.chunk.css",
-    "main.js": "/static/js/main.a4da247c.chunk.js",
-    "main.js.map": "/static/js/main.a4da247c.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.7da7bab1.js",
-    "runtime-main.js.map": "/static/js/runtime-main.7da7bab1.js.map",
-    "static/js/2.9fdc1e97.chunk.js": "/static/js/2.9fdc1e97.chunk.js",
-    "static/js/2.9fdc1e97.chunk.js.map": "/static/js/2.9fdc1e97.chunk.js.map",
-    "static/js/3.fce02fcb.chunk.js": "/static/js/3.fce02fcb.chunk.js",
-    "static/js/3.fce02fcb.chunk.js.map": "/static/js/3.fce02fcb.chunk.js.map",
+    "main.js": "/static/js/main.5ff037ae.chunk.js",
+    "main.js.map": "/static/js/main.5ff037ae.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.82247823.js",
+    "runtime-main.js.map": "/static/js/runtime-main.82247823.js.map",
+    "static/js/2.f59fe5b0.chunk.js": "/static/js/2.f59fe5b0.chunk.js",
+    "static/js/2.f59fe5b0.chunk.js.map": "/static/js/2.f59fe5b0.chunk.js.map",
+    "static/js/3.52178e22.chunk.js": "/static/js/3.52178e22.chunk.js",
+    "static/js/3.52178e22.chunk.js.map": "/static/js/3.52178e22.chunk.js.map",
     "index.html": "/index.html",
     "static/css/main.533edd12.chunk.css.map": "/static/css/main.533edd12.chunk.css.map",
-    "static/js/2.9fdc1e97.chunk.js.LICENSE.txt": "/static/js/2.9fdc1e97.chunk.js.LICENSE.txt",
+    "static/js/2.f59fe5b0.chunk.js.LICENSE.txt": "/static/js/2.f59fe5b0.chunk.js.LICENSE.txt",
     "static/media/ad.f32460a5.jpg": "/static/media/ad.f32460a5.jpg",
     "static/media/ala1.2a13c1fb.jpg": "/static/media/ala1.2a13c1fb.jpg",
     "static/media/ala10.17bfc27a.jpg": "/static/media/ala10.17bfc27a.jpg",
@@ -395,7 +395,7 @@
     "static/media/t7.4d861b1a.jpg": "/static/media/t7.4d861b1a.jpg",
     "static/media/t8.2862d469.jpg": "/static/media/t8.2862d469.jpg",
     "static/media/t9.890c5314.jpg": "/static/media/t9.890c5314.jpg",
-    "static/media/trade1.0b2a4129.jpg": "/static/media/trade1.0b2a4129.jpg",
+    "static/media/trade1.bb0a7eae.png": "/static/media/trade1.bb0a7eae.png",
     "static/media/trade2.ecd29c8f.jpg": "/static/media/trade2.ecd29c8f.jpg",
     "static/media/trade3.12dfada1.jpg": "/static/media/trade3.12dfada1.jpg",
     "static/media/trader1s.c92f03f3.jpg": "/static/media/trader1s.c92f03f3.jpg",
@@ -420,9 +420,9 @@
     "static/media/yunus.7dd6203c.jpg": "/static/media/yunus.7dd6203c.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.7da7bab1.js",
-    "static/js/2.9fdc1e97.chunk.js",
+    "static/js/runtime-main.82247823.js",
+    "static/js/2.f59fe5b0.chunk.js",
     "static/css/main.533edd12.chunk.css",
-    "static/js/main.a4da247c.chunk.js"
+    "static/js/main.5ff037ae.chunk.js"
   ]
 }

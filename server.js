@@ -67,13 +67,14 @@ const opinionModel = require('./models/model').opinionModel;
 const hookupModel = require('./models/model').hookup;
 const pubArticleModel=require('./models/model').pubArticleModel;
 const permissionTokensModel=require('./models/model').permissionTokensModel;
+const traderModel=require('./models/model').traderModel;
 const registerModel=require('./models/model').registerModel;
 const pendingSmsNotificationsModel=require('./models/model').pendingSmsNotificationsModel;
 const monitoredOpinionsModel=require('./models/model').monitoredOpinionsModel;
 const articleAssessmentModel=require('./models/model').articleAssessmentModel;
 
+const SmsSubscribersModel = require('./models/model').SmsSubscribersModel;
 const groupLinkModel = require('./models/model').groupLinkModel;
-const traderModel = require('./models/model').trader;
 const recommendationModel = require('./models/model').recommendation;
 const requestsModel = require('./models/model').requestsModel;
 const messagerModel = require('./models/model').messagerModel;
@@ -349,10 +350,9 @@ app.get('/collection_controls_visits', (req,res)=>{
 
       
    })
+   
 
-
-
-
+   app.get('/smssubscribers', (req,res)=>{db.collection('smssubscribers').find().toArray().then((array)=>{res.send(array)})})
     app.get('/pushNotificationDelays', (req,res)=>{db.collection('controls').find({_id:new ObjectId('6446c593a0c184843ed48174')}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collection_registers_registers', (req,res)=>{db.collection('registers').find().toArray().then((array)=>{res.send(array)})}) 
     app.get('/collections_opinionpolls_cand1', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:1}).toArray().then((array)=>{res.send(array)})}) 
@@ -616,7 +616,11 @@ app.get('/collection_recommendations_recommendations', (req,res)=>{
     app.get('/collection_kayasers_kayasers', (req,res)=>{
         db.collection('kayasers').find().toArray().then((array)=>{
         res.send(array)})})
+app.get('/requestsThroughRecommender/:recommender', (req,res)=>{
 
+          db.collection('requests').find({recommender:parseInt(req.params.recommender)}).toArray().then((array)=>{
+         
+          res.send(array)})})
 
 app.get('/collection_requests_requests', (req,res)=>{
     db.collection('requests').find().toArray().then((array)=>{
@@ -680,6 +684,43 @@ if(resp.length==0){
                 
                                 
                             })
+
+
+app.get('/getTradingDetails/:trader', (req,res)=>{
+ 
+try{
+  db.collection('traders').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
+  if(resp.length==0){
+
+    db.collection('kayasers').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
+      if(resp.length==0){
+  
+    res.send([])
+        
+      }else{
+
+traderModel({name:resp[0].name,contact:resp[0].contact,accBal:0}).save().then(resp=>{
+
+  res.send([resp])
+})
+ }
+    
+    })
+
+
+  }else{
+
+res.send(resp)
+
+
+  }
+
+})
+  }catch(err){
+  console.log(err)
+}
+
+})
 
 app.get('/collection_recommendations_familyDetails/:contact/:pin', (req,res)=>{
 
@@ -946,8 +987,82 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 )
 
 */
+app.post('/creditDebitTrader',(req,res)=>{
+
+  try{
+ 
+db.collection('traders').find({contact:req.body.contact}).toArray().then(resp=>{
+  if(resp.length==0){
+    res.send(['<div style="color:red;">Account not active yet</div>'])
+  }else{
+   
+    if(req.body.action=='credit'){
+      db.collection('traders').updateOne({contact:req.body.contact},{$set:{accBal:resp[0].accBal+req.body.amount}}).then(resp=>{
+      res.send([`credited ${req.body.contact} with ${req.body.amount}`])
+      })
+
+    }else if(req.body.action=='debit'){
+      db.collection('traders').updateOne({contact:req.body.contact},{$set:{accBal:resp[0].accBal-req.body.amount}}).then(resp=>{
+        res.send([`debited ${req.body.contact} with ${req.body.amount}`])
+        })
+  
+    } else{
+      res.send(['An error occured, try again'])
+    }
+  }
+})
 
 
+
+  }catch(err){
+   res.send(['<div style="color:red;">An error occured, enter correct ID</div>'])
+   console.log(err)
+ 
+  }
+ 
+ })
+ app.post('/setTraderNotice',(req,res)=>{
+
+  try{
+ 
+db.collection('controls').updateOne({_id:new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{traderNotice:req.body.msg}}).then(resp=>{
+  res.send(["Successful"])
+})
+
+
+  }catch(err){
+   res.send(['<div style="color:red;">An error occured, enter correct ID</div>'])
+   console.log(err)
+ 
+  }
+ 
+ })
+ 
+app.post('/clearRequest',(req,res)=>{
+
+ try{
+  db.collection('requests').find({_id:new ObjectId(req.body.requestId)}).toArray().then(resp=>{
+    if(resp.length==0){
+    
+      res.send(['Request not present'])
+    }else{
+    
+      db.collection('requests').deleteOne({_id:new ObjectId(req.body.requestId)}).then(resp=>{
+        res.send(['Succesfull'])
+    
+      })
+    
+    
+    
+    }
+      })
+ }catch(err){
+  res.send(['<div style="color:red;">An error occured, enter correct ID</div>'])
+  console.log(err)
+
+ }
+
+})
 
 app.post('/setPushNotification',bodyParser.json(),(req,res)=>{
  
@@ -1850,21 +1965,95 @@ app.post('/registerClick',bodyParser.json(),(req,res)=>{
   console.log("clicked")
 })
 app.post('/subscribeforsmsnotifications',(req,res)=>{
-  db.collection('smssubscribers').find({contact:req.body.contact}).toArray().then(resp=>{
-    console.log(resp)
+
+  try{  db.collection('smssubscribers').find({contact:req.body.contact}).toArray().then(resp=>{
+  
     if(resp.length==0){
+  
+     db.collection('pendingsmsnotifications').find({contact:req.body.contact}).toArray().then(resp=>{
+      if(resp.length==0){
+        pendingSmsNotificationsModel(req.body).save().then(resp=>{
+     
+          res.send(['<div style="color:green;">Successful <span class="fa fa-check"></span> Thank you.</div>'])
+        })
+  
+      }else{
+        res.send([`<div style="color:green;">${resp[0].name}, you will be contacted soon.</div>`])
+      }
+     })
 
-      pendingSmsNotificationsModel(req.body).save().then(resp=>{
-        console.log(resp)
-        res.send(['<div style="color:green;">Successful <span class="fa fa-check"></span> Thank you.</div>'])
-      })
-
+     
 
     }else{
-;
+      res.send([`<div style="color:red;">${resp[0].name}, you already subscribed and have ${resp[0].noOfSms} sms left .</div>`])
     }
   })
+}catch(err){
+    console.log(err)
+  }
+
+
+
 })
+app.post('/subscriberequestforsmsnotifications',(req,res)=>{
+
+  try{db.collection('smssubscribers').find({contact:req.body.contact}).toArray().then(resp=>{
+  
+    if(resp.length==0){
+      db.collection('pendingsmsnotifications').find({contact:req.body.contact}).toArray().then(resp=>{
+if(resp.length==0){
+  res.send(['<div style="color:red;">Has not sent notification request.</div>'])
+}else{
+  resp[0].noOfSms=req.body.noOfSms
+  console.log(resp[0])
+SmsSubscribersModel(resp[0]).save().then(resp=>{
+
+    db.collection('pendingsmsnotifications').deleteMany({contact:req.body.contact}).then(resp=>{
+      res.send(['<div style="color:green;">Successful <span class="fa fa-check"></span> Thank you.</div>'])
+    })
+    
+  })
+}
+  })
+     
+    }else{
+      res.send(['<div style="color:red;">Is already subscribed.</div>'])
+    }
+  })}catch(err){
+    console.log(err)
+  }
+
+
+ 
+
+})
+
+
+app.post('/topupsmsnotifications',(req,res)=>{
+  try{
+    db.collection('smssubscribers').find({contact:req.body.contact}).toArray().then(resp=>{
+      if(resp.length==0){
+        res.send(['<div style="color:red;">Is not subscribed.</div>'])
+      }else
+      {
+        db.collection('smssubscribers').find({contact:req.body.contact}).toArray().then(resp=>{
+       let originalSms=resp[0].noOfSms,subscriber=resp[0]
+          db.collection('smssubscribers').updateOne({contact:req.body.contact},{$set:{noOfSms:originalSms+req.body.noOfSms}}).then(resp=>{
+
+            res.send([`<div style="color:green;">Added SMS to ${subscriber.name}.</div>`])
+          })
+  
+  
+        })
+  
+      }
+    })
+   }catch(err){
+    console.log(err)
+  }
+
+ 
+ })
 
 app.post('/setAttendeeRegisterMessagee',bodyParser.json(),(req,res)=>{
 
@@ -2010,8 +2199,7 @@ app.post('/getMyArticles',bodyParser.json(),(req,res)=>{
   })
 }) 
 app.post('/verifyUser',bodyParser.json(), (req,res)=>{
-  
-  db.collection('kayasers').find({contact:parseInt(req.body.contact)}).toArray().then((docArray)=>{
+ db.collection('kayasers').find({contact:parseInt(req.body.contact)}).toArray().then((docArray)=>{
      
     if(docArray.length==0){
 res.send({registered:false})
@@ -3030,58 +3218,7 @@ switch(req.body.fieldToUpdate){
 
 
       })
-      app.post('/collection_traders_register', (req,res)=>{
-  
-          var form = new formidable.IncomingForm();
-          form.parse(req, function (err, fields, files){
-inCollection('kayasers',[parseInt(fields.tradingId)]).then(resp=>{
-
-  if (resp==true){
-inCollection('traders',[parseInt(fields.tradingId)]).then(resp=>{
-
-if(resp==true){
-
-res.send(`<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Already registered !</div><div style="font-size:40px;text-align:center;padding-top:30px;">You have already registered as a Kayas trader. Please proceed with the next steps. <p></p><a href=${familyTradingGroupLink}>Join Trading Group</a><p></p> Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>`)
-}
-else{
-
-  try{
-
-  db.collection('kayasers').find({contact:parseInt(fields.tradingId)}).toArray().then(kayaser=>{
-      if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
-          let data={name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,email:kayaser[0].email,tradingCode:bcrypt.hashSync(fields.tradingCode,10)}
-          const trader=new traderModel(data)
-          trader.save().then(res=>console.log(fields.tradingId+" has registered as a new trader"))
-          res.send(`<div style="font-size:80px;font-weight:bold;text-align:center;padding-top:30px;">Welcome</div><div style="font-size:40px;text-align:center;padding-top:30px;"><div>Thank you for creating an account with Kayas.</div><div> If you have created an account in order to get a trading card, proceed to joining the group where you will be given trading card, tap here:</div> <a href=${familyTradingGroupLink}>JOIN GROUP</a> </div>`)
-
-      }
-      else{
-res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. <p></p><a href="https://kayas-mak.herokuapp.com/pages/trading/tradingregistration">Try again</a><p></p> Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178<p></p> Thank you for keeping it Kayas</div>')
-      }
-  })
-
-
-
-}
-catch(err){
-  console.log("Kayas, the error originated from registering a trader.")
-}
-
-
-}
-
-      })
-
-  }
-  else{
-      res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your Contact is not Registered with Kayas. Please Register and try again.<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a><p></p>Incase of any detailed problems, WhatsApp Charles on 0700411626 or Isaac on 0755643774. <p></p>Thank you for keeping it Kayas.</div>')
-  }
-})
-
-
-
-          })
-      })
+   
 app.post('/collection_kayasers_registerThrouhAdmin',(req,res)=>{//register though Admin
 
  
@@ -3468,10 +3605,17 @@ if(req.body.data.status=="successful"){
       })
          
   app.post('/submitMessage',bodyParser.json(), (req,res)=>{
+ 
+     try{
+      requestsModel(req.body).save().then(resp=>{
+        res.send({success:1})
+      })
      
-          requestsModel(req.body).save().then(resp=>{
-            res.send({success:1})
-          })
+     }catch(err){
+      console.log(err)
+     }
+
+       
       
       })
 
