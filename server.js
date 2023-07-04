@@ -28,6 +28,39 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
 
+/*
+    db.collection('registers').find({contact:755643774,registerId:2}).toArray().then(resp=>{
+      let final=[]
+      resp[0].attendees.forEach(Doc=>{
+Doc.name=Doc.name,Doc.number='256'+Doc.contact,Doc.message=`${Doc.name} hostel, 2 male, 0 female students looking for hostel today. Will pass to see rooms if we make it there. 0703852178 #Kayas`,Doc.senderid='0703852178'
+final.push(Doc)
+      })
+   console.log(final)
+   request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+    method:"SendSms",
+    userdata:{
+       username:"kayas",
+       password:"onongeopio"
+    },
+    msgdata:final
+  }}, function (error, response, body) {
+    if (!error && response.statusCode == 201) {
+        console.log(body);
+    }else{
+      console.log(body)
+    }
+  }
+  
+  )
+    })
+
+  
+
+ */
+
+
+
+
 //
 /*
 let file=excel.readFile('../readExcel/list5.xlsx')
