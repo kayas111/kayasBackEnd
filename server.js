@@ -1025,7 +1025,16 @@ app.post('/registerPageVisitOfTrader', (req,res)=>{
   try{
 
   db.collection('traders').find({contact:req.body.recommender}).toArray().then(resp=>{
-   if(resp.length==0){;}else{
+   if(resp.length==0){;
+  db.collection('kayasers').find({contact:req.body.recommender}).toArray().then(resp=>{
+if(resp.length==0){;}else{
+traderModel({name:resp[0].name,contact:resp[0].contact,accBal:0,pagesVisitsNo:0,institution:resp[0].institution}).save().then(resp=>{
+;
+  })
+}
+
+  })
+  }else{
     let traderDoc=resp[0]
     db.collection('traders').updateOne({contact:req.body.recommender},{$set:{pagesVisitsNo:traderDoc.pagesVisitsNo+1}}).then(resp=>{;})
    }
