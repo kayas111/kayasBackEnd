@@ -306,6 +306,7 @@ app.use(express.static(path.join(__dirname,'/build')))
 app.use(pagesRouter)
 app.use(bodyParser.json())
 //access databse by get
+
 app.get('/attendeesMessage/:registrarContact/:id', (req,res)=>{
 
   try{
@@ -552,7 +553,7 @@ app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').f
 app.get('/collection_hookups_hookups', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_quotes_quotes', (req,res)=>{db.collection('quotes').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_orders_orders', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
-app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find().toArray().then((array)=>{res.send(array)})}) 
+app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find().sort({pagesVisitsNo:1}).toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_monitoredopinions_number', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_monitoredopinions_opinions', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_multidocs_monitoredArticleOpinions', (req,res)=>{db.collection('multidocs').find({desc:'monitoredArticleOpinions'}).toArray().then((array)=>{res.send(array[0].opinions)})})
@@ -675,7 +676,7 @@ app.get('/collection_requests_number', (req,res)=>{
               
                   res.send(["Doesn't exist as a Kayaser"])
               }else{
-              db.collection('kayasers').deleteMany({contact:parseInt(req.params.contact)}).then(resp=>{
+              db.collection('kayasers').deleteOne({contact:parseInt(req.params.contact)}).then(resp=>{
                 if(resp.deletedCount==1){res.send(["Successful"])}else{res.send(["Error must have occurred, try again"])}
               
               })
@@ -1019,6 +1020,22 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 )
 
 */
+app.post('/registerPageVisitOfTrader', (req,res)=>{
+
+  try{
+
+  db.collection('traders').find({contact:req.body.recommender}).toArray().then(resp=>{
+   if(resp.length==0){;}else{
+    let traderDoc=resp[0]
+    db.collection('traders').updateOne({contact:req.body.recommender},{$set:{pagesVisitsNo:traderDoc.pagesVisitsNo+1}}).then(resp=>{;})
+   }
+  })
+ }catch(err){
+   console.log(err)
+ }
+ 
+ })
+
 app.post('/creditDebitTrader',(req,res)=>{
 
   try{
