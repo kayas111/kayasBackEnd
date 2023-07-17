@@ -2138,20 +2138,22 @@ req.body.forEach(messagee=>{
   })
 if(errorMessagees.length==0){
   let category='mukEducation';
+
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
     let newMessagees=[]
     
-   
   req.body.forEach(messagee=>{
 if(resp[0].messagees.find(inList=>{
   return inList.contact==messagee
 })==undefined){
   console.log("absent")
+ 
     newMessagees.push(messagee)
       
 
 }else{
  console.log("present")
+
     newMessagees.push(messagee)
 
 
