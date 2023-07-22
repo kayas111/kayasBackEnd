@@ -1823,7 +1823,7 @@ db.collection('registers').find({contact:req.body.registrarContact,registerId:re
   if(resp.length==0){
 res.send({registerPresent:0})
   }else{
-    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{registerTitle:req.body.registerTitle,attendees:[{name:resp[0].name,contact:req.body.registrarContact}],message:"🔥Can I speak to you briefly if you do not mind?"}}).then(resp=>{
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{registerTitle:req.body.registerTitle,smsmessage:'Hello, hope you are well',message:"🔥Can I speak to you briefly if you do not mind?"}}).then(resp=>{
       if(resp.modifiedCount==1){
 res.send({success:1})
       }else{
