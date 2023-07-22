@@ -27,7 +27,8 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-
+  
+    
 /*
     db.collection('registers').find({contact:755643774,registerId:2}).toArray().then(resp=>{
       let final=[]
@@ -133,6 +134,20 @@ const hookupRegistrationFee=500
 
 
 //functions start
+
+function FilterArraySection(fromPosition,toPosition,originArray,destinationArray){
+  while(fromPosition<=toPosition){
+  
+   destinationArray.push(originArray[fromPosition-1])
+  fromPosition++
+ }
+ 
+    console.log(`length: ${destinationArray.length}`)  
+    return destinationArray
+   
+ 
+ }
+ 
 
 function GenerateSmsContacts(contactsArray,fromPosition,toPosition,storageDirectory){
   
@@ -1640,7 +1655,7 @@ res.send(["Messagees is already uptodate!!"])
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
   function CreateAttendanceRegister(registerId){
     registerModel({registerId:registerId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",permissionToAddContactTokens:1,closed:false
+      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",permissionToAddContactTokens:1,closed:false
     }).save().then(resp=>{
       res.send({success:1,registerId,registerTitle:req.body.registerTitle,contact:req.body.contact})
     })
@@ -2126,6 +2141,86 @@ app.post('/setAttendeeRegisterMessagee',bodyParser.json(),(req,res)=>{
    
   })
 })
+app.post('/setAttendeeRegisterSms',bodyParser.json(),(req,res)=>{
+
+  db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{smsmessage:req.body.smsmessage}}).then(resp=>{
+  if(resp.modifiedCount==1){
+      res.send(["<div style='color:green;'>Successfully updated SMS.</div>"])
+    }else if(resp.modifiedCount==0){
+      res.send(["<div style='color:green;'>Already upto date!</div>"])
+    }else{
+      res.send(["<div style='color:red;'>Error must have occured, please try again !!</div>"])
+    }
+   
+  })
+ 
+})
+
+app.post('/sendAttendeeRegisterSms',bodyParser.json(),(req,res)=>{
+try{
+let smsCost=req.body.smsCost,smsMessage=req.body.smsmessage,smsReceipients=[]
+
+ 
+  db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray()
+  .then(resp=>{
+    
+resp[0].attendees.forEach(attendee=>{
+attendee.number='256'+attendee.contact,attendee.message=smsMessage+' #SMS by Kayas',attendee.senderid=req.body.registrarContact
+smsReceipients.push(attendee)
+
+})
+  
+
+
+
+
+
+  request.post('http://www.egosms.co/api/v1/json/',{json:{
+  method:"SendSms",
+  userdata:{
+     username:"kayas",
+     password:"onongeopio"
+  },
+  msgdata:smsReceipients
+}}, function (error, response, body) {
+  if (!error && response.statusCode == 201) {
+      console.log(body);
+    
+  }else{
+    console.log(body)
+    db.collection('traders').find({contact:req.body.registrarContact}).toArray().then(resp=>{
+      let originalAccBal=resp[0].accBal
+   
+    db.collection('traders').updateOne({contact:req.body.registrarContact},{$set:{accBal:originalAccBal-smsCost}}).then(resp=>{
+  
+    res.send(['<div style="color:green;">Message sent!</div>'])
+    
+    
+    })
+    
+    })
+   
+  }
+}
+
+)
+  
+  
+
+
+  })
+
+}catch(err){
+  console.log(err)
+}
+ 
+
+
+ 
+
+ 
+})
+
 
 app.post('/addToMessagingQueueThroughAdmin',bodyParser.json(),(req,res)=>{
 let errorMessagees=[]
@@ -2140,10 +2235,10 @@ if(errorMessagees.length==0){
   let category='mukEducation';
 
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
-    let newMessagees=[]
     
-  req.body.forEach(messagee=>{
-if(resp[0].messagees.find(inList=>{
+    let categoryArray=resp[0].messagees,newMessagees=[]
+    req.body.forEach(messagee=>{
+if(categoryArray.find(inList=>{
   return inList.contact==messagee
 })==undefined){
   console.log("absent")
