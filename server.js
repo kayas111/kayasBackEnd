@@ -28,7 +28,6 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
   
-    
 /*
     db.collection('registers').find({contact:755643774,registerId:2}).toArray().then(resp=>{
       let final=[]
@@ -1231,6 +1230,18 @@ app.post('/updateAttendanceRegDetails',bodyParser.json(),(req,res)=>{
   }else{
 
 switch(req.body.fieldToUpdate){
+  case 'smsUnitCost':{
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{smsUnitCost:parseInt(req.body.fieldValue)}}).then(resp=>{
+      if(resp.modifiedCount==1){
+        res.send(['<div style="color:green;">Successful!</div>'])
+      }else{
+        res.send(['<div style="color:red;">Upto date!</div>'])
+
+      }
+    })
+    break;
+  }
+
   case 'name':{
     db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{name:req.body.fieldValue}}).then(resp=>{
       if(resp.modifiedCount==1){
@@ -1823,7 +1834,7 @@ db.collection('registers').find({contact:req.body.registrarContact,registerId:re
   if(resp.length==0){
 res.send({registerPresent:0})
   }else{
-    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{registerTitle:req.body.registerTitle,attendees:[{name:resp[0].name,contact:req.body.registrarContact}],message:"🔥Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are well!"}}).then(resp=>{
+    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{registerTitle:req.body.registerTitle,attendees:[{name:resp[0].name,contact:req.body.registrarContact}],message:"🔥Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are well"}}).then(resp=>{
       if(resp.modifiedCount==1){
 res.send({success:1})
       }else{
