@@ -2182,11 +2182,6 @@ smsReceipients.push(attendee)
 
 })
   
-
-
-
-
-
   request.post('http://www.egosms.co/api/v1/json/',{json:{
   method:"SendSms",
   userdata:{
@@ -2199,7 +2194,8 @@ smsReceipients.push(attendee)
       console.log(body);
     
   }else{
-    console.log(body)
+    if(body.Status=='OK'){
+
     db.collection('traders').find({contact:req.body.registrarContact}).toArray().then(resp=>{
       let originalAccBal=resp[0].accBal
    
@@ -2211,6 +2207,12 @@ smsReceipients.push(attendee)
     })
     
     })
+    }else{
+      res.send(['<div style="color:red;">Not sent. Error must have occured!</div>']) 
+
+    }
+
+
    
   }
 }
