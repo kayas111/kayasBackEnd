@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.e3fb25e2.chunk.css",
-    "main.js": "/static/js/main.185b341a.chunk.js",
-    "main.js.map": "/static/js/main.185b341a.chunk.js.map",
+    "main.js": "/static/js/main.7f20c96a.chunk.js",
+    "main.js.map": "/static/js/main.7f20c96a.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.82247823.js",
     "runtime-main.js.map": "/static/js/runtime-main.82247823.js.map",
     "static/js/2.096c9b01.chunk.js": "/static/js/2.096c9b01.chunk.js",
@@ -357,7 +357,7 @@
     "static/media/goddy3.efbcbdec.jpg": "/static/media/goddy3.efbcbdec.jpg",
     "static/media/holiday.63fbbb47.jpg": "/static/media/holiday.63fbbb47.jpg",
     "static/media/honest.c46acba3.jpg": "/static/media/honest.c46acba3.jpg",
-    "static/media/ip1.3d2c6a01.jpg": "/static/media/ip1.3d2c6a01.jpg",
+    "static/media/ip1.951e8938.jpg": "/static/media/ip1.951e8938.jpg",
     "static/media/irene.53caa8a2.jpg": "/static/media/irene.53caa8a2.jpg",
     "static/media/isaac1.654b5457.jpg": "/static/media/isaac1.654b5457.jpg",
     "static/media/isaac10.b4939a73.jpg": "/static/media/isaac10.b4939a73.jpg",
@@ -515,6 +515,6 @@
     "static/js/runtime-main.82247823.js",
     "static/js/2.096c9b01.chunk.js",
     "static/css/main.e3fb25e2.chunk.css",
-    "static/js/main.185b341a.chunk.js"
+    "static/js/main.7f20c96a.chunk.js"
   ]
 }

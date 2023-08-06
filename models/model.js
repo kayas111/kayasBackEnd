@@ -32,29 +32,7 @@ let commentsModel=mongoose.model('comments',commentsSchema);
 const opinionSchema=new mongoose.Schema({id:{type:String,required:true},opinions:{type:[],required:true}},{strict:false})
 let opinionModel=mongoose.model('clientopinions',opinionSchema)
 
-const recommendationSchema=new Func({
-   
-    name:{
-        type:String,
-        required:true
-        },
-    recommender:{
-        type:Number,
-        required:true
-        },
-     recommendee:{
-    type:[Number
-   ],
-   required:true
-    },
-    registrationPromoBalance:{
-        type:Number,
-        required:true
-        }
-   
-    
-},{timestamps:true})
-let recommendationModel=mongoose.model('recommendations',recommendationSchema)
+
 
 
 
@@ -163,7 +141,7 @@ module.exports.articleGrantModel=articleGrantModel
 module.exports.messagerModel=messagerModel
 module.exports.pubArticleModel=pubArticleModel
 module.exports.groupLinkModel=groupLinkModel
-module.exports.recommendation=recommendationModel
+
 
 
 module.exports.campus=campusModel
@@ -175,6 +153,7 @@ module.exports.quotes=quotesModel
 
 module.exports.hookup=hookupModel
 module.exports.monitoredOpinionsModel=monitoredOpinionsModel
+module.exports.recommendationModel=mongoose.model('recommendations',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.traderModel=mongoose.model('traders',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.SmsSubscribersModel=mongoose.model('smssubscribers',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.pendingSmsNotificationsModel=mongoose.model('pendingsmsnotifications',new mongoose.Schema({dynamic:String},{strict:false}))

@@ -27,7 +27,9 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-  
+   
+ 
+
   
 /*
     db.collection('registers').find({contact:755643774,registerId:2}).toArray().then(resp=>{
@@ -109,7 +111,7 @@ const articleAssessmentModel=require('./models/model').articleAssessmentModel;
 
 const SmsSubscribersModel = require('./models/model').SmsSubscribersModel;
 const groupLinkModel = require('./models/model').groupLinkModel;
-const recommendationModel = require('./models/model').recommendation;
+const recommendationModel = require('./models/model').recommendationModel;
 const requestsModel = require('./models/model').requestsModel;
 const messagerModel = require('./models/model').messagerModel;
 const CommentModel = require('./models/model').comments;
@@ -320,7 +322,40 @@ app.use(express.static(path.join(__dirname,'/build')))
 //pages router
 app.use(pagesRouter)
 app.use(bodyParser.json())
-//access databse by get
+//access database by get
+app.get('/egoSmsAccBal', (req,res)=>{
+
+  try{
+    request.post('http://www.egosms.co/api/v1/json/',{json:{
+      method:"Balance",
+      userdata:{
+         username:"kayas",
+         password:"onongeopio"
+      }
+    }}, function (error, response, body) {
+      if (!error && response.statusCode == 201) {
+       
+          console.log(body);
+        
+      }else{
+   
+        
+        res.send(body)
+    
+       
+      }
+    }
+    
+    )
+      
+  
+ }catch(err){
+   console.log(err)
+ }
+ 
+ })
+
+
 
 app.get('/attendeesMessage/:registrarContact/:id', (req,res)=>{
 
@@ -577,6 +612,9 @@ app.get('/universityContacts', (req,res)=>{
 db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts','mubsContacts','mukEducation']}}).toArray().then((array)=>{
 
   res.send(array)})})
+app.get('/recommendations/:recommender', (req,res)=>{db.collection('recommendations').find({recommenderContact:parseInt(req.params.recommender)}).toArray().then((array)=>{ res.send(array)})}) 
+
+
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})})  
 app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
@@ -3776,9 +3814,38 @@ if(req.body.data.status=="successful"){
   app.post('/submitMessage',bodyParser.json(), (req,res)=>{
  
      try{
-      requestsModel(req.body).save().then(resp=>{
-        res.send({success:1})
+      let request=req.body
+      db.collection('kayasers').find({contact:parseInt(request.recommender)}).toArray().then(resp=>{
+        if(resp.length==0){
+
+        }else{
+          let recommender=resp[0]
+
+          if(recommender.contact==request.contact){
+           ;
+          }else{
+
+          db.collection('recommendations').find({recommenderContact:recommender.contact,recommendeeContact:request.contact}).toArray()
+          .then(resp=>{
+            if(resp.length==0){
+recommendationModel({recommenderName:recommender.name,recommenderContact:recommender.contact,recommenderInstitution:recommender.institution,recommendeeName:request.name,recommendeeContact:request.contact}).save().then(resp=>{;})
+            }else{
+         ;
+       
+            }
+          })
+        
+
+          }
+          
+        }
       })
+
+   
+  requestsModel(request).save().then(resp=>{res.send({success:1})})
+
+
+
      
      }catch(err){
       console.log(err)
