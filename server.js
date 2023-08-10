@@ -323,6 +323,52 @@ app.use(express.static(path.join(__dirname,'/build')))
 app.use(pagesRouter)
 app.use(bodyParser.json())
 //access database by get
+
+
+app.get('/regsTotalBill', (req,res)=>{
+
+  try{
+db.collection('registers').find().toArray().then(async (resp)=>{
+  
+ 
+  let registersArray=resp,tradersSearchContacts=[]
+  if(registersArray.length==0){
+    res.send({regsTotalBill:0})
+  }else{
+
+    
+    registersArray.forEach((register)=>{
+      tradersSearchContacts.push(register.contact)
+    })
+  
+    await db.collection('traders').find({contact:{$in:tradersSearchContacts}}).toArray().then(resp=>{
+      let regsTotalBill=0,tradersWithRegisters=resp
+       tradersWithRegisters.forEach(register=>{
+        regsTotalBill+=register.accBal
+      })
+
+      res.send({regsTotalBill:regsTotalBill})
+     
+     })
+
+  
+
+  }
+
+})
+
+    /*
+   db.collection('traders').find().toArray().then(resp=>{
+   
+    res.send(resp)
+   })
+    */  
+  
+ }catch(err){
+   console.log(err)
+ }
+ 
+ })
 app.get('/egoSmsAccBal', (req,res)=>{
 
   try{
@@ -612,7 +658,7 @@ app.get('/universityContacts', (req,res)=>{
 db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts','mubsContacts','mukEducation']}}).toArray().then((array)=>{
 
   res.send(array)})})
-app.get('/recommendations/:recommender', (req,res)=>{db.collection('recommendations').find({recommenderContact:parseInt(req.params.recommender)}).toArray().then((array)=>{ res.send(array)})}) 
+app.get('/recommendations/:recommender', (req,res)=>{db.collection('recommendations').find({recommenderContact:parseInt(req.params.recommender)}).toArray().then((array)=>{res.send(array)})}) 
 
 
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})})  
@@ -695,10 +741,6 @@ app.get('/pubarticleopinions/:id', (req,res)=>{db.collection('pubarticles').find
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
-
-app.get('/collection_recommendations_recommendations', (req,res)=>{
-    db.collection('recommendations').find().sort({"recommender":1}).toArray().then((array)=>{
-    res.send(array)})})
 
     app.get('/collection_kayasers_kayasers', (req,res)=>{
         db.collection('kayasers').find().toArray().then((array)=>{
@@ -1075,6 +1117,8 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 */
 app.post('/registerPageVisitOfTrader', (req,res)=>{
 
+  
+
   try{
 
   db.collection('traders').find({contact:req.body.recommender}).toArray().then(resp=>{
@@ -1097,6 +1141,45 @@ traderModel({name:resp[0].name,contact:resp[0].contact,accBal:0,pagesVisitsNo:0,
  }
  
  })
+
+
+ app.post('/getRecommendationDetails',(req,res)=>{
+
+
+  try{
+
+db.collection('recommendations').find({recommendeeContact:req.body.contact}).toArray().then(resp=>{
+ 
+if(resp.length==0){
+res.send(resp)
+}else{
+  if(req.body.method=='getRecommender'){
+let response=[{method:'getRecommender',data:resp[0]}]
+res.send(response)
+  }else{
+  res.send([{data:'no method defined'}])
+  }
+
+
+
+
+}
+  
+  
+})
+
+
+
+
+   }catch(err){
+  
+   console.log(err)
+ 
+  }
+ 
+ })
+
+
 
 app.post('/creditDebitTrader',(req,res)=>{
 
@@ -3821,7 +3904,7 @@ if(req.body.data.status=="successful"){
         }else{
           let recommender=resp[0]
 
-          if(recommender.contact==request.contact){
+          if(recommender.contact==request.contact||recommender.contact==7038521780||recommender.contact==755643774){
            ;
           }else{
 
