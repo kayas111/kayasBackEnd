@@ -2000,6 +2000,7 @@ db.collection('articleassessments').deleteMany({articleId:req.body.articleId}).t
       console.log("Kayas, the error originated from trying to edit an article and it is:")
       console.log(err)
 
+      
 
   }
   
