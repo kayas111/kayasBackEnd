@@ -28,18 +28,18 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
    
+
  
 
-  
-/*
-    db.collection('registers').find({contact:755643774,registerId:2}).toArray().then(resp=>{
+    /*db.collection('registers').find({contact:755643774,registerId:12}).toArray().then(resp=>{
+      console.log(resp.length)
       let final=[]
       resp[0].attendees.forEach(Doc=>{
-Doc.name=Doc.name,Doc.number='256'+Doc.contact,Doc.message=`${Doc.name} hostel, 2 male, 0 female students looking for hostel today. Will pass to see rooms if we make it there. 0703852178 #Kayas`,Doc.senderid='0703852178'
+Doc.number='256'+Doc.contact,Doc.message=`${Doc.name}, you are invited for BANG orientation tomorrow at 2pm in St. Francis students lower hall opposite Lumumba hall. Contact 0782003419 #SMS by Kayas`,Doc.senderid='0703852178'
 final.push(Doc)
       })
    console.log(final)
-   request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+   request.post('http://www.egosms.co/api/v1/json/',{json:{
     method:"SendSms",
     userdata:{
        username:"kayas",
@@ -56,10 +56,10 @@ final.push(Doc)
   
   )
     })
-
+*/
   
 
- */
+
 
 
 
@@ -2000,7 +2000,7 @@ db.collection('articleassessments').deleteMany({articleId:req.body.articleId}).t
       console.log("Kayas, the error originated from trying to edit an article and it is:")
       console.log(err)
 
-      
+
 
   }
   
@@ -2011,9 +2011,9 @@ app.post('/perimissionToCreateArticle',bodyParser.json(),(req,res)=>{
   db.collection('articlegrants').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
   
       if(docArray.length==0){
-articleGrantModel({name:req.body.author,contact:parseInt(req.body.contact),createTokens:2,editTokens:2}).save().then(resp=>{
-  res.send({permission:1})
-})
+    
+        res.send({permission:0})
+    
       }else{
 if(docArray[0].createTokens<1){
   res.send({permission:0})
@@ -3379,20 +3379,37 @@ try{
     }
     
     case 'createArticle':{
-      db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(resp=>{
-        if(resp.length==0){res.send(['Does not exit in collection articlegrants'])}else{
-          db.collection('articlegrants').updateOne({contact:req.body.contact},{$set:{createTokens:parseInt(req.body.fieldValue)}}).then(resp=>{
-          if(resp.modifiedCount==1){
-            res.send(['Successful!'])
-          }else if(resp.modifiedCount==0){
-            res.send(['You entered a value already uptodate!'])
-          }else{
+db.collection('kayasers').find({contact:req.body.contact}).toArray().then(resp=>{
+  let kayaser=resp[0]
+  
+  db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(resp=>{
+    if(resp.length==0){
+            
+articleGrantModel({name:kayaser.name,contact:parseInt(req.body.contact),createTokens:parseInt(req.body.fieldValue),editTokens:10}).save().then(resp=>{
+ res.send(['Successful!'])
+})
+  
+  }else{
+      db.collection('articlegrants').updateOne({contact:req.body.contact},{$set:{createTokens:parseInt(req.body.fieldValue)}}).then(resp=>{
+      if(resp.modifiedCount==1){
+        res.send(['Successful!'])
+      }else if(resp.modifiedCount==0){
+        res.send(['You entered a value already uptodate!'])
+      }else{
 
-            res.send(['An error must have occure, try again'])
-          }
-          })
-        }
-            })
+        res.send(['An error must have occure, try again'])
+      }
+      })
+    }
+        })
+
+
+
+
+
+})
+
+     
     break;
     }
     case 'createAttendanceRegister':{
