@@ -27,11 +27,54 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-   
 
+   /*
+    db.collection('registers').find({contact:755643774,registerId:15}).toArray().then(resp=>{
+      
+      let final=[],final2=[],mobilization=resp[0].attendees
+      db.collection('registers').find({contact:755643774,registerId:6}).toArray().then(resp=>{
+      
+ let cabinet=resp[0].attendees
  
 
-    /*db.collection('registers').find({contact:755643774,registerId:12}).toArray().then(resp=>{
+mobilization.forEach(mobmemb=>{
+if( cabinet.find(cabmemb=>{return cabmemb.contact==mobmemb.contact})==undefined){
+  final.push(mobmemb)
+}else{}
+})
+final.push({ name: 'Kayas', contact: 703852178 })
+console.log(final)
+
+final.forEach(receip=>{
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, will you be present? BANG gathering tomorrow in Makerere-St. Francis lower hall at 4:30-6:30pm. Logistics will be provided. WhatsApp 0755643774 to confirm your presence. Topic: Personal Development and Growth Mindset by Eng. Stephen Langa-Our own Patron. Come with a friend #SMS by Kayas`
+final2.push(receip)
+})
+
+console.log(final2)
+request.post('http://www.egosms.co/api/v1/json/',{json:{
+    method:"SendSms",
+    userdata:{
+       username:"kayas",
+       password:"onongeopio"
+    },
+    msgdata:final2
+  }}, function (error, response, body) {
+    if (!error && response.statusCode == 201) {
+        console.log(body);
+    }else{
+      console.log(body)
+    }
+  }
+  
+  )
+
+        
+      })
+
+    })
+ */
+
+    /*db.collection('registers').find({contact:755643774,registerId:15}).toArray().then(resp=>{
       console.log(resp.length)
       let final=[]
       resp[0].attendees.forEach(Doc=>{
@@ -685,7 +728,7 @@ app.get('/updateOpinionVisits/:client', (req,res)=>{db.collection('clientopinion
       
   }else{
     db.collection('clientopinions').updateOne({id:req.params.client},{$set:{opinionVisits:clientDocArray[0].opinionVisits+1}}).then(resp=>{
-    console.log("viewing "+req.params.client+" ..........................................")
+    
       res.send({visits:clientDocArray[0].opinionVisits})
     })
     
@@ -713,7 +756,7 @@ if(array.length==0){
 })
 
 db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{visits:array[0].visits+1}}).then(resp=>{
-  console.log("viewing Article "+req.params.id+" .......................")
+  
   ;})
 
 
@@ -1788,7 +1831,7 @@ res.send(["Messagees is already uptodate!!"])
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
   function CreateAttendanceRegister(registerId){
     registerModel({registerId:registerId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",permissionToAddContactTokens:1,smsUnitCost:100,closed:false
+      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",permissionToAddContactTokens:1,smsUnitCost:50,closed:false
     }).save().then(resp=>{
       res.send({success:1,registerId,registerTitle:req.body.registerTitle,contact:req.body.contact})
     })
@@ -2483,6 +2526,7 @@ db.collection('articleassessments').find({authorContact:req.body.contact}).toArr
 
 
 app.post('/getMyArticles',bodyParser.json(),(req,res)=>{
+ 
     
   db.collection('pubarticles').find({contact:parseInt(req.body.contact)}).toArray().then((array)=>{ 
       res.send(array)
