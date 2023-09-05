@@ -28,61 +28,20 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
 
-   /*
-    db.collection('registers').find({contact:755643774,registerId:15}).toArray().then(resp=>{
+/*
+      db.collection('registers').find({contact:755643774,registerId:17}).toArray().then(resp=>{
       
-      let final=[],final2=[],mobilization=resp[0].attendees
-      db.collection('registers').find({contact:755643774,registerId:6}).toArray().then(resp=>{
-      
- let cabinet=resp[0].attendees
+ let list=resp[0].attendees,final=[]
  
 
-mobilization.forEach(mobmemb=>{
-if( cabinet.find(cabmemb=>{return cabmemb.contact==mobmemb.contact})==undefined){
-  final.push(mobmemb)
-}else{}
+
+list.forEach(receip=>{
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, BANG appreciates your presence in yesterday's gathering and looks forward to growing with you. 0755643774 #SMS by Kayas`
+final.push(receip)
 })
-final.push({ name: 'Kayas', contact: 703852178 })
+
 console.log(final)
-
-final.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, will you be present? BANG gathering tomorrow in Makerere-St. Francis lower hall at 4:30-6:30pm. Logistics will be provided. WhatsApp 0755643774 to confirm your presence. Topic: Personal Development and Growth Mindset by Eng. Stephen Langa-Our own Patron. Come with a friend #SMS by Kayas`
-final2.push(receip)
-})
-
-console.log(final2)
 request.post('http://www.egosms.co/api/v1/json/',{json:{
-    method:"SendSms",
-    userdata:{
-       username:"kayas",
-       password:"onongeopio"
-    },
-    msgdata:final2
-  }}, function (error, response, body) {
-    if (!error && response.statusCode == 201) {
-        console.log(body);
-    }else{
-      console.log(body)
-    }
-  }
-  
-  )
-
-        
-      })
-
-    })
- */
-
-    /*db.collection('registers').find({contact:755643774,registerId:15}).toArray().then(resp=>{
-      console.log(resp.length)
-      let final=[]
-      resp[0].attendees.forEach(Doc=>{
-Doc.number='256'+Doc.contact,Doc.message=`${Doc.name}, you are invited for BANG orientation tomorrow at 2pm in St. Francis students lower hall opposite Lumumba hall. Contact 0782003419 #SMS by Kayas`,Doc.senderid='0703852178'
-final.push(Doc)
-      })
-   console.log(final)
-   request.post('http://www.egosms.co/api/v1/json/',{json:{
     method:"SendSms",
     userdata:{
        username:"kayas",
@@ -98,14 +57,14 @@ final.push(Doc)
   }
   
   )
-    })
-*/
-  
 
+        
+      })
 
+  */
+ 
 
-
-
+   
 
 //
 /*
