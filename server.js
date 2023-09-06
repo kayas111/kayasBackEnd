@@ -3689,6 +3689,8 @@ kayaser.save().then(response=>{
 })
 
 app.post('/submitPubarticleOpinion/:id',bodyParser.json(),(req,res)=>{
+ let post=req.body
+ 
  db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$push:{pubArticleOpinions:req.body}}).then(resp=>{
  
   if(resp.modifiedCount==1){
@@ -3746,6 +3748,20 @@ articleAssessmentModel(articleAssessmentDoc).save().then(resp=>{
  
 
 })
+db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
+  if(resp.length==0){
+
+  }else{
+let article=resp[0]
+    post.serviceType=post.msg+` -- Reaction to article(${article.id}): ${article.headline1}`
+    let request={name:post.name,contact:post.contact,serviceType:post.serviceType,recommender:703852178}
+   requestsModel(request).save().then(resp=>{;})
+
+  }
+ 
+
+})
+
 
 })
 app.post('/collection_kayasers_registerToHookup',(req,res)=>{
@@ -3919,6 +3935,7 @@ if(req.body.data.status=="successful"){
  
      try{
       let request=req.body
+    
       db.collection('kayasers').find({contact:parseInt(request.recommender)}).toArray().then(resp=>{
         if(resp.length==0){
 
