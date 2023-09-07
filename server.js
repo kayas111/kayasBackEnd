@@ -3753,7 +3753,8 @@ db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(r
 
   }else{
 let article=resp[0]
-    post.serviceType=post.msg+` -- Reaction to article(${article.id}): ${article.headline1}`
+
+    post.serviceType=post.msg+` -- Reaction to article(${article.id}): ${article.headline1} -- Author: ${article.author} - 0${article.contact}  `
     let request={name:post.name,contact:post.contact,serviceType:post.serviceType,recommender:703852178}
    requestsModel(request).save().then(resp=>{;})
 
