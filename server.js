@@ -1978,7 +1978,7 @@ app.post('/permissionToEditArticle',bodyParser.json(),(req,res)=>{
 res.send({permission:0})
     }else{
 
-pubArticleModel({id:req.body.articleId,visits:1,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"on",recentCommentOnTop:"on"})
+pubArticleModel({id:req.body.articleId,visits:1,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"off",recentCommentOnTop:"on"})
 .save().then((resp)=>{
 
 console.log(`${resp.author} has updated an article with ID: ${resp.id}`)
