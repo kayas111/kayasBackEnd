@@ -29,19 +29,19 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
 
 /*
-      db.collection('registers').find({contact:755643774,registerId:17}).toArray().then(resp=>{
-      
+      db.collection('registers').find({contact:755643774,registerId:20}).toArray().then(resp=>{
+      console.log(resp[0])
  let list=resp[0].attendees,final=[]
  
 
 
 list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, BANG appreciates your presence in yesterday's gathering and looks forward to growing with you. 0755643774 #SMS by Kayas`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`At 4:30pm, ${receip.name} be at St. Francis students center lower hall. Thank you. 0755643774 #SMS by Kayas`
 final.push(receip)
 })
 
 console.log(final)
-request.post('http://www.egosms.co/api/v1/json/',{json:{
+request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
     method:"SendSms",
     userdata:{
        username:"kayas",
@@ -61,8 +61,8 @@ request.post('http://www.egosms.co/api/v1/json/',{json:{
         
       })
 
-  */
- 
+  
+ */
 
    
 
