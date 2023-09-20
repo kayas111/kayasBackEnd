@@ -27,7 +27,7 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-
+    
 /*
       db.collection('registers').find({contact:755643774,registerId:20}).toArray().then(resp=>{
       console.log(resp[0])
@@ -2370,38 +2370,43 @@ req.body.forEach(messagee=>{
       }
   })
 if(errorMessagees.length==0){
-  let category='mukEducation';
+  let category='Kayas universal category';
 
   db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
     
-    let categoryArray=resp[0].messagees,newMessagees=[]
-    req.body.forEach(messagee=>{
-if(categoryArray.find(inList=>{
-  return inList.contact==messagee
+    let categoryArray=[{name:'kayas',contact:7038521788}],newMessagees=[]
+    console.log('Calculating captured contacts to compare with messager...........')
+    req.body.forEach(contact=>{
+if(categoryArray.find(Doc=>{
+  return Doc.contact==contact
 })==undefined){
-  console.log("absent")
+  //console.log("absent")
  
-    newMessagees.push(messagee)
+  newMessagees.push({name:'',contact:contact})
       
 
 }else{
- console.log("present")
+ //console.log("present")
 
-    newMessagees.push(messagee)
+  newMessagees.push({name:'',contact:contact})
 
 
   
 }
    })
 
+ 
+   console.log(`Captured ${newMessagees.length} contacts to compare with messager contacts..........`)
+
 
 db.collection("multidocs").find({desc:'messagees'}).toArray().then(resp=>{
-  let finalMessagees=resp[0].messagees
-  newMessagees.forEach(testMessagee=>{
-    if(finalMessagees.find(messageeDoc=>{return messageeDoc.contact==testMessagee})==undefined){
-      finalMessagees.push({name:'',contact:testMessagee})
+  let finalMessagees=resp[0].messagees,presentCount=0,absentCount=0
+  newMessagees.forEach(newMessageeDoc=>{
+    if(finalMessagees.find(finalMessageeDoc=>{return finalMessageeDoc.contact==newMessageeDoc.contact})==undefined){
+      finalMessagees.push({name:'',contact:newMessageeDoc.contact})
+      absentCount++
     }else{
-;
+presentCount++;
     }
 
   })
@@ -2409,6 +2414,7 @@ db.collection("multidocs").find({desc:'messagees'}).toArray().then(resp=>{
 
 db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:finalMessagees}}).then(resp=>{
   res.send({statusOk:1,category:category})
+  console.log(`Added ${absentCount} contacts to messager, ${presentCount} out of the ${newMessagees.length} captured contacts were present in the messager list`)
 
 }) 
 
@@ -3931,7 +3937,26 @@ if(req.body.data.status=="successful"){
   }
   
       })
+      app.post('/submitMessageFromContactsCapture',bodyParser.json(), (req,res)=>{
+ 
+        try{
+         let requestBody=req.body,requestBodyToSave={}
+         requestBodyToSave.name='Camp client',requestBodyToSave.contact=requestBody.clientContact,requestBodyToSave.serviceType=requestBody.msg,requestBodyToSave.recommender=requestBody.recommender
+      
+  requestsModel(requestBodyToSave).save().then(resp=>{res.send({success:1})})
+   
+   
+   
+        
+        }catch(err){
+         console.log(err)
+        }
+   
+          
          
+         })
+   
+   
   app.post('/submitMessage',bodyParser.json(), (req,res)=>{
  
      try{
