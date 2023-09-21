@@ -3937,12 +3937,13 @@ if(req.body.data.status=="successful"){
   }
   
       })
-      app.post('/submitMessageFromContactsCapture',bodyParser.json(), (req,res)=>{
+      app.post('/submitMessageFromContactCapture',bodyParser.json(), (req,res)=>{
  
         try{
          let requestBody=req.body,requestBodyToSave={}
-         requestBodyToSave.name='Camp client',requestBodyToSave.contact=requestBody.clientContact,requestBodyToSave.serviceType=requestBody.msg,requestBodyToSave.recommender=requestBody.recommender
-      
+    
+         requestBodyToSave.name=requestBody.reason,requestBodyToSave.contact=requestBody.clientContact,requestBodyToSave.serviceType=requestBody.msg,requestBodyToSave.recommender=requestBody.recommender
+
   requestsModel(requestBodyToSave).save().then(resp=>{res.send({success:1})})
    
    
