@@ -749,8 +749,9 @@ res.send(array)})})
         res.send(array)})})
 app.get('/requestsThroughRecommender/:recommender', (req,res)=>{
 
+
           db.collection('requests').find({recommender:parseInt(req.params.recommender)}).toArray().then((array)=>{
-         
+           
           res.send(array)})})
 
 app.get('/collection_requests_requests', (req,res)=>{
