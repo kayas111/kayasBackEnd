@@ -16,7 +16,7 @@ const emailValidator = require('deep-email-validator');
 const mongoose=require('mongoose')
 const webpush=require('web-push')
 const excel=require('xlsx')
-
+// messager is located in multidocs collection
 
 
 mongoose.set('strictQuery', false)
@@ -28,20 +28,21 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
     
+   
 /*
-      db.collection('registers').find({contact:755643774,registerId:20}).toArray().then(resp=>{
+      db.collection('registers').find({contact:755643774,registerId:25}).toArray().then(resp=>{
       console.log(resp[0])
  let list=resp[0].attendees,final=[]
  
 
 
 list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`At 4:30pm, ${receip.name} be at St. Francis students center lower hall. Thank you. 0755643774 #SMS by Kayas`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`You have received a reminder ${receip.name}. The seminar is today Sunday 2pm at yusuf lule auditorium. BANG Club Makerere honours your presence. 0755643774 #SMS by Kayas`
 final.push(receip)
 })
 
 console.log(final)
-request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+request.post('http://www.egosms.co/api/v1/json/',{json:{
     method:"SendSms",
     userdata:{
        username:"kayas",
@@ -61,8 +62,8 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
         
       })
 
-  
- */
+  */
+ 
 
    
 
@@ -801,6 +802,7 @@ if(resp.length==0){
                 
             })
  app.get('/admin_getTradingDetails/:contact', (req,res)=>{
+
    
     db.collection("traders").find({contact:parseInt(req.params.contact)}).toArray().then(resp=>{
                 
