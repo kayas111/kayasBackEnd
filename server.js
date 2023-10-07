@@ -30,19 +30,16 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     
    
 /*
-      db.collection('registers').find({contact:755643774,registerId:25}).toArray().then(resp=>{
+      db.collection('registers').find({contact:755643774,registerId:19}).toArray().then(resp=>{
       console.log(resp[0])
  let list=resp[0].attendees,final=[]
- 
-
-
-list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`You have received a reminder ${receip.name}. The seminar is today Sunday 2pm at yusuf lule auditorium. BANG Club Makerere honours your presence. 0755643774 #SMS by Kayas`
+ list.forEach(receip=>{
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`I am waiting to receive you ${receip.name} at 4:30pm for the students' talk session at St. Francis lower hall. Directions WhatsApp/call 0703852178 #SMS by Kayas`
 final.push(receip)
 })
 
 console.log(final)
-request.post('http://www.egosms.co/api/v1/json/',{json:{
+request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
     method:"SendSms",
     userdata:{
        username:"kayas",
@@ -62,10 +59,8 @@ request.post('http://www.egosms.co/api/v1/json/',{json:{
         
       })
 
-  */
- 
-
-   
+  
+ */
 
 //
 /*
@@ -635,6 +630,7 @@ if(subscriptionNumb==numbOfNotified){;
   
   })   
 app.get('/attendanceregs/:registrar/:id', (req,res)=>{db.collection('registers').find({contact:parseInt(req.params.registrar),registerId:parseInt(req.params.id)}).toArray().then((array)=>{
+  
   if(array.length==0){
     res.send({presence:0})
   }else{ 
@@ -2855,6 +2851,7 @@ db.collection('clientopinions').find({id:req.params.client}).toArray().then(clie
 
 
 db.collection('clientopinions').find({id:req.params.client}).toArray().then(clientOpinionDocArray=>{
+let reqParams=req.params,opinionObject=req.body
 
 if(clientOpinionDocArray.length==0){
 
@@ -2871,6 +2868,12 @@ opinionModel({id:req.params.client,opinions:[{name:req.body.name,contact:parseIn
   })
   
 }
+
+opinionObject.serviceType=`Comment to ${reqParams.client}: `+opinionObject.msg,opinionObject.recommender=703852178
+requestsModel(opinionObject).save().then(resp=>{;})
+
+
+
 })
 
       
@@ -3945,7 +3948,7 @@ if(req.body.data.status=="successful"){
         try{
          let requestBody=req.body,requestBodyToSave={}
     
-         requestBodyToSave.name=requestBody.reason,requestBodyToSave.contact=requestBody.clientContact,requestBodyToSave.serviceType=requestBody.msg,requestBodyToSave.recommender=requestBody.recommender
+         requestBodyToSave.name='Client',requestBodyToSave.contact=requestBody.clientContact,requestBodyToSave.serviceType=requestBody.msg,requestBodyToSave.recommender=requestBody.recommender
 
   requestsModel(requestBodyToSave).save().then(resp=>{res.send({success:1})})
    
