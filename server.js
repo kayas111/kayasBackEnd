@@ -817,7 +817,7 @@ if(resp.length==0){
 
 
 app.get('/getTradingDetails/:trader', (req,res)=>{
- 
+  
 try{
   db.collection('traders').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
   if(resp.length==0){
@@ -829,7 +829,7 @@ try{
         
       }else{
 
-traderModel({name:resp[0].name,contact:resp[0].contact,accBal:100,pagesVisitsNo:0,institution:resp[0].institution}).save().then(resp=>{
+traderModel({name:resp[0].name,contact:resp[0].contact,accBal:100,pagesVisitsNo:0,institution:resp[0].institution,sendSmsToken:1}).save().then(resp=>{
 
   res.send([resp])
 })
@@ -840,6 +840,7 @@ traderModel({name:resp[0].name,contact:resp[0].contact,accBal:100,pagesVisitsNo:
 
   }else{
    res.send(resp)
+   
 
 
   }
@@ -1378,8 +1379,6 @@ switch(req.body.fieldToUpdate){
   }
 
   case 'permissionToAddContactTokens':{
-   
-
     db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{permissionToAddContactTokens:parseInt(req.body.fieldValue)}}).then(resp=>{
       if(resp.modifiedCount==1){
         res.send(['<div style="color:green;">Successful!</div>'])
@@ -2320,9 +2319,10 @@ smsReceipients.push(attendee)
     if(body.Status=='OK'){
 
     db.collection('traders').find({contact:req.body.registrarContact}).toArray().then(resp=>{
-      let originalAccBal=resp[0].accBal
+      let originalAccBal=resp[0].accBal,originalSendSmsTokens=resp[0].sendSmsTokens
    
-    db.collection('traders').updateOne({contact:req.body.registrarContact},{$set:{accBal:originalAccBal-smsCost}}).then(resp=>{
+    db.collection('traders').updateOne({contact:req.body.registrarContact},{$set:{accBal:originalAccBal-smsCost,sendSmsTokens:originalSendSmsTokens-1}})
+    .then(resp=>{
   
     res.send(['<div style="color:green;">Message sent!</div>'])
     
@@ -3392,7 +3392,26 @@ try{
             })
     break;
     }
+    case 'sendSmsTokens':{
     
+      if(parseInt(req.body.fieldValue)>-1){
+        
+        db.collection('traders').updateOne({contact:req.body.contact},{$set:{sendSmsTokens:parseInt(req.body.fieldValue)}}).then(resp=>{
+        
+          if(resp.modifiedCount==1){
+            res.send(['<div style="color:green;">Successful!</div>'])
+          }else{
+            res.send(['<div style="color:red;">Upto date!</div>'])
+    
+          }
+        })
+      }else{
+        res.send(['<div style="color:red;">Enter a value!</div>'])
+      }
+      
+      break;
+    }
+  
     case 'createArticle':{
 db.collection('kayasers').find({contact:req.body.contact}).toArray().then(resp=>{
   let kayaser=resp[0]
