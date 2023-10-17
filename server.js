@@ -27,7 +27,9 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-    
+    db.collection('voteropinionpolls').deleteMany({description:"kyuGuildPolls"}).then(resp=>{
+      console.log(resp)
+    })
    /*
 
       db.collection('registers').find({contact:755643774,registerId:22}).toArray().then(resp=>{
@@ -91,7 +93,7 @@ let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hh
 webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
 
 let maxAttendeeRegisters=10
-let opinionPollsSchema=new mongoose.Schema({name:String,stdNo:Number,contact:Number,email:String,candidateNumber:Number},{strict:false})
+
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/model').comments;
 const quotesModel = require('./models/model').quotes;
@@ -113,8 +115,8 @@ const recommendationModel = require('./models/model').recommendationModel;
 const requestsModel = require('./models/model').requestsModel;
 const messagerModel = require('./models/model').messagerModel;
 const CommentModel = require('./models/model').comments;
-const mukOpinionPollsModel = require('./models/model').mukOpinionPollsModel;
-const mubsOpinionPollsModel = require('./models/model').mubsOpinionPollsModel;
+const voterOpinionPollModel = require('./models/model').voterOpinionPollModel;
+
 
 const articleGrantModel = require('./models/model').articleGrantModel;
 const CampusModel = require('./models/model').campus;
@@ -420,6 +422,14 @@ app.get('/attendeesMessage/:registrarContact/:id', (req,res)=>{
  }
  
  })
+ app.get('/getOpinionPolls/:description', (req,res)=>{
+  db.collection('voteropinionpolls').find({description:req.params.description}).toArray().then(resp=>{
+ res.send(resp)
+ 
+  })
+ 
+ 
+ })
  app.get('/pendingForSmsNotifications', (req,res)=>{
  db.collection('pendingsmsnotifications').find().toArray().then(resp=>{
 res.send(resp)
@@ -483,11 +493,6 @@ app.get('/collection_controls_visits', (req,res)=>{
    app.get('/smssubscribers', (req,res)=>{db.collection('smssubscribers').find().toArray().then((array)=>{res.send(array)})})
     app.get('/pushNotificationDelays', (req,res)=>{db.collection('controls').find({_id:new ObjectId('6446c593a0c184843ed48174')}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/collection_registers_registers', (req,res)=>{db.collection('registers').find().toArray().then((array)=>{res.send(array)})}) 
-    app.get('/collections_opinionpolls_cand1', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:1}).toArray().then((array)=>{res.send(array)})}) 
-    app.get('/collections_opinionpolls_cand2', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:2}).toArray().then((array)=>{res.send(array)})}) 
-    app.get('/collections_opinionpolls_cand3', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:3}).toArray().then((array)=>{res.send(array)})}) 
-    app.get('/collections_opinionpolls_cand4', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:4}).toArray().then((array)=>{res.send(array)})}) 
-    app.get('/collections_opinionpolls_cand5', (req,res)=>{db.collection('opinionpolls').find({candidateNumber:5}).toArray().then((array)=>{res.send(array)})}) 
     app.get('/messagees', (req,res)=>{db.collection('multidocs').find({desc:"messagees"}).toArray().then((array)=>{
      
       db.collection('controls').find({_id:new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then(docArray=>{
@@ -1058,21 +1063,6 @@ app.get('/fetchArticle/:id',(req,res)=>{
    })
 })
 
-app.get('/opinionpolls/:collection/:candId',(req,res)=>{
-  db.collection(req.params.collection).find().toArray().then(arrayOfVotesCast=>{
-    db.collection(req.params.collection).find({candId:parseInt(req.params.candId)}).toArray().then(resp=>{
-
-      res.send({count:(resp.length/arrayOfVotesCast.length)*100,totalVotes:arrayOfVotesCast.length})
-      
-      })
-
-  })
-
-
-
-
-
-})
 
 
 //posts to the database
@@ -1440,66 +1430,72 @@ try{
   console.log(err)
 }
   })
-app.post('/submitOpinionpoll/:collection',bodyParser.json(),(req,res)=>{
+app.post('/submitOpinionpoll',bodyParser.json(),(req,res)=>{
 try{
+
+let submission=req.body
+
+
+if(submission.candVotedFor==undefined){
+  res.send(['<div style="color:red">Enter a number corresponding to a candidate on the list.</div>'])
+}else{
   
-switch(req.params.collection){
-case 'mukopinionpolls':{
-  db.collection(req.params.collection).find({contact:req.body.contact}).toArray().then(resp=>{
+  db.collection('voteropinionpolls').find({contactOfVoter:submission.contactOfVoter,description:submission.description}).toArray().then(resp=>{
     if(resp.length==0){
-    mukOpinionPollsModel(req.body).save().then(resp=>{
-    
-    res.send(["<div style='color:green;'>Please forward to other groups too and check for the polls after 30 minutes. Thanks for submitting</div>"])
-    
-    })
-    
-    
+      
+      voterOpinionPollModel(submission).save().then(resp=>{
+        res.send(['<div style="color:green">Submitted. Thank you <span class="fa fa-check"></span></div>'])
+
+      })
+      
     }else{
-      res.send(["<div style='color:red;'>You already submitted, please forward to other groups and check for the polls after 30 minutes.</div>"])
+      res.send(['<div style="color:red">You already voted.</div>'])
     }
-    
-    })
-    break ;
+  })
 }
-
-case 'mubsopinionpolls':{
-  db.collection(req.params.collection).find({contact:req.body.contact}).toArray().then(resp=>{
-    if(resp.length==0){
-    mubsOpinionPollsModel(req.body).save().then(resp=>{
-    
-    res.send(["<div style='color:green;'>Please forward to other groups too and check for the polls after 30 minutes. Thanks for submitting</div>"])
-    
-    })
-    
-    
-    }else{
-      res.send(["<div style='color:red;'>You already submitted, please forward to other groups and check for the polls after 30 minutes.</div>"])
-    }
-    
-    })
-    break ;
-}
-
-
-
-
-
-
-default:{
-res.send(["Error must have occured, please try again later"])
-
-}
-
-
-
-}
- 
 
   
 
 }catch(err){
   console.log(err)
 }
+})
+app.post('/categorizeMessagerContacts',bodyParser.json(),(req,res)=>{
+
+  try{
+    
+  db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
+     
+ let messagees=resp[0].messagees
+ if(messagees.length==0){
+  res.send(["Messagees list is empty"])
+ } else{
+
+  messagees.forEach(attendeeDoc=>{
+   attendeeDoc.yearOfEntry=req.body.contactCategoryValue
+  }) 
+
+
+db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:messagees}}).then(resp=>{
+  if(resp.modifiedCount==1){
+    res.send(['<div style="color:green;">Successful</div>'])
+  }else{
+    res.send(['<div style="color:red;">Already upto date!</div>'])
+  }
+})
+
+
+ }
+ 
+})
+
+
+    
+   
+  
+  }catch(err){
+    console.log(err)
+  }
 })
 app.post('/pushToAttendanceRegister',bodyParser.json(),(req,res)=>{
 
@@ -2671,73 +2667,7 @@ app.post('/collection_orders_order',(req,res)=>{
   })
 
 })
-app.post('/collection_opinionpolls_poll',(req,res)=>{
 
-
-  var form = new formidable.IncomingForm();
-
- 
-
-      form.parse(req, function (err, fields, files){
-          inCollection("kayasers",[parseInt(fields.contact)]).then(resp=>{
-              if(resp==true){
-                  inCollection("opinionpolls",[parseInt(fields.contact)]).then(resp=>{
-
-                      if (resp==true){
-                          res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">You already voted</div><div style="font-size:40px;text-align:center;padding-top:30px;"><p></p> Thank you for keeping it Kayas</div>')
-
-
-
-                      }else{
-
-//
-try{
-  db.collection("kayasers").find({contact:parseInt(fields.contact)}).toArray().then(kayaser=>{
-
-
-
-
-      if(bcrypt.compareSync(fields.pin,kayaser[0].pin)){
-          let Poll=mongoose.model('opinionpolls',opinionPollsSchema)
-
-Poll({name:kayaser[0].name,stdNo:kayaser[0].stdNo,contact:kayaser[0].contact,email:kayaser[0].email,candidateNumber:parseInt(fields.candidateNumber)}).save().then(resp=>{
-console.log("opinion poll saved")
-})
-res.redirect(`/pages/politics/opinionpolls`)
-
-      }else{
-
-          res.send('<div style="font-size:90px;font-weight:bold;text-align:center;padding-top:30px;">Incorrect PIN !</div><div style="font-size:40px;text-align:center;padding-top:30px;">Your PIN is incorrect. Incase you have forgotten your PIN, WhatsApp Kayas on 0703852178. <p></p><a href="https://kayas-mak.herokuapp.com/pages/politics/opinionpolls">Back to Kayas</a> <p></p> Thank you for keeping it Kayas</div>')
-
-      }
-  
-  
-  
-  })
-
-
-}catch(error){
-  console.log("Kayas error originate from registering an opinion poll and it is: ")
-  console.log(error)
-}//
-
-
-                      }
-                  })
-
-
-                  
-              }else{//user is not registered
-
-                  res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Not Registered!</div><div style="font-size:40px;text-align:center;padding-top:30px;">You can not submit your choice because you are not registered with Kayas. <br></br>Please register with Kayas in order to submit your choice of a candidate by clicking here:<p></p><a href="https://kayas-mak.herokuapp.com/pages/register">Register</a> <p></p> Thank you for keeping it Kayas</div>') 
-              }
-          })
-
-
-      })
-
-
-})
 app.post('/pages/tradingd/:client',(req,res)=>{
 
 
@@ -3857,7 +3787,8 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
 })
 
 app.post('/collection_kayasers_registerFree',bodyParser.json(),(req,res)=>{
- 
+  console.log(req.body)
+ /*
 try{
  
 registrationModel({name:req.body.name,institution:req.body.institution,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
@@ -3872,7 +3803,7 @@ console.log("error is result from entering a wrong student number format by "+fi
 }
 
 
-
+*/
 })
 
 app.post('/collection_kayasers_register',(req,res)=>{
