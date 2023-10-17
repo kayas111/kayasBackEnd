@@ -27,9 +27,7 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-    db.collection('voteropinionpolls').deleteMany({description:"kyuGuildPolls"}).then(resp=>{
-      console.log(resp)
-    })
+    
    /*
 
       db.collection('registers').find({contact:755643774,registerId:22}).toArray().then(resp=>{
