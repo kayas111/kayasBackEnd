@@ -1435,7 +1435,7 @@ let submission=req.body
 
 
 if(submission.candVotedFor==undefined){
-  res.send(['<div style="color:red">Enter a number corresponding to a candidate on the list.</div>'])
+  res.send(['<div style="color:red">Enter a number corresponding to an option on the list.</div>'])
 }else{
   
   db.collection('voteropinionpolls').find({contactOfVoter:submission.contactOfVoter,description:submission.description}).toArray().then(resp=>{
