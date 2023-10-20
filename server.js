@@ -28,13 +28,13 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
     
-   /*
-
-      db.collection('registers').find({contact:755643774,registerId:22}).toArray().then(resp=>{
+   
+/*
+      db.collection('registers').find({contact:755643774,registerId:20}).toArray().then(resp=>{
       console.log(resp[0])
  let list=resp[0].attendees,final=[]
  list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`Campus tests next week may be hindered by rain. Dont miss a test because of rain. Have an umbrella delivered to you. WhatsApp/Call 0703852178 #SMS by Kayas`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name} tomorrow 4:30pm (BANG), mama Beatrice .L. will speak. Theme "Networking and Professional Etiquette" at St. Francis lower hall 0755643774 #SMS by Kayas`
 final.push(receip)
 })
 
@@ -59,8 +59,8 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
         
       })
 
-  */
- 
+  
+ */
 
 //
 /*
