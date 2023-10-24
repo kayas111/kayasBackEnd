@@ -3894,11 +3894,11 @@ if(req.body.data.status=="successful"){
       app.post('/submitMessageFromContactCapture',bodyParser.json(), (req,res)=>{
  
         try{
-         let requestBody=req.body,requestBodyToSave={}
+         let requestBody=req.body
     
-         requestBodyToSave.name='Client',requestBodyToSave.contact=requestBody.clientContact,requestBodyToSave.serviceType=requestBody.msg,requestBodyToSave.recommender=requestBody.recommender
+         
 
-  requestsModel(requestBodyToSave).save().then(resp=>{res.send({success:1})})
+  requestsModel(requestBody).save().then(resp=>{res.send({success:1})})
    
    
    
