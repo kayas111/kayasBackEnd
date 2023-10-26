@@ -30,11 +30,11 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     
    
 /*
-      db.collection('registers').find({contact:755643774,registerId:0}).toArray().then(resp=>{
+      db.collection('registers').find({contact:755643774,registerId:1}).toArray().then(resp=>{
       console.log(resp[0])
  let list=resp[0].attendees,final=[]
  list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`You've received a reminder ${receip.name} for the "Networking & Professional Etiquette" BANG session today at 4:30pm. Venue: St. Francis Students' center lower hall. I am expecting you (Brian) #SMS by Kayas`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`Good evening ${receip.name}. This weekend we're visiting Bluemoon lounge (Bar & Restaurant) as a team from Makerere. I invite you too. WhatsApp me on 0703852178`
 final.push(receip)
 })
 
@@ -3785,8 +3785,8 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
 })
 
 app.post('/collection_kayasers_registerFree',bodyParser.json(),(req,res)=>{
-  console.log(req.body)
- /*
+  
+ 
 try{
  
 registrationModel({name:req.body.name,institution:req.body.institution,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
@@ -3801,67 +3801,9 @@ console.log("error is result from entering a wrong student number format by "+fi
 }
 
 
-*/
+
 })
 
-app.post('/collection_kayasers_register',(req,res)=>{
-
-          var form = new formidable.IncomingForm();
-          form.parse(req, function (err, fields, files){
-     //Querry to check for kayaser presence
-     db.collection('kayasers').find({contact:parseInt(fields.contact)}).toArray().then((array)=>{
-      const presence=array.length
-     if(presence==0){
-      //register
-
-      try{
-
-          //Register because kayaser is absent
-
-                  
-      let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),payerNo:fields.payerNo,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
- 
-      const pendingKayaser=new pendingRegistrationModel(data)
-pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to register ......."))
-
-           try {flw.MobileMoney.uganda({
-                fullname:fields.name,
-                phone_number:fields.payerNo,
-                network:"AIRTEL",
-                amount:registrationFee,
-                currency: 'UGX',
-                email:fields.email,
-                tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
-            })
-                .then(resp=>{
-                    console.log("Initiating payment for registration of "+fields.contact+" ........")
-                    res.redirect(resp.meta.authorization.redirect)
-                })
-                .catch(console.log);}catch(error){
-                    console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
-                    console.log(error)
-                }
-  
-
-    
-  } catch(error){
-      res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">An error occured. </div><div style="font-size:40px;text-align:center;padding-top:30px;">Please for any urgent issues WhatsApp Isaac on 0755643774 or Charles on 0700411626<p></p>Thank you for keeping it Kayas.</div>')
-      console.log("error is result from entering a wrong student number format by "+fields.contact)
-  }
-  
- //register
-     } 
-     
-     else{//Kayaser is present. Send presence message
-      console.log(fields.contact+" Attempted to register with existing number")
-     
-      res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Do You Know What?</div><div style="font-size:40px;text-align:center;padding-top:30px;">You are  already registered with this contact. Please proceed wih other steps now.Thank you for registering with Kayas.<p></p>You can now proceed with any of the following:<p><a href="https://kayas-mak.herokuapp.com/pages/message">Send message</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')
-     }
-  
-     })
-         })
-    
-  })
 
 
   
