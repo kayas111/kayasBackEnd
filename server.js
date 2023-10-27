@@ -30,11 +30,11 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     
    
 /*
-      db.collection('registers').find({contact:755643774,registerId:1}).toArray().then(resp=>{
+      db.collection('registers').find({contact:755643774,registerId:8}).toArray().then(resp=>{
       console.log(resp[0])
  let list=resp[0].attendees,final=[]
  list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`Good evening ${receip.name}. This weekend we're visiting Bluemoon lounge (Bar & Restaurant) as a team from Makerere. I invite you too. WhatsApp me on 0703852178`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, BANG session will start at 4:30pm exactly. Please keep time. Theme:"Stress Management $ Well Being", thanks. #SMS by Kayas`
 final.push(receip)
 })
 
@@ -59,8 +59,8 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
         
       })
 
-  
- */
+  */
+ 
 
 //
 /*
