@@ -28,13 +28,16 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
     
-   
-/*
-      db.collection('registers').find({contact:755643774,registerId:8}).toArray().then(resp=>{
-      console.log(resp[0])
- let list=resp[0].attendees,final=[]
+
+
+
+
+  /*
+      db.collection('registers').find({contact:755643774,registerId:28}).toArray().then(resp=>{
+      
+ let list=resp[0].attendees,attendanceRegister=resp,final=[]
  list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, BANG session will start at 4:30pm exactly. Please keep time. Theme:"Stress Management $ Well Being", thanks. #SMS by Kayas`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`Makerere students will be clubbing tonight as a team. Free transport to and fro is present. Departure time is 10pm. WhatsApp 0703852178 to join. #SMS by Kayas`
 final.push(receip)
 })
 
@@ -51,21 +54,24 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
         console.log(body);
     }else{
       console.log(body)
+      console.log(attendanceRegister)
+       
     }
   }
   
   )
 
-        
+     
       })
 
-  */
- 
+  
+ */
 
 //
 /*
-let file=excel.readFile('../readExcel/list5.xlsx')
-let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet2']),final=[]
+let file=excel.readFile('../readExcel/kampala.xlsx')
+
+let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
 attendees.forEach(attendee=>{
 if(attendee.contact>0){
@@ -76,9 +82,11 @@ final.push(attendee)
 })
 console.log(final)
 
-db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed")}) 
-*/
 
+
+db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed")}) 
+
+*/
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
 
 
@@ -1459,7 +1467,7 @@ if(submission.candVotedFor==undefined){
 }
 })
 app.post('/categorizeMessagerContacts',bodyParser.json(),(req,res)=>{
-
+//dependecies: messager categorize button
   try{
     
   db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
@@ -1865,6 +1873,7 @@ function PermissionToCreateAttendanceRegister(){
     })
     
 }
+
 
 db.collection('permissiontokens').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
   if(docArray.length==0){//not present in the permissiontokens collection
@@ -3376,7 +3385,8 @@ articleGrantModel({name:kayaser.name,contact:parseInt(req.body.contact),createTo
     }
     case 'createAttendanceRegister':{
       db.collection('permissiontokens').find({contact:req.body.contact}).toArray().then(resp=>{
-        if(resp.length==0){res.send(['Does not exit in collection permissionTokens'])}else{
+        if(resp.length==0){res.send(['Does not exit in collection permissionTokens, first create a register using that contact to be able to update this the tokens'])}else{
+          //3e
           db.collection('permissiontokens').updateOne({contact:req.body.contact},{$set:{createAttendanceRegister:parseInt(req.body.fieldValue)}}).then(resp=>{
           if(resp.modifiedCount==1){
             res.send(['Successful!'])
