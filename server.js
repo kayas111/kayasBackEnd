@@ -31,13 +31,13 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
 
 
-
-  /*
-      db.collection('registers').find({contact:755643774,registerId:28}).toArray().then(resp=>{
+/*
+  
+      db.collection('registers').find({contact:703852178,registerId:9}).toArray().then(resp=>{
       
  let list=resp[0].attendees,attendanceRegister=resp,final=[]
  list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`Makerere students will be clubbing tonight as a team. Free transport to and fro is present. Departure time is 10pm. WhatsApp 0703852178 to join. #SMS by Kayas`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`Voting for MDES is tomorrow 3pm. Come cast your votes & I kindly request for your vote too as your vice President - Mugume Frank Gonzaga 0755942387 #SMS by Kayas`
 final.push(receip)
 })
 
