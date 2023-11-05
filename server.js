@@ -31,13 +31,12 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
 
 
-/*
-  
-      db.collection('registers').find({contact:703852178,registerId:9}).toArray().then(resp=>{
+  /*
+      db.collection('registers').find({contact:755643774,registerId:20}).toArray().then(resp=>{
       
  let list=resp[0].attendees,attendanceRegister=resp,final=[]
  list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`Voting for MDES is tomorrow 3pm. Come cast your votes & I kindly request for your vote too as your vice President - Mugume Frank Gonzaga 0755942387 #SMS by Kayas`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, the BANG session will start at exactly 4:30pm, you're welcome. Theme: "Significance of Mentorship". We expect you. Thanks. 0755643774 #SMS by Kayas`
 final.push(receip)
 })
 
@@ -64,12 +63,12 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
      
       })
 
-  
- */
+  */
+ 
 
 //
 /*
-let file=excel.readFile('../readExcel/kampala.xlsx')
+let file=excel.readFile('../readExcel/unsa district coordinators.xlsx')
 
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
@@ -77,16 +76,14 @@ attendees.forEach(attendee=>{
 if(attendee.contact>0){
 final.push(attendee) 
 }else{
- console.log(`${attendee} is not gt`)
+  console.log(attendee)
+ console.log(`-------------is not gt----------------`)
 }
 })
 console.log(final)
-
-
-
 db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed")}) 
-
 */
+
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
 
 
@@ -143,7 +140,7 @@ const hookupRegistrationFee=500
 
 //functions start
 
-function FilterArraySection(fromPosition,toPosition,originArray,destinationArray){
+function FilterArraySection(fromPosition,toPosition,originArray,destinationArray=[]){
   while(fromPosition<=toPosition){
   
    destinationArray.push(originArray[fromPosition-1])
@@ -1469,7 +1466,10 @@ if(submission.candVotedFor==undefined){
 app.post('/categorizeMessagerContacts',bodyParser.json(),(req,res)=>{
 //dependecies: messager categorize button
 
+
+
   try{
+    
     
   db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
      
@@ -1479,8 +1479,19 @@ app.post('/categorizeMessagerContacts',bodyParser.json(),(req,res)=>{
  } else{
 
   messagees.forEach(attendeeDoc=>{
-   attendeeDoc.yearOfEntry=req.body.contactCategoryValue
+if(attendeeDoc[req.body.property]==undefined){
+  attendeeDoc[req.body.property]=req.body.propertyValue
+}else{
+  ;
+}
+
+
+   
   }) 
+
+
+
+
 
 
 db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:messagees}}).then(resp=>{
@@ -1503,6 +1514,8 @@ db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:message
   }catch(err){
     console.log(err)
   }
+
+
 })
 app.post('/pushToAttendanceRegister',bodyParser.json(),(req,res)=>{
 
