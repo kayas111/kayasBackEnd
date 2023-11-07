@@ -837,7 +837,7 @@ try{
         
       }else{
 
-traderModel({name:resp[0].name,contact:resp[0].contact,accBal:100,pagesVisitsNo:0,institution:resp[0].institution,sendSmsToken:1}).save().then(resp=>{
+traderModel({name:resp[0].name,contact:resp[0].contact,accBal:0,pagesVisitsNo:0,institution:resp[0].institution,sendSmsToken:1}).save().then(resp=>{
 
   res.send([resp])
 })
