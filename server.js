@@ -33,10 +33,11 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
   /*
       db.collection('registers').find({contact:755643774,registerId:20}).toArray().then(resp=>{
-      
+     
+    
  let list=resp[0].attendees,attendanceRegister=resp,final=[]
  list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, the BANG session will start at exactly 4:30pm, you're welcome. Theme: "Significance of Mentorship". We expect you. Thanks. 0755643774 #SMS by Kayas`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, tomorrow Eng. Stephen .L. will be the Guest speaker in BANG. Theme: "Family Relationships". Time 4:30pm. I invite you. 0755643774 #SMS by Kayas`
 final.push(receip)
 })
 
@@ -62,15 +63,15 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
      
       })
-
-  */
+*/
+  
  
 
 //
 /*
-let file=excel.readFile('../readExcel/unsa district coordinators.xlsx')
+let file=excel.readFile('../readExcel/bang.xlsx')
 
-let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
+let attendees=excel.utils.sheet_to_json(file.Sheets['sheet1']),final=[]
 
 attendees.forEach(attendee=>{
 if(attendee.contact>0){
@@ -328,7 +329,7 @@ app.use(bodyParser.json())
 //access database by get
 
 
-app.get('/regsTotalBill', (req,res)=>{
+app.get('/smsTotalBill', (req,res)=>{
 
   try{
 db.collection('registers').find().toArray().then(async (resp)=>{
@@ -336,7 +337,7 @@ db.collection('registers').find().toArray().then(async (resp)=>{
  
   let registersArray=resp,tradersSearchContacts=[]
   if(registersArray.length==0){
-    res.send({regsTotalBill:0})
+    res.send({smsTotalBill:0})
   }else{
 
     
@@ -345,12 +346,12 @@ db.collection('registers').find().toArray().then(async (resp)=>{
     })
   
     await db.collection('traders').find({contact:{$in:tradersSearchContacts}}).toArray().then(resp=>{
-      let regsTotalBill=0,tradersWithRegisters=resp
+      let smsTotalBill=0,tradersWithRegisters=resp
        tradersWithRegisters.forEach(register=>{
-        regsTotalBill+=register.accBal
+        smsTotalBill+=register.accBal
       })
 
-      res.send({regsTotalBill:regsTotalBill})
+      res.send({smsTotalBill:smsTotalBill})
      
      })
 
