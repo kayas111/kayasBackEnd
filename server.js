@@ -32,12 +32,12 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
 
   /*
-      db.collection('registers').find({contact:755643774,registerId:20}).toArray().then(resp=>{
+      db.collection('registers').find({contact:755643774,registerId:1}).toArray().then(resp=>{
      
     
  let list=resp[0].attendees,attendanceRegister=resp,final=[]
  list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, tomorrow Eng. Stephen .L. will be the Guest speaker in BANG. Theme: "Family Relationships". Time 4:30pm. I invite you. 0755643774 #SMS by Kayas`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, today's BANG Theme: "Family relationships" starts at 4:30pm. Speaker: Eng. Stephen .L. Hoping to see you, thanks. 0755643774 #SMS by Kayas`
 final.push(receip)
 })
 
