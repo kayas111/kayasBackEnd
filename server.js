@@ -37,7 +37,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     
  let list=resp[0].attendees,attendanceRegister=resp,final=[]
  list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, today's BANG Theme: "Family relationships" starts at 4:30pm. Speaker: Eng. Stephen .L. Hoping to see you, thanks. 0755643774 #SMS by Kayas`
+  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, 40 mins from now, the BANG session will be starting. Come with a friend if you can. Theme: "Understanding Sexuality" by Stephen L. #SMS by Kayas`
 final.push(receip)
 })
 
@@ -63,8 +63,8 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
      
       })
-*/
-  
+
+  */
  
 
 //
