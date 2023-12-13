@@ -27,17 +27,31 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-    
 
 
+
+/*
+    db.collection('traders').deleteOne({contact:755643774}).then(resp=>{
+
+      console.log(resp)
+    })
+    */
+    //db.collection('traders').updateOne({contact:755643774},{$set:{accBal:1230000}}).then(resp=>{console.log(resp)})
+  
 
   /*
-      db.collection('registers').find({contact:755643774,registerId:1}).toArray().then(resp=>{
+      db.collection('registers').find({contact:706161016,registerId:0}).toArray().then(resp=>{
      
+        
     
  let list=resp[0].attendees,attendanceRegister=resp,final=[]
  list.forEach(receip=>{
-  receip.number='256'+receip.contact,receip.senderid='1234567890',receip.message=`${receip.name}, 40 mins from now, the BANG session will be starting. Come with a friend if you can. Theme: "Understanding Sexuality" by Stephen L. #SMS by Kayas`
+  message=`${receip.name}, join CTPA Alumni Meet & Greet! Network, celebrate and have fun. Tomorrow, 30th Nov, 5pm-8:30pm at Grand Global Hotel Kikoni.`
+
+
+  receip.number='256'+receip.contact,
+  receip.senderid='1234567890',
+  receip.message=message+' #SMS by Kayas'
 final.push(receip)
 })
 
@@ -69,9 +83,9 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
 //
 /*
-let file=excel.readFile('../readExcel/bang.xlsx')
+let file=excel.readFile('../readExcel/ctpa alumni.xlsx')
 
-let attendees=excel.utils.sheet_to_json(file.Sheets['sheet1']),final=[]
+let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
 attendees.forEach(attendee=>{
 if(attendee.contact>0){
@@ -83,8 +97,8 @@ final.push(attendee)
 })
 console.log(final)
 db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed")}) 
-*/
 
+*/
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
 
 
@@ -140,6 +154,20 @@ const hookupRegistrationFee=500
 
 
 //functions start
+
+async function InstantiateTraderModel(kayaserObj){
+  
+let traderDetailsObj=await traderModel({name:kayaserObj.name,contact:parseInt(kayaserObj.contact),accBal:0,pagesVisitsNo:1,institution:kayaserObj.institution,sendSmsTokens:1,freeSmsObj:{freeSmsNotice:`Sponsored by ${kayaserObj.name}`,allowFreeSmsSending:1,freeSmsUsers:[]}}).save().then((resp)=>{
+
+
+  return(resp)
+  })
+
+
+return (traderDetailsObj)
+
+
+}
 
 function FilterArraySection(fromPosition,toPosition,originArray,destinationArray=[]){
   while(fromPosition<=toPosition){
@@ -826,8 +854,11 @@ if(resp.length==0){
 
 
 app.get('/getTradingDetails/:trader', (req,res)=>{
+  //dependencies: sendfree sms, contact registers
   
 try{
+
+  
   db.collection('traders').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
   if(resp.length==0){
 
@@ -838,10 +869,12 @@ try{
         
       }else{
 
-traderModel({name:resp[0].name,contact:resp[0].contact,accBal:0,pagesVisitsNo:0,institution:resp[0].institution,sendSmsToken:1}).save().then(resp=>{
 
-  res.send([resp])
-})
+      InstantiateTraderModel(resp[0]).then(resp=>{
+        res.send([resp])
+          
+      })
+      
  }
     
     })
@@ -1070,6 +1103,291 @@ app.get('/fetchArticle/:id',(req,res)=>{
 
 
 //posts to the database
+app.post('/updateTraderDetails',(req,res)=>{
+
+let receivedObj=req.body
+
+
+switch(receivedObj.method){
+  case 'updateAsKayaser':{
+
+    switch(receivedObj.argsObj.fieldToUpdate){
+      case 'allowFreeSmsSending':{
+    
+        db.collection('traders').find({contact:parseInt(receivedObj.argsObj.traderContact)}).toArray().then(resp=>{
+          let traderDetailsObj=resp[0]
+         
+          traderDetailsObj.freeSmsObj[receivedObj.argsObj.fieldToUpdate]=receivedObj.argsObj.updateValue
+         
+          db.collection('traders').updateOne({contact:parseInt(receivedObj.argsObj.traderContact)},{$set:{freeSmsObj:traderDetailsObj.freeSmsObj}}).then(resp=>{
+           if(resp.modifiedCount==1){
+             res.send({success:1})
+           }else{
+             res.send({success:0})
+         
+           }
+         
+         
+         })
+         
+         
+         })
+         
+
+    break;
+       }
+      
+      case 'freeSmsNotice':{
+        
+        db.collection('traders').find({contact:parseInt(receivedObj.argsObj.traderContact)}).toArray().then(resp=>{
+        let traderDetailsObj=resp[0]
+       
+        traderDetailsObj.freeSmsObj[receivedObj.argsObj.fieldToUpdate]=receivedObj.argsObj.updateValue
+       
+        db.collection('traders').updateOne({contact:parseInt(receivedObj.argsObj.traderContact)},{$set:{freeSmsObj:traderDetailsObj.freeSmsObj}}).then(resp=>{
+         if(resp.modifiedCount==1){
+           res.send({success:1})
+         }else{
+           res.send({success:0})
+       
+         }
+       
+       
+       })
+       
+       
+       })
+
+       break;
+       
+       }
+
+
+
+    default:{
+      res.send({success:0})
+      console.log('Case value for field to update not available')
+      break;
+    }
+    }
+    
+break;
+
+   }
+  
+default:{
+  res.send({success:0})
+  console.log('Case value for method not available')
+}
+}
+
+
+
+
+
+
+  /*
+let operationObj=req.body
+console.log(operationObj)
+switch(operationObj.fieldToUpdate){
+  case 'allowFreeSmsSending':{
+
+db.collection('traders').find({contact:parseInt(operationObj.traderContact)}).toArray().then(resp=>{
+ let traderDetailsObj=resp[0]
+
+ traderDetailsObj.freeSmsObj[operationObj.fieldToUpdate]=operationObj.updateValue
+
+ db.collection('traders').updateOne({contact:parseInt(operationObj.traderContact)},{$set:{freeSmsObj:traderDetailsObj.freeSmsObj}}).then(resp=>{
+  if(resp.modifiedCount==1){
+    res.send({success:1})
+  }else{
+    res.send({success:0})
+
+  }
+
+
+})
+
+
+})
+
+
+  
+
+    break;
+
+
+  }
+  case 'freeSmsNotice':{
+
+    db.collection('traders').find({contact:parseInt(operationObj.traderContact)}).toArray().then(resp=>{
+     let traderDetailsObj=resp[0]
+    
+     traderDetailsObj.freeSmsObj[operationObj.fieldToUpdate]=operationObj.updateValue
+    
+     db.collection('traders').updateOne({contact:parseInt(operationObj.traderContact)},{$set:{freeSmsObj:traderDetailsObj.freeSmsObj}}).then(resp=>{
+      if(resp.modifiedCount==1){
+        res.send({success:1})
+      }else{
+        res.send({success:0})
+    
+      }
+    
+    
+    })
+    
+    
+    })
+    
+    
+      
+    
+        break;
+    
+    
+      }
+    
+    
+
+  
+
+default:{
+  res.send({success:0})
+  console.log('Case value not available')
+}
+}
+*/
+
+})
+app.post('/sendSmsMessage',(req,res)=>{
+try{
+
+  let receivedObj=req.body
+ // console.log(receivedObj)
+
+switch(receivedObj.method){
+
+  case 'sendFreeSmsMessage':{
+ 
+      
+    try{
+
+      request.post('http://www.egosms.co/api/v1/json/',{json:{ 
+        method:"SendSms",
+        userdata:{
+           username:"kayas",
+           password:"onongeopio"
+        },
+        msgdata:[receivedObj.argsObj]
+      }}, function (error, response, body) {
+        if (!error && response.statusCode == 201) {
+            console.log(body);
+            console.log('Error one in free sending sms')
+            res.send({success:0})
+        }else{
+          console.log(body)
+          if(body.Status=='OK'){ 
+    
+    let smsBill=process.env.freeSmsBill // body.Cost+20 remove, 30+20 and replace with this for live api billing
+    db.collection('traders').find({contact:receivedObj.argsObj.sponsor}).toArray().then(resp=>{
+     let trader=resp[0],freeSmsSenderInList,freeSmsUsersWithOutSender
+      let originalBal=trader.accBal,newBal=originalBal-smsBill //calculate newBalance of trader
+    
+    let freeSmsUsers=trader.freeSmsObj.freeSmsUsers // initialize current free sms users
+    
+    if(freeSmsUsers.find(freeSmsUserObj=>{return parseInt(freeSmsUserObj.contact)==parseInt(receivedObj.argsObj.senderContact)})==undefined)
+    {
+      // add new user because doesnt exist in the list of free sms users
+      freeSmsUsers.push({name:receivedObj.argsObj.senderName,contact:parseInt(receivedObj.argsObj.senderContact),noOfSmsSent:0})
+      freeSmsSenderInList=freeSmsUsers.find(freeSmsUserObj=>{return parseInt(freeSmsUserObj.contact)==parseInt(receivedObj.argsObj.senderContact)})
+      freeSmsUsersWithOutSender=freeSmsUsers.filter((freeSmsUserObj)=>{
+      return freeSmsUserObj.contact!=freeSmsSenderInList.contact
+    })
+
+    }else{
+      ; //do not add user because already present in list
+    
+    freeSmsSenderInList=freeSmsUsers.find(freeSmsUserObj=>{return parseInt(freeSmsUserObj.contact)==parseInt(receivedObj.argsObj.senderContact)})
+    freeSmsUsersWithOutSender=freeSmsUsers.filter((freeSmsUserObj)=>{
+      return freeSmsUserObj.contact!=freeSmsSenderInList.contact
+    })
+    }
+    
+    trader.accBal=newBal // set new account bal of trader
+    trader.freeSmsObj.freeSmsUsers=freeSmsUsers // set traders' sms users  by adding new sms user who was originally absent else maintains previous users
+    freeSmsSenderInList.noOfSmsSent+=1 // increases the number of SMS sent by the user originally in list
+  freeSmsUsersWithOutSender.push(freeSmsSenderInList) //add sender to 'freeSmsUsersWithOutSender' list
+    trader.freeSmsObj.freeSmsUsers=freeSmsUsersWithOutSender // but here, sender is now pushed to group 'freeSmsUsersWithOutSender' with added sms count
+    db.collection('traders').replaceOne({contact:receivedObj.argsObj.sponsor},trader).then(resp=>{
+       //update the trader document
+    
+      if(resp.modifiedCount>0){
+        res.send({success:1})
+      }else{
+        res.send({success:0})
+      }
+      
+      
+      
+      })
+    
+    
+    
+    })
+    
+    
+    
+    
+          }else{
+            res.send({success:0})
+            console.log('Error two in sending free sms')
+          }
+           
+        }
+      }
+      
+      )
+    
+
+    }catch(err){
+      console.log('Error is catch block of sending a free sms message')
+    }
+    
+    
+    
+      break;
+    }
+    
+    
+    
+      default:{
+        console.log('Switch case method not available')
+      }
+
+}
+
+
+
+
+
+
+
+   
+      
+
+
+
+}catch(err){
+
+  console.log('error occured at /sendSmsMessage route')
+}
+
+
+})
+
+
+
+
 
 app.post('/testbackend',bodyParser.json(),(req,res)=>{
 let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
@@ -1121,9 +1439,14 @@ app.post('/registerPageVisitOfTrader', (req,res)=>{
    if(resp.length==0){;
   db.collection('kayasers').find({contact:req.body.recommender}).toArray().then(resp=>{
 if(resp.length==0){;}else{
-traderModel({name:resp[0].name,contact:resp[0].contact,accBal:0,pagesVisitsNo:0,institution:resp[0].institution}).save().then(resp=>{
-;
+
+  InstantiateTraderModel(resp[0]).then(resp=>{
+   // res.send([resp])
+      
   })
+  
+
+
 }
 
   })
@@ -1805,7 +2128,7 @@ res.send(["Messagees is already uptodate!!"])
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
   function CreateAttendanceRegister(registerId){
     registerModel({registerId:registerId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",permissionToAddContactTokens:1,smsUnitCost:50,closed:false
+      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",permissionToAddContactTokens:1,smsUnitCost:30,closed:false
     }).save().then(resp=>{
       res.send({success:1,registerId,registerTitle:req.body.registerTitle,contact:req.body.contact})
     })
