@@ -2670,6 +2670,7 @@ smsReceipients.push(attendee)
     
     })
     }else{
+      
       res.send(['<div style="color:red;">Not sent. Error must have occured!</div>']) 
 
     }
