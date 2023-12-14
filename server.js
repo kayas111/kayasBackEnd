@@ -29,7 +29,6 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
 
 
-
 /*
     db.collection('traders').deleteOne({contact:755643774}).then(resp=>{
 
@@ -2126,7 +2125,7 @@ res.send(["Messagees is already uptodate!!"])
 })
 
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
-  function CreateAttendanceRegister(registerId){
+  function CreateAttendanceRegister(registerId){//999
     registerModel({registerId:registerId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
       attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",permissionToAddContactTokens:1,smsUnitCost:30,closed:false
     }).save().then(resp=>{
