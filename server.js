@@ -26,7 +26,8 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-
+ 
+//db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
 
 /*
     db.collection('traders').deleteOne({contact:755643774}).then(resp=>{
@@ -108,7 +109,7 @@ db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}
 let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
 webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
 
-let maxAttendeeRegisters=10
+let maxAttendeeRegisters=50
 
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/model').comments;
@@ -848,12 +849,24 @@ if(resp.length==0){
                 })
                 
                                 
-                            })
+                  
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              })
 
 
 app.get('/getTradingDetails/:trader', (req,res)=>{
-  //dependencies: sendfree sms, contact registers
-  
+  //traderModel({name:kayaserObj.name,contact:parseInt(kayaserObj.contact),accBal:0,pagesVisitsNo:1,institution:kayaserObj.institution,sendSmsTokens:1,freeSmsObj:{freeSmsNotice:`Sponsored by ${kayaserObj.name}`,allowFreeSmsSending:1,freeSmsUsers:[]}})
+  //dependencies: sendfree sms, contact registers, account page
+  // original
+  /*
 try{
 
   
@@ -886,9 +899,123 @@ try{
   }
 
 })
-  }catch(err){
+  
+}catch(err){
   console.log(err)
 }
+*/
+// original
+
+
+// new
+db.collection('kayasers').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
+  let traderDetailsObj,kayaserDetailsObj
+  if(resp.length==0){
+
+res.send([])
+    
+  }else{
+    kayaserDetailsObj=resp[0]
+ 
+
+
+db.collection('traders').find({contact:parseInt(kayaserDetailsObj.contact)}).toArray().then(async (resp)=>{
+if(resp.length==0){
+ 
+  traderDetailsObj = await traderModel({name:kayaserDetailsObj.name,contact:parseInt(kayaserDetailsObj.contact)}).save().then(resp=> {return resp})
+
+}else{
+  traderDetailsObj=resp[0]
+}
+
+traderDetailsObj.name=kayaserDetailsObj.name,
+traderDetailsObj.contact=kayaserDetailsObj.contact,
+traderDetailsObj.institution=kayaserDetailsObj.institution
+
+
+//check for accBal
+if(traderDetailsObj.accBal==undefined || traderDetailsObj.accBal!=undefined ){
+if(traderDetailsObj.accBal==undefined){
+traderDetailsObj.accBal=0
+}else{}
+}else{}
+
+//check for pagesVisitsNo
+if(traderDetailsObj.pagesVisitsNo==undefined || traderDetailsObj.pagesVisitsNo!=undefined ){
+if(traderDetailsObj.pagesVisitsNo==undefined){
+traderDetailsObj.pagesVisitsNo=0
+}else{}
+}else{}
+
+//check for permissionTokensObj
+if(traderDetailsObj.permissionTokensObj==undefined || traderDetailsObj.permissionTokensObj!=undefined ){
+//check if permissionTokensObj is defined
+if(traderDetailsObj.permissionTokensObj==undefined){
+traderDetailsObj.permissionTokensObj={}
+}else{
+}
+//check if permissionTokensObj is defined
+
+//check for sendSmsTokens
+if(traderDetailsObj.permissionTokensObj.sendSmsTokens==undefined){
+traderDetailsObj.permissionTokensObj.sendSmsTokens=5
+}else{}
+//check for sendSmsTokens
+
+//check for createAttendanceRegisterTokens
+if(traderDetailsObj.permissionTokensObj.createAttendanceRegisterTokens==undefined){
+  traderDetailsObj.permissionTokensObj.createAttendanceRegisterTokens=50
+  }else{}
+
+//check for createAttendanceRegisterTokens
+
+
+
+}else{}
+//check for permissionTokensObj
+
+//check for free sms object
+if(traderDetailsObj.freeSmsObj==undefined || traderDetailsObj.freeSmsObj!=undefined ){
+  //check if freeSmsObj is defined
+  if(traderDetailsObj.freeSmsObj==undefined){
+  traderDetailsObj.freeSmsObj={}
+  }else{
+  }
+  //check if freeSmsObj is defined
+  
+  //check for freeSmsNotice
+  if(traderDetailsObj.freeSmsObj.freeSmsNotice==undefined){
+  traderDetailsObj.freeSmsObj.freeSmsNotice=`Sponsored by ${kayaserDetailsObj.name}`
+  }else{}
+  //check for freeSmsNotice
+  
+  //check for allowFreeSmsSending
+  if(traderDetailsObj.freeSmsObj.allowFreeSmsSending==undefined){
+    traderDetailsObj.freeSmsObj.allowFreeSmsSending=1
+    }else{}
+  //check for allowFreeSmsSending
+  
+  // check for freeSmsUsers
+  if(traderDetailsObj.freeSmsObj.freeSmsUsers==undefined){
+    traderDetailsObj.freeSmsObj.freeSmsUsers=[]
+    }else{}
+  // check for freeSmsUsers
+  
+  }else{}
+//check for free sms object
+
+
+
+db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj,{upsert:true}).then(resp=>{
+  res.send([traderDetailsObj])
+})
+
+})
+ 
+}})
+
+
+//new
 
 })
 
@@ -1104,9 +1231,9 @@ app.get('/fetchArticle/:id',(req,res)=>{
 app.post('/updateTraderDetails',(req,res)=>{
 
 let receivedObj=req.body
+console.log(receivedObj)
 
-
-switch(receivedObj.method){
+switch(receivedObj.method){// method is update either as kayaser or as admin
   case 'updateAsKayaser':{
 
     switch(receivedObj.argsObj.fieldToUpdate){
@@ -1173,6 +1300,111 @@ break;
 
    }
   
+
+   case 'updateAsAdmin':{
+
+    switch(receivedObj.argsObj.fieldToUpdate){
+
+      case 'sendSmsTokens':{
+   
+        db.collection('traders').find({contact:receivedObj.argsObj.traderContact}).toArray().then(resp=>{
+      if(resp.length==0){
+        res.send(['<div style="color:red;">trader details do not exist!</div>'])
+      }else{
+      let traderDetailsObj=resp[0]
+      traderDetailsObj.permissionTokensObj.sendSmsTokens=parseInt(receivedObj.argsObj.updateValue)
+      db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj).then(resp=>{
+        if(resp.modifiedCount==1){
+          res.send(['<div style="color:green;">Successful!</div>'])
+        }else if(resp.modifiedCount==0){
+          res.send(['<div style="color:green;">Upto date!</div>'])
+        }else{
+          res.send(['<div style="color:red;">Unsuccessful!</div>'])
+        }
+      })
+      
+      
+      
+      }
+        })
+      
+          break;
+        }
+      
+        case 'accBal':{
+   
+          db.collection('traders').find({contact:receivedObj.argsObj.traderContact}).toArray().then(resp=>{
+        if(resp.length==0){
+          res.send(['<div style="color:red;">trader details do not exist!</div>'])
+        }else{
+        let traderDetailsObj=resp[0]
+        traderDetailsObj.accBal=parseInt(receivedObj.argsObj.updateValue)
+        db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj).then(resp=>{
+          if(resp.modifiedCount==1){
+            res.send(['<div style="color:green;">Successful!</div>'])
+          }else if(resp.modifiedCount==0){
+            res.send(['<div style="color:green;">Upto date!</div>'])
+          }else{
+            res.send(['<div style="color:red;">Unsuccessful!</div>'])
+          }
+        })
+        
+        
+        
+        }
+          })
+        
+            break;
+          }
+        
+  
+  case 'createAttendanceRegisterTokens':{
+   
+    db.collection('traders').find({contact:receivedObj.argsObj.traderContact}).toArray().then(resp=>{
+  if(resp.length==0){
+    res.send(['<div style="color:red;">trader details do not exist!</div>'])
+  }else{
+  let traderDetailsObj=resp[0]
+  traderDetailsObj.permissionTokensObj.createAttendanceRegisterTokens=parseInt(receivedObj.argsObj.updateValue)
+  db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj).then(resp=>{
+    if(resp.modifiedCount==1){
+      res.send(['<div style="color:green;">Successful!</div>'])
+    }else if(resp.modifiedCount==0){
+      res.send(['<div style="color:green;">Upto date!</div>'])
+    }else{
+      res.send(['<div style="color:red;">Unsuccessful!</div>'])
+    }
+  })
+  
+  
+  
+  }
+    })
+  
+      break;
+    }
+  
+
+
+
+       
+
+    default:{
+      
+      res.send(['<div style="color:red;">Case value for field to update not available!</div>'])
+      console.log('Case value for field to update not available')
+      break;
+    }
+    }
+    
+break;
+
+   }
+  
+
+
+
+
 default:{
   res.send({success:0})
   console.log('Case value for method not available')
@@ -1286,7 +1518,8 @@ switch(receivedObj.method){
           console.log(body)
           if(body.Status=='OK'){ 
     
-    let smsBill=process.env.freeSmsBill // body.Cost+20 remove, 30+20 and replace with this for live api billing
+    let smsBill=process.env.freeSmsBill 
+    
     db.collection('traders').find({contact:receivedObj.argsObj.sponsor}).toArray().then(resp=>{
      let trader=resp[0],freeSmsSenderInList,freeSmsUsersWithOutSender
       let originalBal=trader.accBal,newBal=originalBal-smsBill //calculate newBalance of trader
@@ -2124,11 +2357,29 @@ res.send(["Messagees is already uptodate!!"])
 })
 
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
-  function CreateAttendanceRegister(registerId){//999
+  function CreateAttendanceRegister(registerId){
     registerModel({registerId:registerId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
       attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",permissionToAddContactTokens:1,smsUnitCost:30,closed:false
     }).save().then(resp=>{
-      res.send({success:1,registerId,registerTitle:req.body.registerTitle,contact:req.body.contact})
+      db.collection('traders').find({contact:parseInt(req.body.contact)}).toArray().then(resp=>{
+        if(resp.length==0){
+          console.log('Error when creating attendance register. Trader details not available')
+        }else{
+      let traderDetailsObj=resp[0]
+      traderDetailsObj.permissionTokensObj.createAttendanceRegisterTokens=traderDetailsObj.permissionTokensObj.createAttendanceRegisterTokens-1
+      db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj).then(resp=>{
+if(resp.modifiedCount==1){res.send({success:1,registerId,registerTitle:req.body.registerTitle,contact:req.body.contact})
+
+}else{
+  console.log('Register not created. No modified count detected')
+}
+      })
+      
+      
+      
+        }
+      })
+      
     })
 
   }
@@ -2165,6 +2416,7 @@ db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=
   while(searchAgain==1)
 
       CreateAttendanceRegister(newId)
+      
 
     })
 
@@ -2184,47 +2436,7 @@ res.send({registerLimitReached:1})
   
   })
   
-  app.post('/perimissionToCreateRegister',bodyParser.json(),(req,res)=>{
-function PermissionToCreateAttendanceRegister(){
-  db.collection('permissiontokens').find({contact:req.body.contact}).toArray().then(docArray=>{
-    if(docArray[0].createAttendanceRegister==undefined){
-    
-    db.collection('permissiontokens').updateOne({contact:req.body.contact},{$set:{createAttendanceRegister:0}}).then(resp=>{
-      res.send({permission:1})
-      })
-    }else{
-      db.collection('permissiontokens').find({contact:req.body.contact}).toArray().then(docArray=>{
-        if(docArray[0].createAttendanceRegister<1){
-       
-          res.send({permission:0})
-        }else{
-          res.send({permission:1})
-                       
-        }
-      
-      
-      })
-    }
-    
-    })
-    
-}
-
-
-db.collection('permissiontokens').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
-  if(docArray.length==0){//not present in the permissiontokens collection
-        
-permissionTokensModel({name:req.body.name,institution:req.body.institution,contact:req.body.contact}).save().then(resp=>{
-  PermissionToCreateAttendanceRegister()
-})
-
-}else{ 
-  PermissionToCreateAttendanceRegister()
-      }
-    })
-    
-  })
-
+ 
   app.post('/removeMessagee',bodyParser.json(), (req,res)=>{
  
 
@@ -2658,8 +2870,28 @@ smsReceipients.push(attendee)
     if(body.Status=='OK'){
 
     db.collection('traders').find({contact:req.body.registrarContact}).toArray().then(resp=>{
-      let originalAccBal=resp[0].accBal,originalSendSmsTokens=resp[0].sendSmsTokens
-   
+if(resp.length==0){
+  res.send(['<div style="color:red;">Message sent but trader details do not exist!</div>'])
+}
+else{
+  let traderDetailsObj=resp[0]
+  
+  traderDetailsObj.accBal=traderDetailsObj.accBal-smsCost
+  traderDetailsObj.permissionTokensObj.sendSmsTokens=traderDetailsObj.permissionTokensObj.sendSmsTokens-1
+  db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj).then(resp=>{
+    
+    res.send(['<div style="color:green;">Message sent!</div>'])
+  })
+  
+
+}
+
+      
+ 
+
+
+
+/*
     db.collection('traders').updateOne({contact:req.body.registrarContact},{$set:{accBal:originalAccBal-smsCost,sendSmsTokens:originalSendSmsTokens-1}})
     .then(resp=>{
   
@@ -2667,7 +2899,9 @@ smsReceipients.push(attendee)
     
     
     })
-    
+    */
+
+
     })
     }else{
       
@@ -3665,25 +3899,6 @@ try{
         }
             })
     break;
-    }
-    case 'sendSmsTokens':{
-    
-      if(parseInt(req.body.fieldValue)>-1){
-        
-        db.collection('traders').updateOne({contact:req.body.contact},{$set:{sendSmsTokens:parseInt(req.body.fieldValue)}}).then(resp=>{
-        
-          if(resp.modifiedCount==1){
-            res.send(['<div style="color:green;">Successful!</div>'])
-          }else{
-            res.send(['<div style="color:red;">Upto date!</div>'])
-    
-          }
-        })
-      }else{
-        res.send(['<div style="color:red;">Enter a value!</div>'])
-      }
-      
-      break;
     }
   
     case 'createArticle':{
