@@ -3177,7 +3177,7 @@ app.post('/redirectToSeeHookups',bodyParser.json(),(req,res)=>{
 
 })
 
-app.post('/saveHookupProfile',async (req,res)=>{//fileUpload.single('img')
+app.post('/saveHookupProfileclosed',async (req,res)=>{//fileUpload.single('img')
   try{
    
   console.log(req.body)
