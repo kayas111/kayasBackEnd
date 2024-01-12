@@ -1,5 +1,19 @@
 const express = require("express");
 const app = express();
+const ConvertFileToBase64=require('./Functions')
+const multer = require ('multer')
+let localDiskStorage=multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploadedimgs');
+    console.log('destination accessed')
+  },filename: (req, file, cb) => {
+    cb(null, 'uploadedimg');
+  }
+})
+const fileUpload=multer({storage:localDiskStorage})
+//console.log(fileUpload.single('img'))
+
+
 const fs=require('fs')
 const path=require('path')
 require('dotenv').config()
@@ -26,7 +40,7 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
- 
+
 //db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
 
 /*
@@ -117,7 +131,7 @@ const quotesModel = require('./models/model').quotes;
 
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const opinionModel = require('./models/model').opinionModel;
-const hookupModel = require('./models/model').hookup;
+const hookupsModel =require('./models/model').hookupsModel
 const pubArticleModel=require('./models/model').pubArticleModel;
 const permissionTokensModel=require('./models/model').permissionTokensModel;
 const traderModel=require('./models/model').traderModel;
@@ -352,6 +366,8 @@ app.use(express.static(path.join(__dirname,'/build')))
 
 //pages router
 app.use(pagesRouter)
+
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 //access database by get
 
@@ -3161,20 +3177,53 @@ app.post('/redirectToSeeHookups',bodyParser.json(),(req,res)=>{
 
 })
 
-app.post('/collection_hookups_writeaboutself',bodyParser.json(),(req,res)=>{
-console.log(req.body)
+app.post('/saveHookupProfile',async (req,res)=>{//fileUpload.single('img')
+  try{
+   
+  console.log(req.body)
 
-try{db.collection('hookups').find().toArray().then(docArray=>{
-  if(docArray.find(hookupDesc=>{
-     return hookupDesc.contact==req.body.contact
-  })==undefined){
-      hookupModel({name:req.body.name,campus:req.body.campus,contact:req.body.contact,msg:req.body.msg}).save().then(resp=>{
-          res.send({descriptionPresent:0})
-      })
-  }else{
-res.send({descriptionPresent:1})
-  }
-})}catch(error){
+  
+/*
+    var form = new formidable.IncomingForm();
+   form.parse(req, (err, fields, files)=>{
+    
+    let formObj={fields,files},hookUpProfileObj,kayaserDetailsObj
+    console.log(formObj)
+    res.send(formObj.files.img)
+
+db.collection('kayasers').find({contact:parseInt(formObj.fields.contact)}).toArray().then(resp=>{
+if(resp.length==0){
+  res.redirect('/pages/register')
+}else{
+  kayaserDetailsObj=resp[0]
+  hookUpProfileObj={name:kayaserDetailsObj.name,contact:parseInt(kayaserDetailsObj.contact),profileDesc:formObj.fields.msg,img:formObj.files.img}
+console.log(hookUpProfileObj)
+
+
+hookupsModel(hookUpProfileObj).save().then(resp=>{
+  console.log(resp)
+})
+
+}
+
+
+})
+
+
+  res.redirect('/pages/hookup/writeaboutself')
+
+
+
+
+    })
+
+
+*/
+
+
+
+
+}catch(error){
   console.log("kayas, the error originated from trying to be described for hook ups and it is:")
   console.log(error)
 }

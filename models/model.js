@@ -1,11 +1,6 @@
 const mongoose=require('mongoose')
 const Func=mongoose.Schema
-const hookupSchema=new Func(
-    
-    {name:{type:String,required:true},campus:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true}}
-    
-    ,{timestamps:true})
-let hookupModel=mongoose.model('hookups',hookupSchema);
+
 
 const quotesSchema=new Func({
    
@@ -151,10 +146,11 @@ module.exports.registrationModel=mongoose.model('kayasers',new mongoose.Schema({
 module.exports.pendingRegistration=pendingRegistrationModel
 module.exports.quotes=quotesModel
 
-module.exports.hookup=hookupModel
+
 module.exports.monitoredOpinionsModel=monitoredOpinionsModel
 module.exports.recommendationModel=mongoose.model('recommendations',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.traderModel=mongoose.model('traders',new mongoose.Schema({dynamic:String},{strict:false}))
+module.exports.hookupsModel=mongoose.model('hookups',new mongoose.Schema({},{strict:false}))
 module.exports.SmsSubscribersModel=mongoose.model('smssubscribers',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.pendingSmsNotificationsModel=mongoose.model('pendingsmsnotifications',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.requestsModel=mongoose.model('requests',new mongoose.Schema({dynamic:String},{strict:false}))
@@ -164,6 +160,7 @@ module.exports.permissionTokensModel=mongoose.model('permissiontokens',new mongo
 module.exports.registerModel=mongoose.model('registers',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.articleAssessmentModel=mongoose.model('articleassessments',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.voterOpinionPollModel=mongoose.model('voteropinionpolls',new mongoose.Schema({dynamic:String},{strict:false}))
+
 
 
 
