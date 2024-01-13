@@ -3164,7 +3164,7 @@ app.post('/link_to_whatsapp_group',(req,res)=>{
 
   
   })
-app.post('/redirectToSeeHookups',bodyParser.json(),(req,res)=>{
+app.post('/redirectToSeeHookupsddddd',bodyParser.json(),(req,res)=>{
  
   db.collection('hookups').find({contact:req.body.contact}).toArray().then(resp=>{
       if(resp.length==0){
@@ -3177,7 +3177,7 @@ app.post('/redirectToSeeHookups',bodyParser.json(),(req,res)=>{
 
 })
 
-app.post('/saveHookupProfileclosed',async (req,res)=>{//fileUpload.single('img')
+app.post('/saveHookupProfilessd',bodyParser.raw({ type: 'application/octet-stream' }),async (req,res)=>{//fileUpload.single('img')
   try{
    
   console.log(req.body)
