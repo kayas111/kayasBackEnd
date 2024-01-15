@@ -3426,7 +3426,8 @@ opinionModel({id:req.params.client,opinions:[{name:req.body.name,contact:parseIn
   
 }
 
-opinionObject.serviceType=`Comment to ${reqParams.client}: `+opinionObject.msg,opinionObject.recommender=703852178
+opinionObject.serviceType=`Comment to ${reqParams.client} `+opinionObject.msg,opinionObject.recommender=703852178
+
 requestsModel(opinionObject).save().then(resp=>{;})
 
 
