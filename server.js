@@ -3408,7 +3408,9 @@ db.collection('clientopinions').find({id:req.params.client}).toArray().then(clie
 
 
 db.collection('clientopinions').find({id:req.params.client}).toArray().then(clientOpinionDocArray=>{
+
 let reqParams=req.params,opinionObject=req.body
+
 
 if(clientOpinionDocArray.length==0){
 
@@ -3426,7 +3428,9 @@ opinionModel({id:req.params.client,opinions:[{name:req.body.name,contact:parseIn
   
 }
 
-opinionObject.serviceType=`Comment to ${reqParams.client} `+opinionObject.msg,opinionObject.recommender=703852178
+opinionObject.serviceType=`Comment to ${reqParams.client} (${opinionObject.headline1}): `+opinionObject.msg,opinionObject.recommender=703852178
+
+
 
 requestsModel(opinionObject).save().then(resp=>{;})
 
