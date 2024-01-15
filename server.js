@@ -141,7 +141,7 @@ const monitoredOpinionsModel=require('./models/model').monitoredOpinionsModel;
 const articleAssessmentModel=require('./models/model').articleAssessmentModel;
 
 const SmsSubscribersModel = require('./models/model').SmsSubscribersModel;
-const groupLinkModel = require('./models/model').groupLinkModel;
+const linkModel = require('./models/model').linkModel;
 const recommendationModel = require('./models/model').recommendationModel;
 const requestsModel = require('./models/model').requestsModel;
 const messagerModel = require('./models/model').messagerModel;
@@ -370,7 +370,14 @@ app.use(pagesRouter)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 //access database by get
+app.get('/getLinks', (req,res)=>{
 
+  db.collection('links').find().toArray().then(resp=>{
+let array=resp
+res.send(array)
+  })
+ 
+})
 
 app.get('/smsTotalBill', (req,res)=>{
 
@@ -1244,6 +1251,46 @@ app.get('/fetchArticle/:id',(req,res)=>{
 
 
 //posts to the database
+app.post('/saveLink',(req,res)=>{
+
+ try{
+  let payLoad=req.body
+  payLoad.isValid=true
+
+  db.collection('links').find({linkUrl:payLoad.linkUrl}).toArray().then(resp=>{
+    
+if(resp.length==0){
+
+
+  linkModel(payLoad).save().then(resp=>{
+    res.send({msg:'Successful!!'})
+    })
+    
+    
+
+}else{
+
+res.send({msg:'Url already exists'})
+
+}
+
+
+
+
+
+
+
+
+  })
+
+
+
+ }catch(err){
+  console.log(err)
+ }
+
+
+})
 app.post('/updateTraderDetails',(req,res)=>{
 
 let receivedObj=req.body
@@ -3114,56 +3161,7 @@ res.send({registered:false})
   )
 
 })
-app.post('/link_to_whatsapp_group',(req,res)=>{
-  var form = new formidable.IncomingForm();
-  form.parse(req, function (err, fields, files){
 
-      switch(parseInt(fields.campusId)){
-          case 1:{
-              let campus="Makerere University"
-              groupLinkModel({campusId:parseInt(fields.campusId),campus:campus,groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
-                  console.log("Whatsapp group link added")
-                  res.redirect('/pages/admin/controls')
-                  })
-              break;
-          }
-
-          case 2:{
-              let campus="Kyambogo University"
-              groupLinkModel({campusId:parseInt(fields.campusId),campus:campus,groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
-                  console.log("Whatsapp group link added")
-                  res.redirect('/pages/admin/controls')
-                  })
-              break;
-          }
-          case 3:{
-              let campus="Mubs"
-              groupLinkModel({campusId:parseInt(fields.campusId),campus:campus,groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
-                  console.log("Whatsapp group link added")
-                  res.redirect('/pages/admin/controls')
-                  })
-              break;
-          }
-
-
-         default:{
-
-          
-          groupLinkModel({campusId:parseInt(fields.campusId),campus:"General group",groupName:fields.groupName,groupAdmin:fields.groupAdmin,description:fields.description,link:fields.link}).save().then(resp=>{
-              console.log("Whatsapp group link added")
-              res.redirect('/pages/admin/controls')
-              })
-          break;
-
-         } 
-      }
-
-
-
-  })
-
-  
-  })
 app.post('/redirectToSeeHookupsddddd',bodyParser.json(),(req,res)=>{
  
   db.collection('hookups').find({contact:req.body.contact}).toArray().then(resp=>{
@@ -3480,21 +3478,23 @@ catch(err){
 
 
 app.post('/deleteAllDocuments', (req,res)=>{
-  var form = new formidable.IncomingForm();
+  
+  try{ db.collection(req.body.collection.trim()).deleteMany({}).then(resp=>{
+    console.log("All documents in collection "+req.body.collection+" have been deleted")
+    
+    res.redirect('/pages/admin/controls')     
+})
+}catch(err){
+  console.log(err)
+}
 
-  form.parse(req, function (err, fields, files){
 
-      db.collection(fields.collection).deleteMany({}).then(resp=>{
-          console.log("All documents in collection "+fields.collection+" have been deleted")
-          
-          db.collection('monitoredopinions').deleteMany({clientCollection:fields.collection}).then(resp=>{
-              console.log(fields.collection+" documents in collection monitoredopinions have also been deleted")})
-      })
-      res.redirect('/pages/admin/controls')
+    
+     
 
   }
 
-)})
+)
 
 app.post('/deleteAllRequests', (req,res)=>{
   var form = new formidable.IncomingForm();

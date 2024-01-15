@@ -83,8 +83,8 @@ const campusSchema=new Func({
 
 let campusModel=mongoose.model('campus',campusSchema)
 
-const groupLinkSchema=new Func({campusId:Number,campus:String,groupName:String,groupAdmin:String,description:String,link:String},{strict:false})
-let groupLinkModel=mongoose.model('whatsappgrouplinks',groupLinkSchema)
+
+
 
 const pubArticleSchema=new Func({
    
@@ -135,7 +135,7 @@ let messagerModel=mongoose.model('messagees',messagerSchema)
 module.exports.articleGrantModel=articleGrantModel
 module.exports.messagerModel=messagerModel
 module.exports.pubArticleModel=pubArticleModel
-module.exports.groupLinkModel=groupLinkModel
+
 
 
 
@@ -160,6 +160,7 @@ module.exports.permissionTokensModel=mongoose.model('permissiontokens',new mongo
 module.exports.registerModel=mongoose.model('registers',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.articleAssessmentModel=mongoose.model('articleassessments',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.voterOpinionPollModel=mongoose.model('voteropinionpolls',new mongoose.Schema({dynamic:String},{strict:false}))
+module.exports.linkModel=mongoose.model('links',new mongoose.Schema({},{strict:false}))
 
 
 
