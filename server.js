@@ -100,6 +100,7 @@ let file=excel.readFile('../readExcel/ctpa alumni.xlsx')
 
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
+
 attendees.forEach(attendee=>{
 if(attendee.contact>0){
 final.push(attendee) 
