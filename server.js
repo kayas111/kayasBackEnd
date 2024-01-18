@@ -730,7 +730,7 @@ app.get('/opinions/:client', (req,res)=>{db.collection('clientopinions').find({i
         res.send([])
     }else{
         
-        res.send(clientDocArray[0].opinions)
+        res.send(clientDocArray[0])
     }
     
     
@@ -3413,7 +3413,7 @@ let reqParams=req.params,opinionObject=req.body
 
 if(clientOpinionDocArray.length==0){
 
-opinionModel({id:req.params.client,opinions:[{name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}]}).save().then(resp=>{
+opinionModel({id:req.params.client,displayRespondentsContacts:true,opinions:[{name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}]}).save().then(resp=>{
 
   res.send("succesful")
   CopyToMonitoredOpinions()
