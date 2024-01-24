@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const ConvertFileToBase64=require('./Functions')
+
 const multer = require ('multer')
 let localDiskStorage=multer.diskStorage({
   destination: (req, file, cb) => {
@@ -24,6 +25,19 @@ const { ReturnDocument } = require('mongodb')
 const bodyParser=require('body-parser')
 const {google}=require('googleapis') 
 const nodemailer=require('nodemailer')
+
+
+
+
+
+
+//SendBulkEmails('ericsserugunda@gmail.com',process.env.ericGmailAppPassword,['onongeisaac@gmail.com'],'CYNTHIA','Beb is pregnant')
+  
+
+
+
+
+
 const Flutterwave=require('flutterwave-node-v3')
 const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey)
 const emailValidator = require('deep-email-validator');
@@ -168,6 +182,42 @@ const hookupRegistrationFee=500
 
 
 //functions start
+async function SendBulkEmails(fromEmail,password,toArrayOfEmails,subject,message){
+  const oAuth2Client = new google.auth.OAuth2(
+    process.env.mailerId,
+    process.env.mailerSecret,
+    process.env.redirectURI
+  );
+  
+  oAuth2Client.setCredentials({ refresh_token: process.env.refreshToken})
+  const accessToken = await oAuth2Client.getAccessToken()
+  const transport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: fromEmail,
+      pass: password
+  }
+  })
+  transport.sendMail({
+    from: fromEmail,
+    to:toArrayOfEmails,
+  
+    subject: subject,
+    
+    html:'we all want'
+     
+    
+    
+  }).then(resp=>{
+    console.log(resp)
+    console.log(`Sent ${resp.accepted.length} emails, rejected ${resp.rejected.length}`)
+  })
+
+
+
+}
+
+
 
 async function InstantiateTraderModel(kayaserObj){
   
