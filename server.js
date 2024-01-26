@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const ConvertFileToBase64=require('./Functions')
 
+const Functions=require('./Functions.js')
 const multer = require ('multer')
 let localDiskStorage=multer.diskStorage({
   destination: (req, file, cb) => {
@@ -28,16 +28,6 @@ const nodemailer=require('nodemailer')
 
 
 
-
-
-
-//SendBulkEmails('ericsserugunda@gmail.com',process.env.ericGmailAppPassword,['onongeisaac@gmail.com'],'CYNTHIA','Beb is pregnant')
-  
-
-
-
-
-
 const Flutterwave=require('flutterwave-node-v3')
 const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey)
 const emailValidator = require('deep-email-validator');
@@ -54,6 +44,45 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
+   
+   
+    /*
+db.collection('registers').find({contact:755874269,registerId:0}).toArray().then(resp=>{
+let register=resp[0],emailReceipientsArray=[]
+
+
+register.attendees.forEach(doc=>{
+if(doc.email==undefined){}else{
+  emailReceipientsArray.push(doc.email)
+}
+
+
+})
+
+
+
+
+Functions.ReturnArrayChunks(emailReceipientsArray,100).then(async (resp)=>{
+
+  resp.forEach(async (emailReceipientsArray)=>{
+await SendEmail(process.env.kayasEmailApiCredentialsObj,emailReceipientsArray,'INVITATION REMINDER-MAKERERE BANG STUDENTS CLUB','Good morning, I wish to remind you that <span style="color:red;">you have been invited to the Makerere BANG students club</span> gathering <span style="color:red;">today 26th Friday</span> inside campus starting at exactly 4:30pm to 6:30pm at St. Francis Students Conference Center, lower hall.<p></p><p></p>Students usually meet and enjoy moments together, get to know each other, enjoy refreshments but also share/learn from one another on designed themes.<p></p><p></p>Today, we will talk on the theme "Personal Growth & Resilience" and I have decided to invite you too.<p></p><p></p><span style="color:red;">Join this invitation WhatsApp group: https://chat.whatsapp.com/CsqDqUf0TCaD1E6Eiq1dt5</span> or Send a direct WhatsApp message for more inquiries/directions to the venue <span style="color:red;">by tapping this link: https://wa.me/256752331549</span> or WhatsApp Keith on 0752331549.<p></p>Keith<br></br>Thank you. <p></p><p></p><div style="color:yellow;font-size:20px;background:black;padding:10px;text-align:center;">Refreshments/Logistics for all students will be catered for. </div> ').then(resp=>{
+  console.log(resp.accepted.length)
+})
+
+  })
+
+})
+
+
+
+
+})
+
+
+*/
+  
+
+
 
 //db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
 
@@ -109,14 +138,17 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
  
 
 //
+
 /*
-let file=excel.readFile('../readExcel/ctpa alumni.xlsx')
+let file=excel.readFile('../readExcel/ericVoterslist.xlsx')
 
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
 
 attendees.forEach(attendee=>{
 if(attendee.contact>0){
+attendee.contact=parseInt(attendee.contact)
+
 final.push(attendee) 
 }else{
   console.log(attendee)
@@ -182,7 +214,7 @@ const hookupRegistrationFee=500
 
 
 //functions start
-async function SendBulkEmails(fromEmail,password,toArrayOfEmails,subject,message){
+async function SendEmail(credentialsObj,arrayOfEmailReceipients,subject,html){
   const oAuth2Client = new google.auth.OAuth2(
     process.env.mailerId,
     process.env.mailerSecret,
@@ -190,27 +222,33 @@ async function SendBulkEmails(fromEmail,password,toArrayOfEmails,subject,message
   );
   
   oAuth2Client.setCredentials({ refresh_token: process.env.refreshToken})
-  const accessToken = await oAuth2Client.getAccessToken()
+  //const accessToken = await oAuth2Client.getAccessToken()
   const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: fromEmail,
-      pass: password
+      user: 'kayasforyou@gmail.com', // credentialsObj.email,
+      pass: 'aaihjqmydruuasel' //credentialsObj.password
   }
   })
-  transport.sendMail({
-    from: fromEmail,
-    to:toArrayOfEmails,
+
+
+
+  
+  return await transport.sendMail({
+    from: credentialsObj.email,
+    
+    to:arrayOfEmailReceipients,
   
     subject: subject,
     
-    html:'we all want'
+    html:html + '<div style="padding-top:40px;"><div style="text-align:center;background:black;font-size:20px;color:white;padding-top:40px;padding-bottom:40px;">Powered by Kayas</div></div>'
      
     
     
   }).then(resp=>{
-    console.log(resp)
-    console.log(`Sent ${resp.accepted.length} emails, rejected ${resp.rejected.length}`)
+   
+return  (resp)
+  
   })
 
 
@@ -983,7 +1021,10 @@ try{
 
 // new
 db.collection('kayasers').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
-  let traderDetailsObj,kayaserDetailsObj
+
+
+ try{
+ let traderDetailsObj,kayaserDetailsObj
   if(resp.length==0){
 
 res.send([])
@@ -1086,7 +1127,17 @@ db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDet
 
 })
  
-}})
+}
+
+
+
+
+
+ }catch(err){
+  console.log(err)
+ }
+
+})
 
 
 //new
