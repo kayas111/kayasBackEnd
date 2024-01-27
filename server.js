@@ -24,7 +24,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const { ReturnDocument } = require('mongodb')
 const bodyParser=require('body-parser')
 const {google}=require('googleapis') 
-const nodemailer=require('nodemailer')
+
 
 
 
@@ -44,8 +44,13 @@ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
-   
-   
+
+    /*
+//credentialsObj,arrayOfEmailReceipients,responseUrl,subject,html
+    Functions.SendEmail({credentialsObj:process.env.kayasEmailApiCredentialsObj,arrayOfEmailReceipients:['onongeisaac@gmail.com'],responseUrl:'https://wa.me/256703852178',subject:'INVITATION REMINDER-MAKERERE BANG STUDENTS CLUB',html:'hello this is it'}).then(resp=>{
+  console.log(resp.accepted.length)
+})
+  */
     /*
 db.collection('registers').find({contact:755874269,registerId:0}).toArray().then(resp=>{
 let register=resp[0],emailReceipientsArray=[]
@@ -214,46 +219,6 @@ const hookupRegistrationFee=500
 
 
 //functions start
-async function SendEmail(credentialsObj,arrayOfEmailReceipients,subject,html){
-  const oAuth2Client = new google.auth.OAuth2(
-    process.env.mailerId,
-    process.env.mailerSecret,
-    process.env.redirectURI
-  );
-  
-  oAuth2Client.setCredentials({ refresh_token: process.env.refreshToken})
-  //const accessToken = await oAuth2Client.getAccessToken()
-  const transport = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: 'kayasforyou@gmail.com', // credentialsObj.email,
-      pass: 'aaihjqmydruuasel' //credentialsObj.password
-  }
-  })
-
-
-
-  
-  return await transport.sendMail({
-    from: credentialsObj.email,
-    
-    to:arrayOfEmailReceipients,
-  
-    subject: subject,
-    
-    html:html + '<div style="padding-top:40px;"><div style="text-align:center;background:black;font-size:20px;color:white;padding-top:40px;padding-bottom:40px;">Powered by Kayas</div></div>'
-     
-    
-    
-  }).then(resp=>{
-   
-return  (resp)
-  
-  })
-
-
-
-}
 
 
 
@@ -813,16 +778,45 @@ app.get('/collection_orders_number', (req,res)=>{db.collection('orders').find().
 app.get('/collection_hookups_number', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_whatsappgrouplinks_links', (req,res)=>{db.collection('whatsappgrouplinks').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/getAllArticles', (req,res)=>{db.collection('pubarticles').find().toArray().then((array)=>{array.reverse(); res.send(array)})}) 
-app.get('/opinions/:client', (req,res)=>{db.collection('clientopinions').find({id:req.params.client}).toArray().then((clientDocArray)=>{
-    if(clientDocArray[0]==undefined){
-        res.send([])
+app.get('/opinions/:client', (req,res)=>{db.collection('clientopinions').find({id:req.params.client}).toArray().then(async (clientDocArray)=>{
+
+async function UpdateAndReturnOpinionsObj(clientId){
+db.collection('clientopinions').find({id:clientId}).toArray().then(resp=>{
+  let clientOpinionsDoc=resp[0]
+  clientOpinionsDoc.opinionVisits=clientOpinionsDoc.opinionVisits+1
+
+db.collection('clientopinions').replaceOne({id:clientId},clientOpinionsDoc).then(resp=>{
+  res.send(clientOpinionsDoc)
+})
+
+  
+
+})
+
+ 
+}
+
+
+  if(clientDocArray.length==0){
+
+    opinionModel({id:req.params.client,displayRespondentsContacts:true,opinions:[],opinionVisits:1}).save().then(resp=>{
+
+res.send(resp)
+    })
+
+      
     }else{
-        
-        res.send(clientDocArray[0])
+
+      UpdateAndReturnOpinionsObj(req.params.client)
+
+    
+       
     }
     
     
 })}) 
+
+/*
 app.get('/updateOpinionVisits/:client', (req,res)=>{db.collection('clientopinions').find({id:req.params.client}).toArray().then((clientDocArray)=>{
 
   if(clientDocArray[0]==undefined){
@@ -840,6 +834,8 @@ app.get('/updateOpinionVisits/:client', (req,res)=>{db.collection('clientopinion
   
   
 })}) 
+
+*/
 app.get('/pubarticle/:id', (req,res)=>{
     
     db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
@@ -3485,11 +3481,7 @@ inCollection(req.params.client,[parseInt(fields.contact)]).then(resp=>{
 })
 
 
-app.post('/send_opinion_emails/:client/:headline1',bodyParser.json(),(req,res)=>{
-;  
-//SendMail("You have just received on your w....",req.body,"A comment has been received on your website page: '"+req.params.headline1+"'. See the comment by following or tapping this link: https://kayas-mak.herokuapp.com/pages/opinions/"+req.params.client)
 
-})
 
 app.post('/pages/opinions/:client',bodyParser.json(),(req,res)=>{
 function CopyToMonitoredOpinions(){
@@ -3509,32 +3501,37 @@ db.collection('clientopinions').find({id:req.params.client}).toArray().then(clie
 
 db.collection('clientopinions').find({id:req.params.client}).toArray().then(clientOpinionDocArray=>{
 
-let reqParams=req.params,opinionObject=req.body
+try{
+  let reqParams=req.params,opinionObject=req.body
 
 
-if(clientOpinionDocArray.length==0){
-
-opinionModel({id:req.params.client,displayRespondentsContacts:true,opinions:[{name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}]}).save().then(resp=>{
-
-  res.send("succesful")
-  CopyToMonitoredOpinions()
-})
-}else{
+  if(clientOpinionDocArray.length==0){
   
-  db.collection('clientopinions').updateOne({id:req.params.client},{$push:{opinions:{name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}}}).then(resp=>{
-      res.send("succesful")
-      CopyToMonitoredOpinions()
+  opinionModel({id:req.params.client,displayRespondentsContacts:true,opinions:[{name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}]}).save().then(resp=>{
+  
+    res.send("succesful")
+    CopyToMonitoredOpinions()
   })
+  }else{
+    
+    db.collection('clientopinions').updateOne({id:req.params.client},{$push:{opinions:{name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}}}).then(resp=>{
+        res.send("succesful")
+        CopyToMonitoredOpinions()
+    })
+    
+  }
   
+  opinionObject.serviceType=`Comment to ${reqParams.client} (${opinionObject.headline1}): `+opinionObject.msg,opinionObject.recommender=703852178
+  
+  requestsModel(opinionObject).save().then(resp=>{;})
+  
+  
+
+
+
+}catch(err){
+  console.log(err)
 }
-
-opinionObject.serviceType=`Comment to ${reqParams.client} (${opinionObject.headline1}): `+opinionObject.msg,opinionObject.recommender=703852178
-
-
-
-requestsModel(opinionObject).save().then(resp=>{;})
-
-
 
 })
 
