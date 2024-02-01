@@ -1,3 +1,4 @@
+require('dotenv').config()
 const nodemailer=require('nodemailer')
 const {google}=require('googleapis') 
 
@@ -57,13 +58,13 @@ console.log('Pass credentials argument to sendMail function')
   const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: 'kayasforyou@gmail.com', // credentialsObj.email,
-      pass: 'aaihjqmydruuasel' //credentialsObj.password
+      user:'kayasforyou@gmail.com',
+      pass:'aaihjqmydruuasel'
   }
   })
 
 
-
+ 
   
   return await transport.sendMail({
     from: Obj.credentialsObj.email,

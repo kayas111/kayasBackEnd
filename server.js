@@ -45,16 +45,21 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log("Listening on port")
     console.log(port)
 
+   
+
+
     /*
 //credentialsObj,arrayOfEmailReceipients,responseUrl,subject,html
     Functions.SendEmail({credentialsObj:process.env.kayasEmailApiCredentialsObj,arrayOfEmailReceipients:['onongeisaac@gmail.com'],responseUrl:'https://wa.me/256703852178',subject:'INVITATION REMINDER-MAKERERE BANG STUDENTS CLUB',html:'hello this is it'}).then(resp=>{
   console.log(resp.accepted.length)
 })
   */
-    /*
+    
+/*
 db.collection('registers').find({contact:755874269,registerId:0}).toArray().then(resp=>{
 let register=resp[0],emailReceipientsArray=[]
 
+console.log(register.attendees)
 
 register.attendees.forEach(doc=>{
 if(doc.email==undefined){}else{
@@ -70,7 +75,7 @@ if(doc.email==undefined){}else{
 Functions.ReturnArrayChunks(emailReceipientsArray,100).then(async (resp)=>{
 
   resp.forEach(async (emailReceipientsArray)=>{
-await SendEmail(process.env.kayasEmailApiCredentialsObj,emailReceipientsArray,'INVITATION REMINDER-MAKERERE BANG STUDENTS CLUB','Good morning, I wish to remind you that <span style="color:red;">you have been invited to the Makerere BANG students club</span> gathering <span style="color:red;">today 26th Friday</span> inside campus starting at exactly 4:30pm to 6:30pm at St. Francis Students Conference Center, lower hall.<p></p><p></p>Students usually meet and enjoy moments together, get to know each other, enjoy refreshments but also share/learn from one another on designed themes.<p></p><p></p>Today, we will talk on the theme "Personal Growth & Resilience" and I have decided to invite you too.<p></p><p></p><span style="color:red;">Join this invitation WhatsApp group: https://chat.whatsapp.com/CsqDqUf0TCaD1E6Eiq1dt5</span> or Send a direct WhatsApp message for more inquiries/directions to the venue <span style="color:red;">by tapping this link: https://wa.me/256752331549</span> or WhatsApp Keith on 0752331549.<p></p>Keith<br></br>Thank you. <p></p><p></p><div style="color:yellow;font-size:20px;background:black;padding:10px;text-align:center;">Refreshments/Logistics for all students will be catered for. </div> ').then(resp=>{
+await  Functions.SendEmail({credentialsObj:process.env.kayasEmailApiCredentialsObj,arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'https://wa.me/256703852178',subject:'MAKERERE STUDENTS HALL/HOSTEL ROOM DUSTBIN DISTRIBUTION',html:'<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Get a room dustbin delivered to your hostel/hall room.</div>Good evening, due to the serious benefits of a hostel/hall room dustbin in terms of keeping your room clean and tidy and also for the comfort of your visitors, I wish to inform you that as Kayas, I will be <span style="color:maroon;">delivering/distributing room dustbins to all student rooms</span>. The dustbin is discounted at a cost of 4,000shs. <p></p><p></p><span style="color:maroon;font-weight:bold;">Use the "SEND REPLY" button below</span> and also send a message requesting for a room dustbin to be delivered to your room as well. <p></p>Thank you. </div>'}).then(resp=>{
   console.log(resp.accepted.length)
 })
 
