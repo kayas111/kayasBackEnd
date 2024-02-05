@@ -48,18 +48,18 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
    
 
 
-    /*
-//credentialsObj,arrayOfEmailReceipients,responseUrl,subject,html
-    Functions.SendEmail({credentialsObj:process.env.kayasEmailApiCredentialsObj,arrayOfEmailReceipients:['onongeisaac@gmail.com'],responseUrl:'https://wa.me/256703852178',subject:'INVITATION REMINDER-MAKERERE BANG STUDENTS CLUB',html:'hello this is it'}).then(resp=>{
-  console.log(resp.accepted.length)
-})
-  */
     
-/*
+//credentialsObj,arrayOfEmailReceipients,responseUrl,subject,html
+
+ 
+  
+    /*
+
+//nsibirwa emails
 db.collection('registers').find({contact:755874269,registerId:0}).toArray().then(resp=>{
 let register=resp[0],emailReceipientsArray=[]
 
-console.log(register.attendees)
+
 
 register.attendees.forEach(doc=>{
 if(doc.email==undefined){}else{
@@ -70,27 +70,23 @@ if(doc.email==undefined){}else{
 })
 
 
+emailReceipientsArray=emailReceipientsArray.slice(600,700)
+//emailReceipientsArray=['onongeisaac@gmail.com']
 
 
-Functions.ReturnArrayChunks(emailReceipientsArray,100).then(async (resp)=>{
 
-  resp.forEach(async (emailReceipientsArray)=>{
-await  Functions.SendEmail({credentialsObj:process.env.kayasEmailApiCredentialsObj,arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'https://wa.me/256703852178',subject:'MAKERERE STUDENTS HALL/HOSTEL ROOM DUSTBIN DISTRIBUTION',html:'<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Get a room dustbin delivered to your hostel/hall room.</div>Good evening, due to the serious benefits of a hostel/hall room dustbin in terms of keeping your room clean and tidy and also for the comfort of your visitors, I wish to inform you that as Kayas, I will be <span style="color:maroon;">delivering/distributing room dustbins to all student rooms</span>. The dustbin is discounted at a cost of 4,000shs. <p></p><p></p><span style="color:maroon;font-weight:bold;">Use the "SEND REPLY" button below</span> and also send a message requesting for a room dustbin to be delivered to your room as well. <p></p>Thank you. </div>'}).then(resp=>{
+Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayas7EmailApiCredentialsObj),arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'https://wa.me/256703852178',subject:'MAKERERE STUDENTS HALL/HOSTEL ROOM DUSTBIN DISTRIBUTION',html:'<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Get a room dustbin delivered to your hostel/hall room.</div>Good evening, due to the serious benefits of a hostel/hall room dustbin in terms of keeping your room clean and tidy and also for the comfort of your visitors, I wish to inform you that as Kayas, I will be <span style="color:maroon;">delivering/distributing room dustbins to all student rooms</span>. The dustbin is discounted at a cost of 4,000shs. <p></p><p></p><span style="color:maroon;font-weight:bold;">Use the "SEND REPLY" button below</span> and also send a message requesting for a room dustbin to be delivered to your room as well.<p></p> <span style="color:maroon;font-weight:bold">OR WhatsApp Kayas on 0703852178</span> <p></p>Thank you. </div>'}).then(resp=>{
   console.log(resp.accepted.length)
 })
 
-  })
-
-})
-
 
 
 
 })
 
 
-*/
-  
+
+  */
 
 
 
@@ -560,7 +556,7 @@ app.get('/attendees/:registrarContact/:id', (req,res)=>{
       if(resp.length==0){
         ;
       }else{
-      res.send({brandTop:docArray[0].brandTop,attendees:resp[0].attendees,closed:resp[0].closed})
+      res.send({brandTop:docArray[0].brandTop,registerDoc:resp[0],closed:resp[0].closed})
       
     
   

@@ -58,8 +58,8 @@ console.log('Pass credentials argument to sendMail function')
   const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user:'kayasforyou@gmail.com',
-      pass:'aaihjqmydruuasel'
+      user:Obj.credentialsObj.email,
+      pass:Obj.credentialsObj.password
   }
   })
 
