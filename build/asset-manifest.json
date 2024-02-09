@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/static/css/main.006e5fb6.chunk.css",
-    "main.js": "/static/js/main.2d255efd.chunk.js",
-    "main.js.map": "/static/js/main.2d255efd.chunk.js.map",
+    "main.css": "/static/css/main.53f328d2.chunk.css",
+    "main.js": "/static/js/main.d45a91d8.chunk.js",
+    "main.js.map": "/static/js/main.d45a91d8.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.e6411a01.js",
     "runtime-main.js.map": "/static/js/runtime-main.e6411a01.js.map",
     "static/js/2.476b4b5d.chunk.js": "/static/js/2.476b4b5d.chunk.js",
@@ -10,7 +10,7 @@
     "static/js/3.da38dcd9.chunk.js": "/static/js/3.da38dcd9.chunk.js",
     "static/js/3.da38dcd9.chunk.js.map": "/static/js/3.da38dcd9.chunk.js.map",
     "index.html": "/index.html",
-    "static/css/main.006e5fb6.chunk.css.map": "/static/css/main.006e5fb6.chunk.css.map",
+    "static/css/main.53f328d2.chunk.css.map": "/static/css/main.53f328d2.chunk.css.map",
     "static/js/2.476b4b5d.chunk.js.LICENSE.txt": "/static/js/2.476b4b5d.chunk.js.LICENSE.txt",
     "static/media/ad.f32460a5.jpg": "/static/media/ad.f32460a5.jpg",
     "static/media/adoniaReporterImg.b2c0b88b.png": "/static/media/adoniaReporterImg.b2c0b88b.png",
@@ -504,7 +504,7 @@
   "entrypoints": [
     "static/js/runtime-main.e6411a01.js",
     "static/js/2.476b4b5d.chunk.js",
-    "static/css/main.006e5fb6.chunk.css",
-    "static/js/main.2d255efd.chunk.js"
+    "static/css/main.53f328d2.chunk.css",
+    "static/js/main.d45a91d8.chunk.js"
   ]
 }
