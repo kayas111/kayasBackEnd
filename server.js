@@ -1016,128 +1016,141 @@ try{
 // original
 
 
-// new
-db.collection('kayasers').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
 
 
- try{
- let traderDetailsObj,kayaserDetailsObj
-  if(resp.length==0){
+try{
+  // new
+  db.collection('kayasers').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
 
-res.send([])
+
+    try{
+    let traderDetailsObj,kayaserDetailsObj
+     if(resp.length==0){
+   
+   res.send([])
+       
+     }else{
+       kayaserDetailsObj=resp[0]
     
-  }else{
-    kayaserDetailsObj=resp[0]
- 
-
-
-db.collection('traders').find({contact:parseInt(kayaserDetailsObj.contact)}).toArray().then(async (resp)=>{
-if(resp.length==0){
- 
-  traderDetailsObj = await traderModel({name:kayaserDetailsObj.name,contact:parseInt(kayaserDetailsObj.contact)}).save().then(resp=> {return resp})
-
-}else{
-  traderDetailsObj=resp[0]
-}
-
-traderDetailsObj.name=kayaserDetailsObj.name,
-traderDetailsObj.contact=kayaserDetailsObj.contact,
-traderDetailsObj.institution=kayaserDetailsObj.institution
-
-
-//check for accBal
-if(traderDetailsObj.accBal==undefined || traderDetailsObj.accBal!=undefined ){
-if(traderDetailsObj.accBal==undefined){
-traderDetailsObj.accBal=0
-}else{}
-}else{}
-
-//check for pagesVisitsNo
-if(traderDetailsObj.pagesVisitsNo==undefined || traderDetailsObj.pagesVisitsNo!=undefined ){
-if(traderDetailsObj.pagesVisitsNo==undefined){
-traderDetailsObj.pagesVisitsNo=0
-}else{}
-}else{}
-
-//check for permissionTokensObj
-if(traderDetailsObj.permissionTokensObj==undefined || traderDetailsObj.permissionTokensObj!=undefined ){
-//check if permissionTokensObj is defined
-if(traderDetailsObj.permissionTokensObj==undefined){
-traderDetailsObj.permissionTokensObj={}
-}else{
-}
-//check if permissionTokensObj is defined
-
-//check for sendSmsTokens
-if(traderDetailsObj.permissionTokensObj.sendSmsTokens==undefined){
-traderDetailsObj.permissionTokensObj.sendSmsTokens=5
-}else{}
-//check for sendSmsTokens
-
-//check for createAttendanceRegisterTokens
-if(traderDetailsObj.permissionTokensObj.createAttendanceRegisterTokens==undefined){
-  traderDetailsObj.permissionTokensObj.createAttendanceRegisterTokens=50
-  }else{}
-
-//check for createAttendanceRegisterTokens
-
-
-
-}else{}
-//check for permissionTokensObj
-
-//check for free sms object
-if(traderDetailsObj.freeSmsObj==undefined || traderDetailsObj.freeSmsObj!=undefined ){
-  //check if freeSmsObj is defined
-  if(traderDetailsObj.freeSmsObj==undefined){
-  traderDetailsObj.freeSmsObj={}
-  }else{
-  }
-  //check if freeSmsObj is defined
-  
-  //check for freeSmsNotice
-  if(traderDetailsObj.freeSmsObj.freeSmsNotice==undefined){
-  traderDetailsObj.freeSmsObj.freeSmsNotice=`Sponsored by ${kayaserDetailsObj.name}`
-  }else{}
-  //check for freeSmsNotice
-  
-  //check for allowFreeSmsSending
-  if(traderDetailsObj.freeSmsObj.allowFreeSmsSending==undefined){
-    traderDetailsObj.freeSmsObj.allowFreeSmsSending=1
-    }else{}
-  //check for allowFreeSmsSending
-  
-  // check for freeSmsUsers
-  if(traderDetailsObj.freeSmsObj.freeSmsUsers==undefined){
-    traderDetailsObj.freeSmsObj.freeSmsUsers=[]
-    }else{}
-  // check for freeSmsUsers
-  
-  }else{}
-//check for free sms object
-
-
-
-db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj,{upsert:true}).then(resp=>{
-  res.send([traderDetailsObj])
-})
-
-})
- 
-}
-
-
-
-
-
- }catch(err){
+   
+   
+   db.collection('traders').find({contact:parseInt(kayaserDetailsObj.contact)}).toArray().then(async (resp)=>{
+   if(resp.length==0){
+    
+     traderDetailsObj = await traderModel({name:kayaserDetailsObj.name,contact:parseInt(kayaserDetailsObj.contact)}).save().then(resp=> {return resp})
+   
+   }else{
+     traderDetailsObj=resp[0]
+   }
+   
+   traderDetailsObj.name=kayaserDetailsObj.name,
+   traderDetailsObj.contact=kayaserDetailsObj.contact,
+   traderDetailsObj.institution=kayaserDetailsObj.institution
+   
+   
+   //check for accBal
+   if(traderDetailsObj.accBal==undefined || traderDetailsObj.accBal!=undefined ){
+   if(traderDetailsObj.accBal==undefined){
+   traderDetailsObj.accBal=0
+   }else{}
+   }else{}
+   
+   //check for pagesVisitsNo
+   if(traderDetailsObj.pagesVisitsNo==undefined || traderDetailsObj.pagesVisitsNo!=undefined ){
+   if(traderDetailsObj.pagesVisitsNo==undefined){
+   traderDetailsObj.pagesVisitsNo=0
+   }else{}
+   }else{}
+   
+   //check for permissionTokensObj
+   if(traderDetailsObj.permissionTokensObj==undefined || traderDetailsObj.permissionTokensObj!=undefined ){
+   //check if permissionTokensObj is defined
+   if(traderDetailsObj.permissionTokensObj==undefined){
+   traderDetailsObj.permissionTokensObj={}
+   }else{
+   }
+   //check if permissionTokensObj is defined
+   
+   //check for sendSmsTokens
+   if(traderDetailsObj.permissionTokensObj.sendSmsTokens==undefined){
+   traderDetailsObj.permissionTokensObj.sendSmsTokens=5
+   }else{}
+   //check for sendSmsTokens
+   
+   //check for createAttendanceRegisterTokens
+   if(traderDetailsObj.permissionTokensObj.createAttendanceRegisterTokens==undefined){
+     traderDetailsObj.permissionTokensObj.createAttendanceRegisterTokens=50
+     }else{}
+   
+   //check for createAttendanceRegisterTokens
+     //check for addContacttoRegisterTokens
+     if(traderDetailsObj.permissionTokensObj.addContactToRegisterTokens==undefined){
+      traderDetailsObj.permissionTokensObj.addContactToRegisterTokens=0
+      }else{}
+    
+    //check for addContacttoRegisterTokens
+    
+   
+   
+   }else{}
+   //check for permissionTokensObj
+   
+   //check for free sms object
+   if(traderDetailsObj.freeSmsObj==undefined || traderDetailsObj.freeSmsObj!=undefined ){
+     //check if freeSmsObj is defined
+     if(traderDetailsObj.freeSmsObj==undefined){
+     traderDetailsObj.freeSmsObj={}
+     }else{
+     }
+     //check if freeSmsObj is defined
+     
+     //check for freeSmsNotice
+     if(traderDetailsObj.freeSmsObj.freeSmsNotice==undefined){
+     traderDetailsObj.freeSmsObj.freeSmsNotice=`Sponsored by ${kayaserDetailsObj.name}`
+     }else{}
+     //check for freeSmsNotice
+     
+     //check for allowFreeSmsSending
+     if(traderDetailsObj.freeSmsObj.allowFreeSmsSending==undefined){
+       traderDetailsObj.freeSmsObj.allowFreeSmsSending=1
+       }else{}
+     //check for allowFreeSmsSending
+     
+     // check for freeSmsUsers
+     if(traderDetailsObj.freeSmsObj.freeSmsUsers==undefined){
+       traderDetailsObj.freeSmsObj.freeSmsUsers=[]
+       }else{}
+     // check for freeSmsUsers
+     
+     }else{}
+   //check for free sms object
+   
+   
+   
+   db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj,{upsert:true}).then(resp=>{
+     res.send([traderDetailsObj])
+   })
+   
+   })
+    
+   }
+   
+   
+   
+   
+   
+    }catch(err){
+     console.log(err)
+    }
+   
+   })
+   
+   
+   //new
+}catch(err){
   console.log(err)
- }
+}
 
-})
-
-
-//new
 
 })
 
@@ -2403,9 +2416,6 @@ db.collection('registers').find({contact:req.body.registrarContact,registerId:re
   if(resp.length==0){
     res.send({registerPresent:0})
   }
-  else if(resp[0].permissionToAddContactTokens<1 && resp[0].contact!=755643774){
-    res.send({permissionToAddContact:0})
-  }
   else{
 if(resp[0].attendees.find(attendee=>{return attendee.contact==req.body.contact})==undefined){
 db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$push:{attendees:{name:req.body.name,contact:req.body.contact}}}).then(resp=>{
@@ -2413,7 +2423,7 @@ db.collection('registers').updateOne({contact:req.body.registrarContact,register
   db.collection('registers').find({contact:req.body.registrarContact,registerId:req.body.registerId}).toArray().then(resp=>{
   
     res.send({success:1,attendees:resp[0].attendees})
-    db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{permissionToAddContactTokens:resp[0].permissionToAddContactTokens-1}}).then(resp=>{;})
+    
   })
 
   
@@ -2521,7 +2531,7 @@ res.send(["Messagees is already uptodate!!"])
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
   function CreateAttendanceRegister(registerId){
     registerModel({registerId:registerId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",permissionToAddContactTokens:1,smsUnitCost:30,closed:false
+      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",permissionToAddContactTokens:100,smsUnitCost:30,closed:false
     }).save().then(resp=>{
       db.collection('traders').find({contact:parseInt(req.body.contact)}).toArray().then(resp=>{
         if(resp.length==0){
