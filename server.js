@@ -2531,7 +2531,7 @@ res.send(["Messagees is already uptodate!!"])
 app.post('/createAttendanceRegister',bodyParser.json(),(req,res)=>{
   function CreateAttendanceRegister(registerId){
     registerModel({registerId:registerId,registerTitle:req.body.registerTitle,institution:req.body.institution,name:req.body.name,contact:req.body.contact,
-      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",permissionToAddContactTokens:100,smsUnitCost:30,closed:false
+      attendees:[{name:req.body.name,contact:req.body.contact}],message:"🌹Can I speak to you briefly if you do not mind?",smsmessage:"Hello, hope you are fine.",smsUnitCost:30,closed:false
     }).save().then(resp=>{
       db.collection('traders').find({contact:parseInt(req.body.contact)}).toArray().then(resp=>{
         if(resp.length==0){
