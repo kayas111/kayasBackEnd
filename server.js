@@ -872,7 +872,7 @@ app.get('/pubarticleopinions/:id', (req,res)=>{db.collection('pubarticles').find
    try{ if(array[0]==undefined){
     console.log(`A user tried to see comments of public article ${req.params.id} that is absent`)
     }else{
-        res.send(array[0].pubArticleOpinions)
+        res.send(array[0])
     }
     }catch(err){
     console.log("Kayas, the error originated from a user viewing public article opinions of an article that is not present and the error is:")
@@ -1026,7 +1026,7 @@ try{
     try{
     let traderDetailsObj,kayaserDetailsObj
      if(resp.length==0){
-   
+   console.log('trader details not present in collection')
    res.send([])
        
      }else{
@@ -1090,7 +1090,12 @@ try{
     
     //check for addContacttoRegisterTokens
     
-   
+     //check for createPubArticleTokens
+     if(traderDetailsObj.permissionTokensObj.createPubArticleTokens==undefined){
+      traderDetailsObj.permissionTokensObj.createPubArticleTokens=0
+      }else{}
+    
+    //check for createPubArticleTokens
    
    }else{}
    //check for permissionTokensObj
@@ -2692,13 +2697,12 @@ res.send({success:1})
 
 })
 
-app.post('/permissionToEditArticle',bodyParser.json(),(req,res)=>{
+app.post('/editPubArticle',bodyParser.json(),(req,res)=>{
 
-  try{db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(docArray=>{
-   if(docArray[0].editTokens<1){
-res.send({permission:0})
-    }else{
-
+  try{
+    
+    db.collection('articlegrants').find({contact:req.body.contact}).toArray().then(docArray=>{
+  
 pubArticleModel({id:req.body.articleId,visits:1,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"off",recentCommentOnTop:"off"})
 .save().then((resp)=>{
 
@@ -2715,7 +2719,7 @@ db.collection('articleassessments').deleteMany({articleId:req.body.articleId}).t
 
 
      
-    }
+    
          
   }
   
@@ -2729,32 +2733,12 @@ db.collection('articleassessments').deleteMany({articleId:req.body.articleId}).t
   
 })
 
-app.post('/perimissionToCreateArticle',bodyParser.json(),(req,res)=>{
-
-  db.collection('articlegrants').find({contact:parseInt(req.body.contact)}).toArray().then(docArray=>{
-  
-      if(docArray.length==0){
-    
-        res.send({permission:0})
-    
-      }else{
-if(docArray[0].createTokens<1){
-  res.send({permission:0})
-}else{
-  res.send({permission:1})
-  db.collection('articlegrants').updateOne({contact:parseInt(req.body.contact)},{$set:{createTokens:docArray[0].createTokens-1}})
-}
-
-      }
-  })
-  
-})
 
 app.post('/createArticle',bodyParser.json(),(req,res)=>{
 
 db.collection('pubarticles').find({contact:req.body.contact}).toArray().then(resp=>{
 
-if(resp.length>19){
+if(resp.length>29){
   res.send({limitReached:1})
 }else{
 
@@ -4374,82 +4358,94 @@ kayaser.save().then(response=>{
 })
 
 app.post('/submitPubarticleOpinion/:id',bodyParser.json(),(req,res)=>{
- let post=req.body
- 
- db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$push:{pubArticleOpinions:req.body}}).then(resp=>{
- 
-  if(resp.modifiedCount==1){
-      res.send({success:1})
 
-      db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
-        if(resp[0].newCommentsNumb==undefined){
-          db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{newCommentsNumb:1}}).then(resp=>{
-          
-          })
+
+
+  try{
+    let post=req.body
+ 
+    db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$push:{pubArticleOpinions:req.body}}).then(resp=>{
     
-        }else{
-          db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
+     if(resp.modifiedCount==1){
+         res.send({success:1})
+   
+         db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
+           if(resp[0].newCommentsNumb==undefined){
+             db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{newCommentsNumb:1}}).then(resp=>{
+             
+             })
+       
+           }else{
+             db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
+           
+               db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{newCommentsNumb:resp[0].newCommentsNumb+1}})
+       
+             })
+           }
+       
+           db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(articleDocArray=>{
+       
+             db.collection('multidocs').updateOne({desc:'monitoredArticleOpinions'},{$push:{opinions:{articleId:articleDocArray[0].id,headline1:articleDocArray[0].headline1,author:articleDocArray[0].author,authorContact:articleDocArray[0].contact,name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}}})
+                 })
+       
+         })
+   
+     db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
+   
+   try{
+     let articleAssessmentDoc={articleId:resp[0].id,headline1:resp[0].headline1,author:resp[0].author,authorContact:resp[0].contact}
+    articleAssessmentDoc.commenter=req.body.name,articleAssessmentDoc.commenterContact=req.body.contact,articleAssessmentDoc.msg=req.body.msg
+   
+   articleAssessmentModel(articleAssessmentDoc).save().then(resp=>{
+   ;
+   })
+   
+   
+   }catch(err){
+     console.log("Kayas, error originated from tryin to register an article assessment document and it is: ")
+     console.log(err)
+   }
+   
+   
+   
+   
+     })
+   
+       
         
-            db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{newCommentsNumb:resp[0].newCommentsNumb+1}})
+     }else{
+         console.log(`${req.body.contact} has tried to submit an opinion to a public article ${req.params.id} that is not present`)
+        ;// res.send({success:0})
+     }
     
-          })
-        }
     
-        db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(articleDocArray=>{
+   
+   })
+   db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
+     if(resp.length==0){
+   
+     }else{
+   let article=resp[0]
+   
+       post.serviceType=post.msg+` -- Reaction to article(${article.id}): ${article.headline1} -- Author: ${article.author} - 0${article.contact}  `
+       let request={name:post.name,contact:post.contact,serviceType:post.serviceType,recommender:703852178}
+      requestsModel(request).save().then(resp=>{;})
+   
+     }
     
-          db.collection('multidocs').updateOne({desc:'monitoredArticleOpinions'},{$push:{opinions:{articleId:articleDocArray[0].id,headline1:articleDocArray[0].headline1,author:articleDocArray[0].author,authorContact:articleDocArray[0].contact,name:req.body.name,contact:parseInt(req.body.contact),msg:req.body.msg}}})
-              })
-    
-      })
+   
+   })
+   
 
-  db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
-
-try{
-  let articleAssessmentDoc={articleId:resp[0].id,headline1:resp[0].headline1,author:resp[0].author,authorContact:resp[0].contact}
- articleAssessmentDoc.commenter=req.body.name,articleAssessmentDoc.commenterContact=req.body.contact,articleAssessmentDoc.msg=req.body.msg
-
-articleAssessmentModel(articleAssessmentDoc).save().then(resp=>{
-;
-})
-
-
-}catch(err){
-  console.log("Kayas, error originated from tryin to register an article assessment document and it is: ")
-  console.log(err)
-}
-
-
-
-
-  })
-
-    
-     
-  }else{
-      console.log(`${req.body.contact} has tried to submit an opinion to a public article ${req.params.id} that is not present`)
-     ;// res.send({success:0})
+  }catch(err){
+    console.log(err)
   }
- 
- 
-
-})
-db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then(resp=>{
-  if(resp.length==0){
-
-  }else{
-let article=resp[0]
-
-    post.serviceType=post.msg+` -- Reaction to article(${article.id}): ${article.headline1} -- Author: ${article.author} - 0${article.contact}  `
-    let request={name:post.name,contact:post.contact,serviceType:post.serviceType,recommender:703852178}
-   requestsModel(request).save().then(resp=>{;})
-
-  }
- 
-
-})
 
 
 })
+
+
+
 app.post('/collection_kayasers_registerToHookup',(req,res)=>{
 
  
