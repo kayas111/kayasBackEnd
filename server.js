@@ -145,7 +145,7 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
 //
 
-
+/*
 let file=excel.readFile('../readExcel/wallaceuhcontacts.xlsx')
 
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
@@ -163,7 +163,7 @@ final.push(attendee)
 })
 console.log(final)
 db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed and pushed to messager")}) 
-
+*/
 
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
 
