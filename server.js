@@ -1130,9 +1130,7 @@ try{
      
      }else{}
    //check for free sms object
-   
-   
-   
+      
    db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj,{upsert:true}).then(resp=>{
      res.send([traderDetailsObj])
    })
@@ -4515,7 +4513,9 @@ try{
 registrationModel({name:req.body.name,institution:req.body.institution,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
 .save().then(resp=>{
   res.send(resp)
-  console.log(resp.contact+" has registered as a Kayaser")})
+  console.log(resp.contact+" has registered as a Kayaser")
+
+})
 
 
 } catch(error){
