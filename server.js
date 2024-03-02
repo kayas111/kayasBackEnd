@@ -53,9 +53,10 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
  
   
-    /*
+  
 
 //nsibirwa emails
+/*
 db.collection('registers').find({contact:755874269,registerId:0}).toArray().then(resp=>{
 let register=resp[0],emailReceipientsArray=[]
 
@@ -70,25 +71,17 @@ if(doc.email==undefined){}else{
 })
 
 
-emailReceipientsArray=emailReceipientsArray.slice(600,700)
-//emailReceipientsArray=['onongeisaac@gmail.com']
+emailReceipientsArray=emailReceipientsArray.slice(500,600)
+//emailReceipientsArray=['katodonald4@gmail.com']
 
-
-
-Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayas7EmailApiCredentialsObj),arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'https://wa.me/256703852178',subject:'MAKERERE STUDENTS HALL/HOSTEL ROOM DUSTBIN DISTRIBUTION',html:'<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Get a room dustbin delivered to your hostel/hall room.</div>Good evening, due to the serious benefits of a hostel/hall room dustbin in terms of keeping your room clean and tidy and also for the comfort of your visitors, I wish to inform you that as Kayas, I will be <span style="color:maroon;">delivering/distributing room dustbins to all student rooms</span>. The dustbin is discounted at a cost of 4,000shs. <p></p><p></p><span style="color:maroon;font-weight:bold;">Use the "SEND REPLY" button below</span> and also send a message requesting for a room dustbin to be delivered to your room as well.<p></p> <span style="color:maroon;font-weight:bold">OR WhatsApp Kayas on 0703852178</span> <p></p>Thank you. </div>'}).then(resp=>{
+Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayas7EmailApiCredentialsObj),arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'https://wa.me/256771269747',subject:'YOUR HALL OF ATTACHMENT, NSIBIRWA HALL.....',html:'<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Gallant makererean, </div>As a statesman (one who is attached to Nsibirwa hall), I Donald Akampumuza Kato, intend to keep you updated instatntly on critical matters and opportunities concerning your hall of attachment. <p></p>Away from that, I am contesting for the GRC position, Nsibirwa hall to be able to implement any idea during my term of office that you may/could be having. I believe we can actually share more, lets keep in touch. <p></p>Thank you.<p></p>Donald Akampumuza Kato - 0771269747<p></p><p></p></div>'}).then(resp=>{
   console.log(resp.accepted.length)
 })
 
 
 
-
 })
-
-
-
-  */
-
-
+*/
 
 //db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
 
@@ -145,9 +138,9 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
 //
 
-/*
 
-let file=excel.readFile('../readExcel/wallaceuhcontacts.xlsx')
+/*
+let file=excel.readFile('../readExcel/donald.xlsx')
 
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
@@ -164,13 +157,12 @@ final.push(attendee)
 })
 console.log(final)
 db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed and pushed to messager")}) 
-*/
+
 
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
 
+*/
 
-
-//
   
 
 }))
