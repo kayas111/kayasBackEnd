@@ -72,17 +72,18 @@ if(doc.email==undefined){}else{
 
 
 emailReceipientsArray=emailReceipientsArray.slice(500,600)
-//emailReceipientsArray=['katodonald4@gmail.com']
+//emailReceipientsArray=['onongeisaac@gmail.com']
 
-Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayas7EmailApiCredentialsObj),arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'https://wa.me/256771269747',subject:'YOUR HALL OF ATTACHMENT, NSIBIRWA HALL.....',html:'<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Gallant makererean, </div>As a statesman (one who is attached to Nsibirwa hall), I Donald Akampumuza Kato, intend to keep you updated instatntly on critical matters and opportunities concerning your hall of attachment. <p></p>Away from that, I am contesting for the GRC position, Nsibirwa hall to be able to implement any idea during my term of office that you may/could be having. I believe we can actually share more, lets keep in touch. <p></p>Thank you.<p></p>Donald Akampumuza Kato - 0771269747<p></p><p></p></div>'}).then(resp=>{
+Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayas7EmailApiCredentialsObj),arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'https://forms.gle/6m5yGt5YLTkeyjoYA',subject:'CTF 2 Invitation For A Celebration',html:'<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Tomorrow Saturday 2pm at CTF 2. </div>A celebration showcasing the archievements of the BANG project in Makerere since 2019 will be taking place comprising of skits, poems, plays and real life experience talks and a lot more. <p></p>I have invited you too to come and attend tomorrow afternoon at 2pm in CTF 2. <p></p>Register using the "Send reply" button below to get an SMS notification to remind you tomorrow before the event.<p></p>Thank you.<p></p>Isaac Opio<br></br>BANG publicity Makerere University<br></br>0755643774 (WhatsApp)</div>'}).then(resp=>{
   console.log(resp.accepted.length)
 })
 
 
 
-})
-*/
 
+})
+
+*/
 //db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
 
 /*
@@ -140,7 +141,7 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
 
 /*
-let file=excel.readFile('../readExcel/donald.xlsx')
+let file=excel.readFile('../readExcel/celebration.xlsx')
 
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
