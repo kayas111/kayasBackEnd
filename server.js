@@ -1628,7 +1628,7 @@ res.send(resp)
              res.send({msg:'Error occured. Contact Kayas on 0703852178'})
            
          }else{
-           if(body.Status!='OK'){
+           if(body.Status=='OK'){
             res.send({msg:`Message sent to ${arrayOfEligibleTraders.length} followers`})
          arrayOfEligibleTraders.forEach(async (receipient)=>{
       receipient.accBal-=parseInt(process.env.followerUpdateSmsCost)
