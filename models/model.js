@@ -161,6 +161,7 @@ module.exports.registerModel=mongoose.model('registers',new mongoose.Schema({dyn
 module.exports.articleAssessmentModel=mongoose.model('articleassessments',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.voterOpinionPollModel=mongoose.model('voteropinionpolls',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.linkModel=mongoose.model('links',new mongoose.Schema({},{strict:false}))
+module.exports.followingsModel=mongoose.model('followings',new mongoose.Schema({},{strict:false}))
 
 
 

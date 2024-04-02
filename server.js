@@ -28,6 +28,7 @@ const {google}=require('googleapis')
 
 
 
+
 const Flutterwave=require('flutterwave-node-v3')
 const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey)
 const emailValidator = require('deep-email-validator');
@@ -39,8 +40,10 @@ const excel=require('xlsx')
 mongoose.set('strictQuery', false)
 const bcrypt=require('bcrypt')
 var formidable = require('formidable');
-const dbURI="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority"
+let onlineDb="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority",localDb="mongodb://localhost:27017"
+const dbURI=onlineDb
 const port=process.env.PORT || 4000
+
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
@@ -139,9 +142,9 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
 //
 
-
 /*
-let file=excel.readFile('../readExcel/celebration.xlsx')
+
+let file=excel.readFile('../readExcel/amanya.xlsx')
 
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
@@ -189,6 +192,7 @@ const articleAssessmentModel=require('./models/model').articleAssessmentModel;
 
 const SmsSubscribersModel = require('./models/model').SmsSubscribersModel;
 const linkModel = require('./models/model').linkModel;
+const followingsModel = require('./models/model').followingsModel;
 const recommendationModel = require('./models/model').recommendationModel;
 const requestsModel = require('./models/model').requestsModel;
 const messagerModel = require('./models/model').messagerModel;
@@ -428,46 +432,19 @@ res.send(array)
  
 })
 
-app.get('/smsTotalBill', (req,res)=>{
+app.get('/tradersTotalCredit', (req,res)=>{
 
   try{
-db.collection('registers').find().toArray().then(async (resp)=>{
-  
- 
-  let registersArray=resp,tradersSearchContacts=[]
-  if(registersArray.length==0){
-    res.send({smsTotalBill:0})
-  }else{
+db.collection('traders').find().toArray().then(resp=>{
+  let total=0
+  resp.forEach(traderObj=>{
+total+=traderObj.accBal
+  })
 
-    
-    registersArray.forEach((register)=>{
-      tradersSearchContacts.push(register.contact)
-    })
-  
-    await db.collection('traders').find({contact:{$in:tradersSearchContacts}}).toArray().then(resp=>{
-      let smsTotalBill=0,tradersWithRegisters=resp
-       tradersWithRegisters.forEach(register=>{
-        smsTotalBill+=register.accBal
-      })
-
-      res.send({smsTotalBill:smsTotalBill})
-     
-     })
-
-  
-
-  }
-
+  res.send({tradersTotalCredit:total})
 })
 
-    /*
-   db.collection('traders').find().toArray().then(resp=>{
-   
-    res.send(resp)
-   })
-    */  
-  
- }catch(err){
+  }catch(err){
    console.log(err)
  }
  
@@ -579,6 +556,8 @@ app.get('/collection_controls_visits', (req,res)=>{
     
         })
        
+
+
     
     }) 
     app.get('/deleteAllBids', (req,res)=>{
@@ -968,56 +947,11 @@ if(resp.length==0){
 app.get('/getTradingDetails/:trader', (req,res)=>{
   //traderModel({name:kayaserObj.name,contact:parseInt(kayaserObj.contact),accBal:0,pagesVisitsNo:1,institution:kayaserObj.institution,sendSmsTokens:1,freeSmsObj:{freeSmsNotice:`Sponsored by ${kayaserObj.name}`,allowFreeSmsSending:1,freeSmsUsers:[]}})
   //dependencies: sendfree sms, contact registers, account page
-  // original
-  /*
-try{
-
   
-  db.collection('traders').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
-  if(resp.length==0){
-
-    db.collection('kayasers').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
-      if(resp.length==0){
-  
-    res.send([])
-        
-      }else{
-
-
-      InstantiateTraderModel(resp[0]).then(resp=>{
-        res.send([resp])
-          
-      })
-      
- }
-    
-    })
-
-
-  }else{
-   res.send(resp)
-   
-
-
-  }
-
-})
-  
-}catch(err){
-  console.log(err)
-}
-*/
-// original
-
-
-
-
 try{
   // new
   db.collection('kayasers').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
-
-
-    try{
+  try{
     let traderDetailsObj,kayaserDetailsObj
      if(resp.length==0){
    console.log('trader details not present in collection')
@@ -1026,8 +960,6 @@ try{
      }else{
        kayaserDetailsObj=resp[0]
     
-   
-   
    db.collection('traders').find({contact:parseInt(kayaserDetailsObj.contact)}).toArray().then(async (resp)=>{
    if(resp.length==0){
     
@@ -1403,7 +1335,7 @@ res.send({msg:'Url already exists'})
 app.post('/updateTraderDetails',(req,res)=>{
 
 let receivedObj=req.body
-console.log(receivedObj)
+
 
 switch(receivedObj.method){// method is update either as kayaser or as admin
   case 'updateAsKayaser':{
@@ -1587,80 +1519,242 @@ default:{
 
 
 
-
-  /*
-let operationObj=req.body
-console.log(operationObj)
-switch(operationObj.fieldToUpdate){
-  case 'allowFreeSmsSending':{
-
-db.collection('traders').find({contact:parseInt(operationObj.traderContact)}).toArray().then(resp=>{
- let traderDetailsObj=resp[0]
-
- traderDetailsObj.freeSmsObj[operationObj.fieldToUpdate]=operationObj.updateValue
-
- db.collection('traders').updateOne({contact:parseInt(operationObj.traderContact)},{$set:{freeSmsObj:traderDetailsObj.freeSmsObj}}).then(resp=>{
-  if(resp.modifiedCount==1){
-    res.send({success:1})
-  }else{
-    res.send({success:0})
-
-  }
-
-
 })
+app.post('/followingsPostRequest',(req,res)=>{
 
+try{
 
-})
-
-
+  let receivedObj=req.body
+  switch(receivedObj.method){// method is update either as kayaser or as admin
+    case 'createFollowersCategory':{
+   
+   db.collection('followings').find({contact:receivedObj.args.contact}).toArray().then(resp=>{
+Functions.CreateIntId(resp,'categoryId').then(resp=>{
+  let categoryId=resp,payLoad={categoryId:categoryId,name:receivedObj.args.name,contact:receivedObj.args.contact,categoryName:receivedObj.args.categoryName,followers:[]}
+followingsModel(payLoad).save().then(resp=>{
   
+  res.send(resp)
 
-    break;
+})
+
+})
 
 
-  }
-  case 'freeSmsNotice':{
+   })
+  break;
+  
+     }
+    case 'getFollowersCategories':{
+   
+   db.collection('followings').find({contact:receivedObj.args.contact}).toArray().then(resp=>{
+    
+res.send(resp)
+   })
+  break;
+  
+     }
+    
+    case 'getCategoriesSubscribedTo':{
+   
+   try{
+    
+    db.collection('followings').find().toArray().then(resp=>{
+      let arrayOfFollowings=resp,responseArray=[]
+          arrayOfFollowings.forEach(followingsDoc=>{
+            if(followingsDoc.followers.find(follower=>{return follower.contact==receivedObj.args.contact})==undefined){
+              ;
+            }else{
+              responseArray.push(followingsDoc)
+            }
 
-    db.collection('traders').find({contact:parseInt(operationObj.traderContact)}).toArray().then(resp=>{
-     let traderDetailsObj=resp[0]
-    
-     traderDetailsObj.freeSmsObj[operationObj.fieldToUpdate]=operationObj.updateValue
-    
-     db.collection('traders').updateOne({contact:parseInt(operationObj.traderContact)},{$set:{freeSmsObj:traderDetailsObj.freeSmsObj}}).then(resp=>{
-      if(resp.modifiedCount==1){
-        res.send({success:1})
-      }else{
-        res.send({success:0})
-    
-      }
-    
-    
-    })
-    
-    
-    })
-    
-    
-      
-    
+          })
+
+res.send(responseArray)
+
+
+         })
         break;
-    
-    
-      }
-    
-    
 
+
+
+
+   }catch(err){
+    console.log('Error trying to get categories subscribed to')
+    console.log(err)
+   }
   
+     }
+    
+    case 'getFollowersCategory':{
+   
+   db.collection('followings').find({contact:receivedObj.args.contact,categoryId:receivedObj.args.categoryId}).toArray().then(resp=>{
 
-default:{
-  res.send({success:0})
-  console.log('Case value not available')
+res.send(resp)
+   })
+  break;
+  
+     }
+    
+    case 'updateFollowers':{
+   try{
+
+    db.collection('followings').find({contact:receivedObj.args.contact,categoryId:receivedObj.args.categoryId}).toArray().then(resp=>{
+      let msg=receivedObj.args.msg,followers=resp[0].followers,arrayOfFollowersContacts=[],senderContact=receivedObj.args.contact
+      followers.forEach(followerDoc=>{arrayOfFollowersContacts.push(followerDoc.contact)})
+      db.collection('traders').find({contact:{$in:arrayOfFollowersContacts},accBal:{$gt:parseInt(process.env.followerUpdateSmsCost)}}).toArray().then(resp=>{
+        let arrayOfEligibleTraders=resp,payLoad=[]
+        arrayOfEligibleTraders.forEach(eligibleTrader=>{
+          payLoad.push({number:'256'+eligibleTrader.contact,message:`${msg} (0${senderContact} #SMS by Kayas)`,senderid:'0'+senderContact})
+          })
+     if(arrayOfEligibleTraders.length==0){
+      res.send({msg:'You have no followers for this category'})
+    }else{
+      request.post(process.env.egoSmsLiveSendApiUrl,{json:{
+        method:"SendSms",
+        userdata:{
+           username:process.env.egoSmsUsername,
+           password:process.env.egoSmsPassword
+        },
+        msgdata:payLoad
+      }},(error, response, body) =>{
+        if (!error && response.statusCode == 201) {
+             console.log(body);
+             res.send({msg:'Error occured. Contact Kayas on 0703852178'})
+           
+         }else{
+           if(body.Status!='OK'){
+            res.send({msg:`Message sent to ${arrayOfEligibleTraders.length} followers`})
+         arrayOfEligibleTraders.forEach(async (receipient)=>{
+      receipient.accBal-=parseInt(process.env.followerUpdateSmsCost)
+      await db.collection('traders').replaceOne({contact:receipient.contact},receipient).then(resp=>{;})
+      })
+      
+      
+           }else{
+             
+            res.send({msg:'Message not sent. Contact Kayas on 0703852178'})
+            
+            
+            }}
+          
+          }
+       
+      )
+    }
+
+
+
+      })
+       })
+        break;
+
+
+   }catch(err){
+    console.log('error updating followers')
+    console.log(err)
+   }
+  
+     }
+    
+    case 'subscribeToACategory':{
+    db.collection('followings').find({contact:receivedObj.args.contactToFollow,categoryId:receivedObj.args.categoryId}).toArray().then(resp=>{
+let caseFollower=receivedObj.args.follower
+if(resp.length==0){
+  res.send({msg:'This category ID does not exit.'})
+}else{
+ let categoryDoc=resp[0],followers=categoryDoc.followers
+if(followers.find(follower=>{return follower.contact==caseFollower.contact})==undefined){
+followers.push(caseFollower)
+categoryDoc.followers=followers
+
+db.collection('traders').find({contact:caseFollower.contact}).toArray().then(resp=>{
+if(resp[0].accBal<process.env.minAccBalToFollowACategory){
+  res.send({msg:`<div style="color:red;">Account balance should be atleast ${process.env.minAccBalToFollowACategory} in order to follow a category. WhatsApp Kayas on 0703852178 to recharge your account.</div>`})
+}else{
+  db.collection('followings').replaceOne({contact:categoryDoc.contact,categoryId:categoryDoc.categoryId},categoryDoc).then(resp=>{
+    if(resp.modifiedCount==1){
+  res.send({msg:'Successful'})
+    }else{
+      res.send({msg:'Error may have occured, try again'})
+    }
+  })
+  
+  
 }
-}
-*/
 
 })
+
+
+
+}else{
+  res.send({msg:'You already subscribe to this category'})
+}
+
+
+}
+
+   })
+  break;
+  
+     }
+    
+    case 'unsubscribeFromACategory':{
+    db.collection('followings').find({contact:receivedObj.args.contactToFollow,categoryId:receivedObj.args.categoryId}).toArray().then(resp=>{
+let caseFollower=receivedObj.args.follower
+if(resp.length==0){
+  res.send({msg:'This category ID does not exit.'})
+}else{
+  let categoryDoc=resp[0],followers=categoryDoc.followers,newFollowers=[]
+if(followers.find(follower=>{return follower.contact==caseFollower.contact})!=undefined){
+followers.forEach(follower=>{
+  if(follower.contact==caseFollower.contact){
+    ;
+  }else{
+    newFollowers.push(follower)
+  }
+})
+categoryDoc.followers=newFollowers
+db.collection('followings').replaceOne({contact:categoryDoc.contact,categoryId:categoryDoc.categoryId},categoryDoc).then(resp=>{
+  if(resp.modifiedCount==1){
+res.send({msg:'Successful'})
+  }else{
+    res.send({msg:'Error may have occured, try again'})
+  }
+})
+
+}else{
+  res.send({msg:'You do not subscribe to this category'})
+}
+
+}
+
+   })
+  break;
+  
+     }
+    
+  
+  default:{
+    
+    console.log('Case value for method not available')
+  }
+  }
+  
+
+
+
+}catch(err){
+  console.log('Error at creating followers category')
+console.log(err)
+}
+
+
+
+
+})
+
+
+
 app.post('/sendSmsMessage',(req,res)=>{
 try{
 

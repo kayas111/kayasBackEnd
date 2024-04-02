@@ -1,4 +1,5 @@
 require('dotenv').config()
+const request = require('request')
 const nodemailer=require('nodemailer')
 const {google}=require('googleapis') 
 
@@ -64,7 +65,7 @@ console.log('Pass credentials argument to sendMail function')
   })
 
 
- 
+
   
   return await transport.sendMail({
     from: Obj.credentialsObj.email,
@@ -92,4 +93,36 @@ return  (resp)
 
 
 
-module.exports={ReturnArrayChunks,ConvertFileToBase64,SendEmail}
+async function CreateIntId(ArrayOfObjects,nameOfIntIdPropertyInTheObjects,Ids=[]){
+  
+  ArrayOfObjects.forEach(Object=>{
+    Ids.push(Object[nameOfIntIdPropertyInTheObjects])
+    
+  })
+
+
+  newId=0,searchAgain=1
+  
+  
+  do{if(Ids.find(Id=>{
+  return Id==newId
+  })==undefined){
+  
+  searchAgain=0
+  }else{
+  newId+=1
+  searchAgain=1
+  
+  }}
+  while(searchAgain==1)
+
+
+return newId
+
+}
+
+
+
+
+
+module.exports={ReturnArrayChunks,ConvertFileToBase64,SendEmail,CreateIntId}
