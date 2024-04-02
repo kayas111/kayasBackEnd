@@ -443,7 +443,6 @@ if(traderObj.accBal==undefined){
   total+=traderObj.accBal
 }
 
-
     
 
   })
