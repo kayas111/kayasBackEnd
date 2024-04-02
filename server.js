@@ -1613,7 +1613,7 @@ res.send(resp)
           payLoad.push({number:'256'+eligibleTrader.contact,message:`${msg} (0${senderContact} #SMS by Kayas)`,senderid:'0'+senderContact})
           })
      if(arrayOfEligibleTraders.length==0){
-      res.send({msg:'Not sent because no follower for this category has enough credit.'})
+      res.send({msg:'<div style="color:red;">Not sent because no follower for this category has enough credit.</div>'})
     }else{
       request.post(process.env.egoSmsLiveSendApiUrl,{json:{
         method:"SendSms",
