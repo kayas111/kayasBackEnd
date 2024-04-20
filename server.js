@@ -93,15 +93,15 @@ Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayas7EmailApiCredent
     */
     //db.collection('traders').updateOne({contact:755643774},{$set:{accBal:1230000}}).then(resp=>{console.log(resp)})
   
-
-  /*
-      db.collection('registers').find({contact:706161016,registerId:0}).toArray().then(resp=>{
+/*
+  
+      db.collection('registers').find({contact:755643774,registerId:20}).toArray().then(resp=>{
      
         
     
  let list=resp[0].attendees,attendanceRegister=resp,final=[]
  list.forEach(receip=>{
-  message=`${receip.name}, join CTPA Alumni Meet & Greet! Network, celebrate and have fun. Tomorrow, 30th Nov, 5pm-8:30pm at Grand Global Hotel Kikoni.`
+  message=`${receip.name}, you've received a reminder to attend BANG today at 4:30pm, usual venue. Theme "Reviewing The Whole Semester", thanks. 0755643774`
 
 
   receip.number='256'+receip.contact,
@@ -123,7 +123,7 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
         console.log(body);
     }else{
       console.log(body)
-      console.log(attendanceRegister)
+     // console.log(attendanceRegister)
        
     }
   }
