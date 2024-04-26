@@ -138,9 +138,9 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
 //
 
-/*
 
-let file=excel.readFile('../readExcel/amanya.xlsx')
+/*
+let file=excel.readFile('../readExcel/Appreciate a lady.xlsx')
 
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
@@ -160,8 +160,8 @@ db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}
 
 
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
-
 */
+
 
   
 
