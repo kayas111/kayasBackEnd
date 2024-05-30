@@ -162,8 +162,7 @@ module.exports.articleAssessmentModel=mongoose.model('articleassessments',new mo
 module.exports.voterOpinionPollModel=mongoose.model('voteropinionpolls',new mongoose.Schema({dynamic:String},{strict:false}))
 module.exports.linkModel=mongoose.model('links',new mongoose.Schema({},{strict:false}))
 module.exports.followingsModel=mongoose.model('followings',new mongoose.Schema({},{strict:false}))
-
-
+module.exports.imageModel=mongoose.model('images',new mongoose.Schema({img:{data: Buffer,contentType: String}},{strict:false}))
 
 
 

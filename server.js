@@ -3,16 +3,23 @@ const app = express();
 
 const Functions=require('./Functions.js')
 const multer = require ('multer')
-let localDiskStorage=multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploadedimgs');
-    console.log('destination accessed')
-  },filename: (req, file, cb) => {
-    cb(null, 'uploadedimg');
+
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb)=>{
+cb(null, 'pubArticleHeaderImages')
+  },
+  filename: (req, file, cb)=>{
+    
+    cb(null, file.originalname)
   }
 })
-const fileUpload=multer({storage:localDiskStorage})
-//console.log(fileUpload.single('img'))
+
+//const upload = multer({ dest: 'pubArticleHeaderImages'})
+const upload = multer({ storage: storage })
+
+
 
 
 const fs=require('fs')
@@ -412,6 +419,7 @@ let familyTradingGroupLink="https://chat.whatsapp.com/BU6aMsNR6jL5x11rcWc9HZ"
 
 //serve static index file
 app.use(express.static(path.join(__dirname,'/build')))
+
 
 //pages router
 app.use(pagesRouter)
@@ -861,6 +869,8 @@ app.get('/pubarticleopinions/:id', (req,res)=>{db.collection('pubarticles').find
 
 })}) 
 
+
+
 app.get('/collection_campus_comments', (req,res)=>{
 db.collection('campus').find().toArray().then((array)=>{
 res.send(array)})})
@@ -1298,6 +1308,7 @@ app.get('/fetchArticle/:id',(req,res)=>{
 
 
 //posts to the database
+
 app.post('/saveLink',(req,res)=>{
 
  try{
