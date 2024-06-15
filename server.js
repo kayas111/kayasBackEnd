@@ -1,26 +1,17 @@
 const express = require("express");
 const app = express();
-
+const fireBaseApp =require("firebase/app")
+const {getStorage,ref,getDownloadURL,uploadBytesResumable,deleteObject} = require("firebase/storage");
 const Functions=require('./Functions.js')
-const multer = require ('multer')
-
-
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb)=>{
-cb(null, 'pubArticleHeaderImages')
-  },
-  filename: (req, file, cb)=>{
-    
-    cb(null, file.originalname)
-  }
+fireBaseApp.initializeApp({
+  apiKey: "AIzaSyCf0LC-eL1pJ2Rpvh59ukbg5OUFm6IcrEA",
+  authDomain: "kayas-42321.firebaseapp.com",
+  projectId: "kayas-42321",
+  storageBucket: "kayas-42321.appspot.com",
+  messagingSenderId: "813452361902",
+  appId: "1:813452361902:web:b574f6e5e821463faaed3f",
+  measurementId: "G-R0W6XKY621"
 })
-
-//const upload = multer({ dest: 'pubArticleHeaderImages'})
-const upload = multer({ storage: storage })
-
-
-
 
 const fs=require('fs')
 const path=require('path')
@@ -31,11 +22,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const { ReturnDocument } = require('mongodb')
 const bodyParser=require('body-parser')
 const {google}=require('googleapis') 
-
-
-
-
-
 const Flutterwave=require('flutterwave-node-v3')
 const flw = new Flutterwave(process.env.flwPublicKey,process.env.flwSecretKey)
 const emailValidator = require('deep-email-validator');
@@ -43,7 +29,6 @@ const mongoose=require('mongoose')
 const webpush=require('web-push')
 const excel=require('xlsx')
 // messager is located in multidocs collection
-
 mongoose.set('strictQuery', false)
 const bcrypt=require('bcrypt')
 var formidable = require('formidable');
@@ -56,11 +41,6 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(port)
          
 //credentialsObj,arrayOfEmailReceipients,responseUrl,subject,html
-
- 
-  
-  
-
 //nsibirwa emails
 /*
 db.collection('registers').find({contact:755874269,registerId:0}).toArray().then(resp=>{
@@ -426,6 +406,7 @@ app.use(pagesRouter)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(express.json())
 //access database by get
 app.get('/getLinks', (req,res)=>{
 
@@ -752,7 +733,17 @@ app.get('/collection_orders_orders', (req,res)=>{db.collection('orders').find().
 app.get('/collection_traders_number', (req,res)=>{db.collection('traders').find().sort({pagesVisitsNo:1}).toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_monitoredopinions_number', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_monitoredopinions_opinions', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
-app.get('/collection_multidocs_monitoredArticleOpinions', (req,res)=>{db.collection('multidocs').find({desc:'monitoredArticleOpinions'}).toArray().then((array)=>{res.send(array[0].opinions)})})
+app.get('/collection_multidocs_monitoredArticleOpinions', (req,res)=>{
+  
+
+try{
+  db.collection('multidocs').find({desc:'monitoredArticleOpinions'}).toArray().then((array)=>{res.send(array[0].opinions)})
+}catch(err){
+  console.log('Error at collection_multidocs_monitoredArticleOpinions ')
+  console.log(err)
+}
+
+})
 app.get('/universityContacts', (req,res)=>{
 
 db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts','mubsContacts','mukEducation']}}).toArray().then((array)=>{
@@ -1308,7 +1299,6 @@ app.get('/fetchArticle/:id',(req,res)=>{
 
 
 //posts to the database
-
 app.post('/saveLink',(req,res)=>{
 
  try{
@@ -2837,15 +2827,44 @@ db.collection('articleassessments').deleteMany({articleId:req.body.articleId}).t
 })
 
 
+app.get('/newAvailablePubArticleId',(req,res)=>{
+  console.log('getting.....')
+  try{   
+    db.collection('pubarticles').find().toArray().then((articlesArray)=>{
+  let articleIds=[]
+     articlesArray.forEach(articleDoc=>{
+  articleIds.push(articleDoc.id)
+  })
+  newId=0,searchAgain=1
+  do{if(articleIds.find(docId=>{
+  return docId==newId
+  })==undefined){
+  
+  searchAgain=0
+  }else{
+  newId+=1
+  searchAgain=1
+  
+  }}
+  while(searchAgain==1)
+res.send({newAvailablePubArticleId:newId})
+  
+    })
+  }catch(err){
+    console.log("Kayas the error originated from trying to create a new available public article id and it is:")
+    console.log(err)
+    }
+   
+})
+
+
 app.post('/createArticle',bodyParser.json(),(req,res)=>{
 
 db.collection('pubarticles').find({contact:req.body.contact}).toArray().then(resp=>{
 
-if(resp.length>29){
+if(resp.length>59){
   res.send({limitReached:1})
 }else{
-
-
 try{   
   db.collection('pubarticles').find().toArray().then((articlesArray)=>{
 let articleIds=[]
@@ -2854,8 +2873,6 @@ articlesArray.forEach(articleDoc=>{
 articleIds.push(articleDoc.id)
 })
 newId=0,searchAgain=1
-
-
 do{if(articleIds.find(docId=>{
 return docId==newId
 })==undefined){
@@ -2871,8 +2888,7 @@ while(searchAgain==1)
 pubArticleModel({id:parseInt(newId),visits:1,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"off",recentCommentOnTop:"off"})
 .save().then((resp)=>{
 
-console.log(`${resp.author} has created an article with ID: ${resp.id}`)
-res.send({msg:"Article created",id:resp.id,headline1:resp.headline1})
+res.send({msg:"Article created",contact:resp.contact,id:resp.id,headline1:resp.headline1})
 })
 
   })
@@ -2885,6 +2901,19 @@ res.send({msg:"Article created",id:resp.id,headline1:resp.headline1})
 
 }
 })
+})
+app.post('/addPubArticleImageUrlToArticle',(req,res)=>{
+try {
+  let payLoad=req.body
+db.collection('pubarticles').updateOne({contact:payLoad.contact,id:payLoad.articleId},{$set:{imageDownLoadUrl:payLoad.imageDownLoadUrl}}).then(resp=>{
+res.send({id:payLoad.articleId})
+
+})
+
+
+}catch(error){
+  console.log(error)
+}
 })
 
 app.post('/deleteMessageesList',bodyParser.json(),(req,res)=>{
