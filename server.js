@@ -4373,7 +4373,7 @@ let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),e
 const kayaser=new registrationModel(data)
 kayaser.save().then(response=>{
   res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
-  console.log(fields.contact+" has registered as a new kayaser........")
+  
 
 })
 
@@ -4410,7 +4410,7 @@ kayaser.save().then(response=>{
            const kayaser=new registrationModel(data)
            kayaser.save().then(response=>{
               res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
-              console.log(fields.contact+" has registered as a new kayaser........")
+              
           
            })
           
@@ -4447,7 +4447,7 @@ kayaser.save().then(response=>{
        const kayaser=new registrationModel(data)
        kayaser.save().then(response=>{
           res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
-          console.log(fields.contact+" has registered as a new kayaser........")
+          
       
        })
       
@@ -4646,7 +4646,7 @@ try{
 registrationModel({name:req.body.name,institution:req.body.institution,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
 .save().then(resp=>{
   res.send(resp)
-  console.log(resp.contact+" has registered as a Kayaser")
+  
 
 })
 
@@ -4822,7 +4822,7 @@ if(recommender==undefined){//register new recommender
                  res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for recommending your friend.<p></p>Keep it Kayas.</div>')
          
   
-  console.log(fields.recommender+" has registered as a new recommender")
+  
 }
 
 else{
