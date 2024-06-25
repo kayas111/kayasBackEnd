@@ -4822,8 +4822,9 @@ if(recommender==undefined){//register new recommender
                  res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful !!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Thank you for recommending your friend.<p></p>Keep it Kayas.</div>')
          
   
-  
                  
+  
+
 }
 
 else{
