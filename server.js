@@ -987,6 +987,13 @@ try{
    }else{}
    }else{}
    
+ //check for cashOutBal
+ if(traderDetailsObj.cashOutBal==undefined || traderDetailsObj.cashOutBal!=undefined ){
+  if(traderDetailsObj.cashOutBal==undefined){
+  traderDetailsObj.cashOutBal=0
+  }else{}
+  }else{}
+
    //check for pagesVisitsNo
    if(traderDetailsObj.pagesVisitsNo==undefined || traderDetailsObj.pagesVisitsNo!=undefined ){
    if(traderDetailsObj.pagesVisitsNo==undefined){
