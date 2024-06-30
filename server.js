@@ -961,8 +961,7 @@ try{
   try{
     let traderDetailsObj,kayaserDetailsObj
      if(resp.length==0){
-   console.log('trader details not present in collection')
-   res.send([])
+    res.send([])
        
      }else{
        kayaserDetailsObj=resp[0]
