@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.abe83c91.css",
-    "main.js": "/static/js/main.cd1a9fc8.js",
+    "main.js": "/static/js/main.9f0bb523.js",
     "static/js/453.f9af8ee5.chunk.js": "/static/js/453.f9af8ee5.chunk.js",
     "static/media/isaac1.jpg": "/static/media/isaac1.654b545740f4e07381e9.jpg",
     "static/media/it12.jpg": "/static/media/it12.e647ead61a6b35e0b0af.jpg",
@@ -44,7 +44,6 @@
     "static/media/client6img16.jpg": "/static/media/client6img16.9ba36921b0a73ecac700.jpg",
     "static/media/client9img39.jpg": "/static/media/client9img39.5a78aba729b3ed85f303.jpg",
     "static/media/client11img13.jpg": "/static/media/client11img13.ea4e9728b62c3c1fdf67.jpg",
-    "static/media/trader1s.jpg": "/static/media/trader1s.c92f03f31cf10e3df7a6.jpg",
     "static/media/client6img9.jpg": "/static/media/client6img9.d66038c470819544bb4f.jpg",
     "static/media/holiday.jpg": "/static/media/holiday.63fbbb476f66188e6dc4.jpg",
     "static/media/client6img8.jpg": "/static/media/client6img8.190cb5820c914a2297b4.jpg",
@@ -68,7 +67,6 @@
     "static/media/client6img3.jpg": "/static/media/client6img3.919eff4baee4edbb5181.jpg",
     "static/media/client6img12.jpg": "/static/media/client6img12.af816c191f2b96d67f8a.jpg",
     "static/media/client9img31.jpg": "/static/media/client9img31.017d885fe58559742812.jpg",
-    "static/media/trader2s.jpg": "/static/media/trader2s.5a4fc710367334d18492.jpg",
     "static/media/client4img1.jpg": "/static/media/client4img1.9d7c23a7a96efd25dfae.jpg",
     "static/media/client6img2.jpg": "/static/media/client6img2.feef3a31eed10c0bf884.jpg",
     "static/media/wobu5.jpg": "/static/media/wobu5.b88e15e0b0f085e16a4e.jpg",
@@ -83,7 +81,6 @@
     "static/media/kahu.jpg": "/static/media/kahu.56add7e227bb55393d96.jpg",
     "static/media/wobu.jpg": "/static/media/wobu.f4c66e870a96416ded7b.jpg",
     "static/media/client9img27.jpg": "/static/media/client9img27.d21af488b554793650c0.jpg",
-    "static/media/trader4.jpg": "/static/media/trader4.d02dcd522004235b5d97.jpg",
     "static/media/client9img1.jpg": "/static/media/client9img1.17929abed4b14710929f.jpg",
     "static/media/client9img23.jpg": "/static/media/client9img23.a475b5c73d6a30610a14.jpg",
     "static/media/client9img30.jpg": "/static/media/client9img30.7971024b90f441b1fe96.jpg",
@@ -155,7 +152,6 @@
     "static/media/client10img15.jpeg": "/static/media/client10img15.64ae671a9d9c2b38292f.jpeg",
     "static/media/client10img1.jpeg": "/static/media/client10img1.4558a799e83a2693ed19.jpeg",
     "static/media/client10img4.jpeg": "/static/media/client10img4.792019d9532ee4d02baf.jpeg",
-    "static/media/trader1s1.jpg": "/static/media/trader1s1.6007354342660afd6499.jpg",
     "static/media/client5img1.jpg": "/static/media/client5img1.f46ca1b46c5857d07c19.jpg",
     "static/media/client10img12.jpeg": "/static/media/client10img12.1a5daa8088f28eefa5b2.jpeg",
     "static/media/it17.jpg": "/static/media/it17.55e285f3c86a3baf9f53.jpg",
@@ -181,11 +177,11 @@
     "static/media/client5img7.jpg": "/static/media/client5img7.d5128b14b4c433900604.jpg",
     "index.html": "/index.html",
     "main.abe83c91.css.map": "/static/css/main.abe83c91.css.map",
-    "main.cd1a9fc8.js.map": "/static/js/main.cd1a9fc8.js.map",
+    "main.9f0bb523.js.map": "/static/js/main.9f0bb523.js.map",
     "453.f9af8ee5.chunk.js.map": "/static/js/453.f9af8ee5.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.abe83c91.css",
-    "static/js/main.cd1a9fc8.js"
+    "static/js/main.9f0bb523.js"
   ]
 }
