@@ -204,6 +204,21 @@ const hookupRegistrationFee=500
 //functions start
 
 
+async function PayTrader(contact,amount){
+  db.collection('traders').find({contact:parseInt(contact)}).toArray().then(resp=>{
+if(resp.length==0){}else{
+let traderDetailsObj=resp[0]
+traderDetailsObj.cashOutBal+=amount;
+db.collection('traders').replaceOne({contact:contact},traderDetailsObj,{upsert:true}).then(resp=>{
+  ;
+})
+
+
+
+}
+  })
+}
+
 
 async function InstantiateTraderModel(kayaserObj){
   
@@ -819,6 +834,7 @@ app.get('/updateOpinionVisits/:client', (req,res)=>{db.collection('clientopinion
 app.get('/pubarticle/:id', (req,res)=>{
     
     db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
+      let article=array[0];
       
 if(array.length==0){
   res.send(array)
@@ -836,6 +852,14 @@ if(array.length==0){
 })
 
 db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{visits:array[0].visits+1}}).then(resp=>{
+  if (article.visits%3==0){
+
+PayTrader(parseInt(article.contact),15)
+
+  }else{
+
+  }
+  
   
   ;})
 
@@ -960,12 +984,15 @@ try{
   // new
   db.collection('kayasers').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
   try{
+
+
     let traderDetailsObj,kayaserDetailsObj
      if(resp.length==0){
     res.send([])
        
      }else{
        kayaserDetailsObj=resp[0]
+
     
    db.collection('traders').find({contact:parseInt(kayaserDetailsObj.contact)}).toArray().then(async (resp)=>{
    if(resp.length==0){
@@ -1023,6 +1050,16 @@ try{
      }else{}
    
    //check for createAttendanceRegisterTokens
+
+
+//check for permission to earn from Kayas
+if(traderDetailsObj.permissionTokensObj.allowedToEarnFromKayas==undefined){
+  traderDetailsObj.permissionTokensObj.allowedToEarnFromKayas=true
+  }else{}
+
+//check for permission to earn from Kayas
+
+
      //check for addContacttoRegisterTokens
      if(traderDetailsObj.permissionTokensObj.addContactToRegisterTokens==undefined){
       traderDetailsObj.permissionTokensObj.addContactToRegisterTokens=0
@@ -2894,7 +2931,7 @@ while(searchAgain==1)
 
 pubArticleModel({id:parseInt(newId),visits:1,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"off",recentCommentOnTop:"off"})
 .save().then((resp)=>{
-
+  PayTrader(parseInt(resp.contact),150)
 res.send({msg:"Article created",contact:resp.contact,id:resp.id,headline1:resp.headline1})
 })
 
