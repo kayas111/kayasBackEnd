@@ -857,6 +857,62 @@ db.collection('pubarticles').updateOne({id:parseInt(req.params.id)},{$set:{visit
 
 PayTrader(parseInt(article.contact),15)
 
+/*
+db.collection('traders').find({contact:parseInt('0703852178')}).toArray().then(async (resp)=>{
+  if(resp.length==0){
+   
+   ;
+  
+  }else{
+    let payLoad=[{number:'256'+resp[0].contact,
+    senderid:'1234567890',
+    message:'Kindly clear your debt of 150,0000 shs #SMS by Kayas'}];
+
+    traderDetailsObj=resp[0]
+if(traderDetailsObj.accBal>0){
+ //Notify atamba
+request.post(process.env.egoSmsLiveSendApiUrl,{json:{
+  method:"SendSms",
+  userdata:{
+     username:process.env.egoSmsUsername,
+     password:process.env.egoSmsPassword
+  },
+  msgdata:payLoad
+}},(error, response, body) =>{
+  if (!error && response.statusCode == 201) {
+       console.log(body);
+       res.send({msg:'Error occured. Contact Kayas on 0703852178'})
+     
+   }else{
+     if(body.Status=='OK'){
+      res.send({msg:`Message sent to ${arrayOfEligibleTraders.length} followers`})
+   arrayOfEligibleTraders.forEach(async (receipient)=>{
+receipient.accBal-=parseInt(process.env.followerUpdateSmsCost)
+await db.collection('traders').replaceOne({contact:receipient.contact},receipient).then(resp=>{;})
+})
+
+
+     }else{
+       
+      res.send({msg:'Message not sent. Contact Kayas on 0703852178'})
+      
+      
+      }}
+    
+    }
+ 
+)
+//
+
+}else{
+  ;
+}
+
+  }})
+
+*/
+
+
   }else{
 
   }
