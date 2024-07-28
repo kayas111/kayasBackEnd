@@ -3215,6 +3215,7 @@ app.post('/setAttendeeRegisterMessagee',bodyParser.json(),(req,res)=>{
    
   })
 })
+
 app.post('/setAttendeeRegisterSms',bodyParser.json(),(req,res)=>{
 
   db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{smsmessage:req.body.smsmessage}}).then(resp=>{
