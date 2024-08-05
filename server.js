@@ -34,10 +34,7 @@ const bcrypt=require('bcrypt')
 var formidable = require('formidable');
 let onlineDb="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority",localDb="mongodb://localhost:27017"
 const dbURI=onlineDb
- 
-
-const port=process.env.PORT || 4000
-
+ const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
     console.log(port)
@@ -82,15 +79,17 @@ Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayas7EmailApiCredent
     */
     //db.collection('traders').updateOne({contact:755643774},{$set:{accBal:1230000}}).then(resp=>{console.log(resp)})
   
-/*
-  
-      db.collection('registers').find({contact:755643774,registerId:20}).toArray().then(resp=>{
+
+  /*
+      db.collection('registers').find({contact:777929447,registerId:0}).toArray().then(resp=>{
      
         
     
  let list=resp[0].attendees,attendanceRegister=resp,final=[]
+list=list.slice(0,279);
+
  list.forEach(receip=>{
-  message=`${receip.name}, you've received a reminder to attend BANG today at 4:30pm, usual venue. Theme "Reviewing The Whole Semester", thanks. 0755643774`
+  message=`3days trip organized by FRANGO TOURS & TRAVELS will be taking place on 16-18th Aug at 250000 for everything. Contact Frank on 0755942387 for more`
 
 
   receip.number='256'+receip.contact,
@@ -99,7 +98,9 @@ Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayas7EmailApiCredent
 final.push(receip)
 })
 
+
 console.log(final)
+console.log(final.length)
 request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
     method:"SendSms",
     userdata:{
@@ -122,15 +123,15 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
      
       })
 
-  */
+*/
  
 
 //
 
 
 /*
-let file=excel.readFile('../readExcel/Appreciate a lady.xlsx')
-
+let file=excel.readFile('../readExcel/FRESHERS CONTACTS.xlsx')
+console.log('Ensure name field is filled with any information..............')
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
 
@@ -149,8 +150,8 @@ db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}
 
 
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
-*/
 
+*/
 
   
 
@@ -1097,7 +1098,7 @@ try{
    
    //check for sendSmsTokens
    if(traderDetailsObj.permissionTokensObj.sendSmsTokens==undefined){
-   traderDetailsObj.permissionTokensObj.sendSmsTokens=5
+   traderDetailsObj.permissionTokensObj.sendSmsTokens=100
    }else{}
    //check for sendSmsTokens
    
@@ -1400,6 +1401,38 @@ app.get('/fetchArticle/:id',(req,res)=>{
 
 
 //posts to the database
+
+
+app.post('/searchForArticles',(req,res)=>{
+  let articles=[]
+  db.collection('pubarticles').find().toArray().then(resp=>{
+
+
+  resp.forEach(article=>{
+   let headlineComponentWords=article.headline1.split(" "),searchComponentWords=req.body.articleSearchValue.split(" ");
+
+   searchComponentWords.forEach(searchWord=>{
+if(headlineComponentWords.includes(searchWord)){
+
+  articles.push(article)
+}else{
+;
+
+}
+
+   })
+
+  
+  })
+
+
+res.send(articles)
+
+
+
+
+  })
+})
 app.post('/saveLink',(req,res)=>{
 
  try{
