@@ -1408,13 +1408,14 @@ app.post('/searchForArticles',(req,res)=>{
   db.collection('pubarticles').find().toArray().then(resp=>{
 
 
+
   resp.forEach(article=>{
    let headlineComponentWords=article.headline1.toLowerCase().split(" "),searchComponentWords=req.body.articleSearchValue.toLowerCase().split(" ");
 
    searchComponentWords.forEach(searchWord=>{
 if(headlineComponentWords.includes(searchWord)){
 
-  articles.push(article)
+  articles.push(article);
 }else{
 ;
 
