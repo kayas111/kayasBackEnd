@@ -33,7 +33,7 @@ mongoose.set('strictQuery', false)
 const bcrypt=require('bcrypt')
 var formidable = require('formidable');
 let onlineDb="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority",localDb="mongodb://localhost:27017"
-const dbURI=onlineDb
+const dbURI=localDb
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log("Listening on port")
@@ -1409,7 +1409,7 @@ app.post('/searchForArticles',(req,res)=>{
 
 
   resp.forEach(article=>{
-   let headlineComponentWords=article.headline1.split(" "),searchComponentWords=req.body.articleSearchValue.split(" ");
+   let headlineComponentWords=article.headline1.toLowerCase().split(" "),searchComponentWords=req.body.articleSearchValue.toLowerCase().split(" ");
 
    searchComponentWords.forEach(searchWord=>{
 if(headlineComponentWords.includes(searchWord)){
