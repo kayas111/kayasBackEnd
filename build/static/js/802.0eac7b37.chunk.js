@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[802],{3802:(e,s,t)=>{t.r(s),t.d(s,{CheapItems:()=>n,default:()=>d});var i=t(579);function n(){return(0,i.jsxs)("div",{style:{padding:"3px"},children:[(0,i.jsx)("div",{style:{fontSize:"18px"},children:"About the items"}),(0,i.jsx)("div",{children:"These are items being sold by students from their hostel rooms at campus."}),(0,i.jsx)("div",{children:"Join group"})]})}const d=n}}]);
+//# sourceMappingURL=802.0eac7b37.chunk.js.map

@@ -167,6 +167,7 @@ const quotesModel = require('./models/model').quotes;
 
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const opinionModel = require('./models/model').opinionModel;
+const marqueeNewsModel = require('./models/model').marqueeNewsModel
 const hookupsModel =require('./models/model').hookupsModel
 const pubArticleModel=require('./models/model').pubArticleModel;
 const permissionTokensModel=require('./models/model').permissionTokensModel;
@@ -426,6 +427,18 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(express.json())
 //access database by get
+
+app.get('/getMarqueeNews',(req,res)=>{
+  try{
+    db.collection('marqueenews').find().toArray().then(resp=>{
+      res.send(resp)
+      
+    })
+  }catch(err){
+console.log(err)
+  }
+})
+
 app.get('/getLinks', (req,res)=>{
 
   db.collection('links').find().toArray().then(resp=>{
@@ -1401,6 +1414,37 @@ app.get('/fetchArticle/:id',(req,res)=>{
 
 
 //posts to the database
+app.post('/deleteMarqueeNews',(req,res)=>{
+  try{
+  
+    db.collection('marqueenews').deleteOne({_id:new ObjectId(req.body.id)}).then(resp=>{
+      
+      res.send(resp)
+      
+    })
+  }catch(err){
+console.log(err)
+  }
+})
+app.post('/postNewsMarquee',(req,res)=>{
+  try{
+let payLoad=req.body
+console.log(req.body)
+
+marqueeNewsModel(payLoad).save().then(resp=>{
+
+res.send({success:true})
+})
+
+
+
+
+
+  }catch(err){
+    console.log(err)
+  }
+})
+
 
 
 app.post('/searchForArticles',(req,res)=>{
