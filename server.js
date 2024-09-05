@@ -130,7 +130,7 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
 
 /*
-let file=excel.readFile('../readExcel/FRESHERS CONTACTS.xlsx')
+let file=excel.readFile('../readExcel/freshersevening.xlsx')
 console.log('Ensure name field is filled with any information..............')
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
@@ -146,13 +146,13 @@ final.push(attendee)
 }
 })
 console.log(final)
-db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed and pushed to messager")}) 
+db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).
+then(resp=>{console.log("completed and pushed to messager")}) 
 
 
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
 
 */
-
   
 
 }))
@@ -3348,26 +3348,13 @@ else{
   traderDetailsObj.permissionTokensObj.sendSmsTokens=traderDetailsObj.permissionTokensObj.sendSmsTokens-1
   db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj).then(resp=>{
     
-    res.send(['<div style="color:green;">Message sent!</div>'])
+    res.send(['Message sent'])
   })
   
 
 }
 
       
- 
-
-
-
-/*
-    db.collection('traders').updateOne({contact:req.body.registrarContact},{$set:{accBal:originalAccBal-smsCost,sendSmsTokens:originalSendSmsTokens-1}})
-    .then(resp=>{
-  
-    res.send(['<div style="color:green;">Message sent!</div>'])
-    
-    
-    })
-    */
 
 
     })
