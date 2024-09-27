@@ -157,6 +157,7 @@ then(resp=>{console.log("completed and pushed to messager")})
   
 
 
+
 }))
 let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
 webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
