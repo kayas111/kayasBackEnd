@@ -3066,9 +3066,11 @@ searchAgain=1
 
 }}
 while(searchAgain==1)
+let payLoad={id:parseInt(newId),visits:1,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"off",recentCommentOnTop:"off"}
 
-pubArticleModel({id:parseInt(newId),visits:1,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"off",recentCommentOnTop:"off"})
+pubArticleModel(payLoad)
 .save().then((resp)=>{
+  
   PayTrader(parseInt(resp.contact),150)
 res.send({msg:"Article created",contact:resp.contact,id:resp.id,headline1:resp.headline1})
 })

@@ -105,7 +105,7 @@ const pubArticleSchema=new Func({
     },
     body:{
         type:String,
-        required:true
+        required:false
     },
     pubArticleOpinions:{
         type:[],
@@ -126,7 +126,7 @@ const pubArticleSchema=new Func({
             required:true
         }
 },{timestamps:true,strict:false})
-let pubArticleModel=mongoose.model('pubarticles',pubArticleSchema)
+module.exports.pubArticleModel=mongoose.model('pubarticles',pubArticleSchema)
 const monitoredOpinionSchema=new mongoose.Schema({name:String,msg:String,contact:Number,clientId:String},{strict:false})
 let monitoredOpinionsModel=mongoose.model('monitoredopinions',monitoredOpinionSchema)
 let articleGrantModel=mongoose.model('articlegrants',new mongoose.Schema({name:String},{strict:false}))
@@ -134,7 +134,7 @@ const messagerSchema=new mongoose.Schema({contact:Number},{strict:false})
 let messagerModel=mongoose.model('messagees',messagerSchema)
 module.exports.articleGrantModel=articleGrantModel
 module.exports.messagerModel=messagerModel
-module.exports.pubArticleModel=pubArticleModel
+
 
 
 
@@ -143,6 +143,8 @@ module.exports.campus=campusModel
 module.exports.opinionModel=opinionModel
 module.exports.comments=commentsModel
 module.exports.registrationModel=mongoose.model('kayasers',new mongoose.Schema({dynamic:String},{strict:false}))
+
+
 module.exports.pendingRegistration=pendingRegistrationModel
 module.exports.quotes=quotesModel
 
@@ -164,7 +166,7 @@ module.exports.linkModel=mongoose.model('links',new mongoose.Schema({},{strict:f
 module.exports.followingsModel=mongoose.model('followings',new mongoose.Schema({},{strict:false}))
 module.exports.marqueeNewsModel=mongoose.model('marqueenews',new mongoose.Schema({},{strict:false}))
 module.exports.imageModel=mongoose.model('images',new mongoose.Schema({img:{data: Buffer,contentType: String}},{strict:false}))
-
+//module.exports.pubArticleModel=mongoose.model('pubarticles',new mongoose.Schema({dynamic:String},{strict:false}))
 
 
 
