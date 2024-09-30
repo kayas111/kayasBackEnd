@@ -3075,6 +3075,7 @@ pubArticleModel(payLoad)
 res.send({msg:"Article created",contact:resp.contact,id:resp.id,headline1:resp.headline1})
 })
 
+
   })
 }catch(err){
   console.log("Kayas the error originated from trying to create an article and it is:")
