@@ -3071,6 +3071,7 @@ let payLoad={id:parseInt(newId),visits:1,headline1:req.body.headline1,author:req
 
 
 
+
 pubArticleModel(payLoad)
 .save().then((resp)=>{
   
