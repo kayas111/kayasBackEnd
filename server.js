@@ -172,6 +172,7 @@ const quotesModel = require('./models/model').quotes;
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const opinionModel = require('./models/model').opinionModel;
 const marqueeNewsModel = require('./models/model').marqueeNewsModel
+const bnplTransactionModel = require('./models/model').bnplTransactionModel
 const hookupsModel =require('./models/model').hookupsModel
 const pubArticleModel=require('./models/model').pubArticleModel;
 const permissionTokensModel=require('./models/model').permissionTokensModel;
@@ -1097,6 +1098,23 @@ try{
   }else{}
   }else{}
 
+//check for bnplObj
+if(traderDetailsObj.bnpl==undefined || traderDetailsObj.bnpl!=undefined ){
+  if(traderDetailsObj.bnpl==undefined){
+  traderDetailsObj.bnpl={}
+  }else{;}
+
+if(traderDetailsObj.bnpl.isEligible==undefined){
+  traderDetailsObj.bnpl.isEligible=false
+}else{}
+if(traderDetailsObj.bnpl.debt==undefined){
+  traderDetailsObj.bnpl.debt=0
+}else{}
+
+  }else{}
+
+
+
    //check for pagesVisitsNo
    if(traderDetailsObj.pagesVisitsNo==undefined || traderDetailsObj.pagesVisitsNo!=undefined ){
    if(traderDetailsObj.pagesVisitsNo==undefined){
@@ -1415,9 +1433,52 @@ app.get('/fetchArticle/:id',(req,res)=>{
    })
 })
 
-
+app.get('/bnplTransactions',(req,res)=>{
+  try{
+db.collection('bnpltransactions').find().toArray().then(arrayOfTransactions=>{
+  res.send(arrayOfTransactions)
+})
+  }catch(err){
+    console.log(err)
+  }
+})
 
 //posts to the database
+
+app.post('/completeBnplTransaction',(req,res)=>{
+  try{
+    let bnplPayLoad=req.body
+   db.collection('traders').updateOne({contact:bnplPayLoad.contact},{$inc:{'bnpl.debt':bnplPayLoad.bill}}).then(resp=>{
+    
+if(resp.modifiedCount==1){
+
+db.collection('kayasers').find({contact:bnplPayLoad.contact}).toArray().then(resp=>{
+let kayaser=resp[0]
+
+emailReceipientsArray=[kayaser.email]
+Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayasEmailApiCredentialsObj),arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'#',subject:`BNPL debit of ${bnplPayLoad.bill}`,html:`<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Debit transaction successful.</div>You have successfully been debited with ${bnplPayLoad.bill} Ugandan shillings for receiving a credit service from ${bnplPayLoad.label}.<p></p>You received ${bnplPayLoad.description}. Thank you.<p></p>Kayas<br></br>0703852178 (WhatsApp)</div>`}).then(resp=>{
+;
+})
+})
+res.send({success:true})
+}else{
+  res.send({success:false})
+}
+
+
+   })
+
+bnplTransactionModel(bnplPayLoad).save().then(resp=>{
+  ;
+})
+
+
+  }catch(err){
+console.log(err)
+  }
+})
+
+
 app.post('/deleteMarqueeNews',(req,res)=>{
   try{
   
@@ -1522,11 +1583,11 @@ res.send({msg:'Url already exists'})
 
 
 })
+
+
 app.post('/updateTraderDetails',(req,res)=>{
 
 let receivedObj=req.body
-
-
 switch(receivedObj.method){// method is update either as kayaser or as admin
   case 'updateAsKayaser':{
 
@@ -1598,7 +1659,32 @@ break;
    case 'updateAsAdmin':{
 
     switch(receivedObj.argsObj.fieldToUpdate){
-
+      case 'bnplDebt':{
+   db.collection('traders').find({contact:receivedObj.argsObj.contact}).toArray().then(resp=>{
+      if(resp.length==0){
+        res.send({msg:'Trader details do not exist.'})
+      }else{
+      let traderDetailsObj=resp[0]
+      
+      db.collection('traders').updateOne({contact:traderDetailsObj.contact},{$set:{'bnpl.debt':receivedObj.argsObj.amount}}).
+      
+      then(resp=>{
+        if(resp.modifiedCount==1){
+          res.send({msg:'Successful'})
+        }else if(resp.modifiedCount==0){
+          res.send({msg:'Upto debt'})
+        }else{
+          res.send({msg:'Unsuccessful'})
+        }
+      })
+      
+      
+      
+      }
+        })
+      
+          break;
+        }
       case 'sendSmsTokens':{
    
         db.collection('traders').find({contact:receivedObj.argsObj.traderContact}).toArray().then(resp=>{
