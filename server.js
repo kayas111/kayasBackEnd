@@ -1105,7 +1105,7 @@ if(traderDetailsObj.bnpl==undefined || traderDetailsObj.bnpl!=undefined ){
   }else{;}
 
 if(traderDetailsObj.bnpl.isEligible==undefined){
-  traderDetailsObj.bnpl.isEligible=false
+  traderDetailsObj.bnpl.isEligible=0
 }else{}
 if(traderDetailsObj.bnpl.debt==undefined){
   traderDetailsObj.bnpl.debt=0
@@ -1655,11 +1655,50 @@ break;
 
    }
   
-   
+
 
    case 'updateAsAdmin':{
 
     switch(receivedObj.argsObj.fieldToUpdate){
+      case 'bnplEligibility':{
+
+        
+        db.collection('traders').find({contact:receivedObj.argsObj.traderContact}).toArray().then(resp=>{
+          
+           if(resp.length==0){
+            
+             res.send({msg:'Trader details do not exist.'})
+           }else{
+           let traderDetailsObj=resp[0]
+         
+           db.collection('traders').updateOne({contact:traderDetailsObj.contact},[{$set:{'bnpl.isEligible':{$not:"$bnpl.isEligible"}}}]).
+           
+           then(resp=>{
+             if(resp.modifiedCount==1){
+if(traderDetailsObj.bnpl.isEligible==true){
+  res.send({msg:`Successfully turned off`})
+}else{
+  res.send({msg:`Successfully turned on`})
+}
+
+
+               
+             }else if(resp.modifiedCount==0){
+               res.send({msg:'Upto debt'})
+             }else{
+               res.send({msg:'Unsuccessful'})
+             }
+           })
+           
+           
+           
+           }
+             })
+           
+               break;
+             }
+      
+      
       case 'bnplDebt':{
    db.collection('traders').find({contact:receivedObj.argsObj.contact}).toArray().then(resp=>{
       if(resp.length==0){
