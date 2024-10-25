@@ -38,9 +38,8 @@ let onlineDb="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?ret
 const dbURI=onlineDb
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
-    console.log("Listening on port")
-    console.log(port)
-    
+    console.log(`Listening on port ${port}`)
+     
          
 //credentialsObj,arrayOfEmailReceipients,responseUrl,subject,html
 //nsibirwa emails
@@ -173,7 +172,8 @@ const quotesModel = require('./models/model').quotes;
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const opinionModel = require('./models/model').opinionModel;
 const marqueeNewsModel = require('./models/model').marqueeNewsModel
-const bnplTransactionModel = require('./models/model').bnplTransactionModel
+const bnplTransactionModel = require('./models/model').bnplTransactionModel 
+const bnplbnplDailyPromotionsModel = require('./models/model').bnplDailyPromotionsModel
 const hookupsModel =require('./models/model').hookupsModel
 const pubArticleModel=require('./models/model').pubArticleModel;
 const permissionTokensModel=require('./models/model').permissionTokensModel;
@@ -772,15 +772,26 @@ app.get('/collection_monitoredopinions_number', (req,res)=>{db.collection('monit
 app.get('/collection_monitoredopinions_opinions', (req,res)=>{db.collection('monitoredopinions').find().toArray().then((array)=>{res.send(array)})})
 app.get('/collection_multidocs_monitoredArticleOpinions', (req,res)=>{
   
-
 try{
-  db.collection('multidocs').find({desc:'monitoredArticleOpinions'}).toArray().then((array)=>{res.send(array[0].opinions)})
+  db.collection('multidocs').find({desc:'monitoredArticleOpinions'}).toArray()
+  .then((array)=>{
+    
+  if(array.length==0){
+    ;
+  }else{
+    res.send(array[0].opinions)
+  }
+  
+  
+  })
 }catch(err){
   console.log('Error at collection_multidocs_monitoredArticleOpinions ')
   console.log(err)
 }
 
 })
+
+
 app.get('/universityContacts', (req,res)=>{
 
 db.collection('multidocs').find({desc:{$in:['mukContacts','nduContacts','mubsContacts','mukEducation']}}).toArray().then((array)=>{
@@ -1111,7 +1122,9 @@ if(traderDetailsObj.bnpl.isEligible==undefined){
 if(traderDetailsObj.bnpl.debt==undefined){
   traderDetailsObj.bnpl.debt=0
 }else{}
-
+if(traderDetailsObj.bnpl.promotionTokens==undefined){
+  traderDetailsObj.bnpl.promotionTokens=0
+}else{}
   }else{}
 
 
@@ -1444,6 +1457,19 @@ db.collection('bnpltransactions').find().toArray().then(arrayOfTransactions=>{
   }
 })
 
+
+app.get('/totalBnplDailyPromotions',(req,res)=>{
+  try{
+db.collection('bnpldailypromotions').find().toArray().then(arrayOfReceipients=>{
+  res.send(arrayOfReceipients)
+})
+  }catch(err){
+    console.log(err)
+  }
+})
+
+
+
 //posts to the database
 
 app.post('/completeBnplTransaction',(req,res)=>{
@@ -1644,6 +1670,35 @@ switch(receivedObj.method){// method is update either as kayaser or as admin
        }
 
 
+       case 'bnplPromotionTokens':{
+   try {
+            db.collection('bnpldailypromotions').find({contact:parseInt(receivedObj.argsObj.traderContact)}).toArray()
+           .then(resp=>{
+            
+if(resp.length>1){
+res.send({msg:"You've reached your maximum daily limit. Tomorrow again."})
+}else{
+  db.collection('traders').updateOne({contact:parseInt(receivedObj.argsObj.traderContact)},[{$set:{'bnpl.promotionTokens':{$add:["$bnpl.promotionTokens",1]}}}]).then(resp=>{
+    if(resp.modifiedCount==1){
+bnplbnplDailyPromotionsModel({contact:parseInt(receivedObj.argsObj.traderContact)}).save().then(resp=>{
+  res.send({success:1,msg:'Successful discount of 1,000shs'})
+ })
+
+          }else{
+      res.send({success:0,msg:'Not successful'})
+  
+    }
+  
+     })
+}
+           })
+
+       break;
+           } catch (error) {
+            console.log(error)
+           }
+       
+       }
 
     default:{
       res.send({success:0})
@@ -1663,40 +1718,44 @@ break;
     switch(receivedObj.argsObj.fieldToUpdate){
       case 'bnplEligibility':{
 
-        
+      try {
+          
         db.collection('traders').find({contact:receivedObj.argsObj.traderContact}).toArray().then(resp=>{
           
-           if(resp.length==0){
-            
-             res.send({msg:'Trader details do not exist.'})
-           }else{
-           let traderDetailsObj=resp[0]
-         
-           db.collection('traders').updateOne({contact:traderDetailsObj.contact},[{$set:{'bnpl.isEligible':{$not:"$bnpl.isEligible"}}}]).
+          if(resp.length==0){
            
-           then(resp=>{
-             if(resp.modifiedCount==1){
+            res.send({msg:'Trader details do not exist.'})
+          }else{
+          let traderDetailsObj=resp[0]
+        
+          db.collection('traders').updateOne({contact:traderDetailsObj.contact},[{$set:{'bnpl.isEligible':{$not:"$bnpl.isEligible"}}}]).
+          
+          then(resp=>{
+            if(resp.modifiedCount==1){
 if(traderDetailsObj.bnpl.isEligible==true){
-  res.send({msg:`Successfully turned off`})
+ res.send({msg:`Successfully turned off`})
 }else{
-  res.send({msg:`Successfully turned on`})
+ res.send({msg:`Successfully turned on`})
 }
 
 
-               
-             }else if(resp.modifiedCount==0){
-               res.send({msg:'Upto debt'})
-             }else{
-               res.send({msg:'Unsuccessful'})
-             }
-           })
-           
-           
-           
-           }
-             })
-           
-               break;
+              
+            }else if(resp.modifiedCount==0){
+              res.send({msg:'Upto debt'})
+            }else{
+              res.send({msg:'Unsuccessful'})
+            }
+          })
+          
+          
+          
+          }
+            })
+          
+              break;
+      } catch (error) {
+        console.log(error)
+      }
              }
       
       

@@ -166,6 +166,7 @@ module.exports.linkModel=mongoose.model('links',new mongoose.Schema({},{strict:f
 module.exports.followingsModel=mongoose.model('followings',new mongoose.Schema({},{strict:false}))
 module.exports.marqueeNewsModel=mongoose.model('marqueenews',new mongoose.Schema({},{strict:false}))
 module.exports.bnplTransactionModel=mongoose.model('bnpltransactions',new mongoose.Schema({},{strict:false}))
+module.exports.bnplDailyPromotionsModel=mongoose.model('bnpldailypromotions',new mongoose.Schema({},{strict:false}))
 module.exports.imageModel=mongoose.model('images',new mongoose.Schema({img:{data: Buffer,contentType: String}},{strict:false}))
 //module.exports.pubArticleModel=mongoose.model('pubarticles',new mongoose.Schema({dynamic:String},{strict:false}))
 
