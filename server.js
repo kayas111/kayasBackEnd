@@ -1457,7 +1457,6 @@ db.collection('bnpltransactions').find().toArray().then(arrayOfTransactions=>{
   }
 })
 
-
 app.get('/totalBnplDailyPromotions',(req,res)=>{
   try{
 db.collection('bnpldailypromotions').find().toArray().then(arrayOfReceipients=>{
