@@ -173,6 +173,7 @@ const webPushSubscriptionModel = require('./models/model').webPushSubscriptionMo
 const opinionModel = require('./models/model').opinionModel;
 const marqueeNewsModel = require('./models/model').marqueeNewsModel
 const bnplTransactionModel = require('./models/model').bnplTransactionModel 
+const foodDeliveryRequestModel=require('./models/model').foodDeliveryRequestModel
 const bnplbnplDailyPromotionsModel = require('./models/model').bnplDailyPromotionsModel
 const hookupsModel =require('./models/model').hookupsModel
 const pubArticleModel=require('./models/model').pubArticleModel;
@@ -1467,10 +1468,31 @@ db.collection('bnpldailypromotions').find().toArray().then(arrayOfReceipients=>{
   }
 })
 
+app.get('/fooddeliveryrequests',(req,res)=>{
+  try{
+db.collection('fooddeliveryrequests').find().toArray().then(arrayOfDeliveryRequests=>{
+  res.send(arrayOfDeliveryRequests)
+})
+  }catch(err){
+    console.log(err)
+  }
+})
+
 
 
 //posts to the database
-
+app.post('/requestFoodDelivery',(req,res)=>{
+  try {
+    let payLoad=req.body
+    
+    foodDeliveryRequestModel(payLoad).save().then(resp=>{
+      
+      res.send({msg:'Your delivery will arrive in less than 15 minutes, please stay in your location. Thank you.'})
+    })
+  } catch (error) {
+    console.log(error)
+  }
+})
 app.post('/completeBnplTransaction',(req,res)=>{
   try{
     let bnplPayLoad=req.body
