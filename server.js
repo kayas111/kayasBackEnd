@@ -1468,6 +1468,7 @@ db.collection('bnpldailypromotions').find().toArray().then(arrayOfReceipients=>{
   }
 })
 
+
 app.get('/fooddeliveryrequests',(req,res)=>{
   try{
 db.collection('fooddeliveryrequests').find().toArray().then(arrayOfDeliveryRequests=>{
