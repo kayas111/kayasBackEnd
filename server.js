@@ -171,6 +171,7 @@ const quotesModel = require('./models/model').quotes;
 
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const opinionModel = require('./models/model').opinionModel;
+const systemControlsModel = require('./models/model').systemControlsModel;
 const marqueeNewsModel = require('./models/model').marqueeNewsModel
 const bnplTransactionModel = require('./models/model').bnplTransactionModel 
 const foodDeliveryRequestModel=require('./models/model').foodDeliveryRequestModel
@@ -1485,8 +1486,19 @@ db.collection('fooddeliveryrequests').find().toArray().then(arrayOfDeliveryReque
 
 
 
-//posts to the database
 
+//posts to the database
+app.post('/systemcontrols',(req,res)=>{
+  try {
+    let payLoad=req.body
+   db.collection('controls').find().toArray().then(resp=>{
+    console.log(resp)
+   })
+   
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 app.post('/foodDeliveryComment',(req,res)=>{
   try {
