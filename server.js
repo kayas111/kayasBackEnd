@@ -174,6 +174,7 @@ const opinionModel = require('./models/model').opinionModel;
 const marqueeNewsModel = require('./models/model').marqueeNewsModel
 const bnplTransactionModel = require('./models/model').bnplTransactionModel 
 const foodDeliveryRequestModel=require('./models/model').foodDeliveryRequestModel
+const foodDeliveryCommentModel=require('./models/model').foodDeliveryCommentModel
 const bnplbnplDailyPromotionsModel = require('./models/model').bnplDailyPromotionsModel
 const hookupsModel =require('./models/model').hookupsModel
 const pubArticleModel=require('./models/model').pubArticleModel;
@@ -1483,14 +1484,29 @@ db.collection('fooddeliveryrequests').find().toArray().then(arrayOfDeliveryReque
 
 
 
+
 //posts to the database
+
+app.post('/foodDeliveryComment',(req,res)=>{
+  try {
+    let payLoad=req.body
+    foodDeliveryCommentModel(payLoad).save().then(resp=>{
+      
+      res.send({msg:'Sent successfully'})
+    })
+   
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 app.post('/requestFoodDelivery',(req,res)=>{
   try {
     let payLoad=req.body
     
     foodDeliveryRequestModel(payLoad).save().then(resp=>{
       
-      res.send({msg:'Your delivery will arrive in less than 15 minutes, please stay in your location. Thank you.'})
+      res.send({msg:'Your delivery will arrive in less than 15 minutes, please stay in your location. Comment on the food after eating using the form below. Thank you.'})
     })
   } catch (error) {
     console.log(error)
