@@ -171,7 +171,7 @@ const quotesModel = require('./models/model').quotes;
 
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const opinionModel = require('./models/model').opinionModel;
-const systemControlsModel = require('./models/model').systemControlsModel;
+const controlsModel = require('./models/model').controlsModel;
 const marqueeNewsModel = require('./models/model').marqueeNewsModel
 const bnplTransactionModel = require('./models/model').bnplTransactionModel 
 const foodDeliveryRequestModel=require('./models/model').foodDeliveryRequestModel
@@ -1484,21 +1484,111 @@ db.collection('fooddeliveryrequests').find().toArray().then(arrayOfDeliveryReque
 })
 
 
-
-
-
-//posts to the database
-app.post('/systemcontrols',(req,res)=>{
+app.get('/getControls',(req,res)=>{
   try {
     let payLoad=req.body
-   db.collection('controls').find().toArray().then(resp=>{
-    console.log(resp)
+    
+   db.collection('controls').find({desc:'systemControls'}).toArray().then(resp=>{
+    
+    if(resp.length==0){
+      controlsModel({desc:"systemControls"}).save().then(resp=>{
+        ;
+      })
+    }else{
+let controlsDoc=resp[0]
+
+if(controlsDoc.foodDeliveryControls==undefined || controlsDoc.foodDeliveryControls!=undefined){
+  if(controlsDoc.foodDeliveryControls==undefined){
+    controlsDoc.foodDeliveryControls={}
+  }else{
+if(controlsDoc.foodDeliveryControls.deliveryServiceIsOn==undefined){
+  controlsDoc.foodDeliveryControls.deliveryServiceIsOn=true
+}else{;}
+
+if(controlsDoc.foodDeliveryControls.deliveryServiceNotice==undefined){
+  controlsDoc.foodDeliveryControls.foodDeliveryServiceNotice='Delivery service is unavailable, try again later.'
+}else{;}
+
+
+
+  }
+
+}else{}
+
+db.collection('controls').replaceOne({desc:'systemControls'},controlsDoc,{upsert:true}).then(resp=>{
+  res.send([controlsDoc])
+
+})
+
+    }
    })
    
   } catch (error) {
     console.log(error)
   }
 })
+
+
+//posts to the database
+
+app.post('/updateControls',(req,res)=>{
+
+try {
+  
+
+  let receivedObj=req.body
+  switch(receivedObj.task){
+    case 'turnFoodDeliveryServiceOnOff':{
+  
+db.collection('controls').updateOne({desc:'systemControls'},[{$set:{"foodDeliveryControls.deliveryServiceIsOn":{$not:"$foodDeliveryControls.deliveryServiceIsOn"}}}]).then(resp=>{
+  if(resp.modifiedCount==true){
+    res.send({msg:'Successful'})
+  }else{
+    res.send({msg:'Not successful'})
+  }
+})
+
+
+break;
+  
+     }
+   
+     case 'updateFoodDeliveryServiceNotice':{
+  db.collection('controls').updateOne({desc:'systemControls'},{$set:{"foodDeliveryControls.foodDeliveryServiceNotice":receivedObj.notice}}).then(resp=>{
+        
+        console.log(resp)
+        if(resp.modifiedCount==true){
+          res.send({msg:'Successful'})
+        }else{
+          res.send({msg:'Not successful, notice could be up to date!'})
+        }
+      })
+      
+      
+      break;
+        
+           }    
+  
+  
+    
+  
+  
+  default:{
+    res.send({success:0})
+    console.log('Case value for method not available')
+  }
+  }
+  
+  
+  
+  
+  
+} catch (error) {
+  console.log(error)
+}
+
+  })
+
 
 app.post('/foodDeliveryComment',(req,res)=>{
   try {
@@ -3250,7 +3340,7 @@ db.collection('articleassessments').deleteMany({articleId:req.body.articleId}).t
 
 
 app.get('/newAvailablePubArticleId',(req,res)=>{
-  console.log('getting.....')
+  
   try{   
     db.collection('pubarticles').find().toArray().then((articlesArray)=>{
   let articleIds=[]
