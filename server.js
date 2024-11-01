@@ -32,7 +32,6 @@ const excel=require('xlsx')
 mongoose.set('strictQuery', false)
 const bcrypt=require('bcrypt') 
 
-
 var formidable = require('formidable');
 let onlineDb="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority",localDb="mongodb://localhost:27017"
 const dbURI=onlineDb
