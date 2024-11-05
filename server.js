@@ -1781,6 +1781,7 @@ if(trader.bnpl.studentDetails==undefined){;}else{
 }
 }
   })
+  
 
 if(studentNoArray.find(studentNo=>{return studentNo==receivedObj.argsObj.studentNo})==undefined){
      db.collection('traders').updateOne({contact:parseInt(receivedObj.argsObj.contact)},{$set:{'bnpl.studentDetails':studentDetails}}).then(resp=>{
