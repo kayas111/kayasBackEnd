@@ -1772,7 +1772,7 @@ switch(receivedObj.method){// method is update either as kayaser or as admin
 
  db.collection('traders').find().toArray().then(array=>{
   let studentNoArray=[]
-  console.log('...........')
+  
   array.forEach(trader=>{
 if(trader.bnpl==undefined){;}else{
 if(trader.bnpl.studentDetails==undefined){;}else{
