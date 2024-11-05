@@ -1762,6 +1762,54 @@ switch(receivedObj.method){// method is update either as kayaser or as admin
   case 'updateAsKayaser':{
 
     switch(receivedObj.argsObj.fieldToUpdate){
+
+
+      case 'addStudentDetails':{
+        try {
+
+ let studentDetails={studentNo:receivedObj.argsObj.studentNo,course:receivedObj.argsObj.course}
+ 
+
+ db.collection('traders').find().toArray().then(array=>{
+  let studentNoArray=[]
+  console.log('...........')
+  array.forEach(trader=>{
+if(trader.bnpl==undefined){;}else{
+if(trader.bnpl.studentDetails==undefined){;}else{
+
+  studentNoArray.push(trader.bnpl.studentDetails.studentNo)
+}
+}
+  })
+
+if(studentNoArray.find(studentNo=>{return studentNo==receivedObj.argsObj.studentNo})==undefined){
+     db.collection('traders').updateOne({contact:parseInt(receivedObj.argsObj.contact)},{$set:{'bnpl.studentDetails':studentDetails}}).then(resp=>{
+            if(resp.modifiedCount==1){
+              res.send({success:1,msg:'Send a WhatsApp message to 0703852178 to complete your verification in less than 30 minutes'})
+        
+                  }else{
+              res.send({success:0,msg:'Not successful, try again'})
+          
+            }
+          
+             })
+}else{
+  res.send({msg:'Not allowed, enter your student number'})
+}
+ })
+
+       
+     
+
+
+            break;
+                } catch (error) {
+                 console.log(error)
+                }
+            
+            }
+
+
       case 'allowFreeSmsSending':{
     
         db.collection('traders').find({contact:parseInt(receivedObj.argsObj.traderContact)}).toArray().then(resp=>{
@@ -1842,6 +1890,9 @@ bnplbnplDailyPromotionsModel({contact:parseInt(receivedObj.argsObj.traderContact
            }
        
        }
+
+
+
 
     default:{
       res.send({success:0})
