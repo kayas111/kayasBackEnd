@@ -1603,6 +1603,8 @@ app.post('/foodDeliveryComment',(req,res)=>{
   }
 })
 
+
+
 app.post('/requestFoodDelivery',(req,res)=>{
   try {
     let payLoad=req.body
@@ -1781,7 +1783,7 @@ if(trader.bnpl.studentDetails==undefined){;}else{
 }
 }
   })
-  
+
 
 if(studentNoArray.find(studentNo=>{return studentNo==receivedObj.argsObj.studentNo})==undefined){
      db.collection('traders').updateOne({contact:parseInt(receivedObj.argsObj.contact)},{$set:{'bnpl.studentDetails':studentDetails}}).then(resp=>{
