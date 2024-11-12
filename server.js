@@ -175,6 +175,7 @@ const marqueeNewsModel = require('./models/model').marqueeNewsModel
 const bnplTransactionModel = require('./models/model').bnplTransactionModel 
 const foodDeliveryRequestModel=require('./models/model').foodDeliveryRequestModel
 const foodDeliveryCommentModel=require('./models/model').foodDeliveryCommentModel
+const queueMemberModel=require('./models/model').queueMemberModel
 const bnplbnplDailyPromotionsModel = require('./models/model').bnplDailyPromotionsModel
 const hookupsModel =require('./models/model').hookupsModel
 const pubArticleModel=require('./models/model').pubArticleModel;
@@ -1603,7 +1604,61 @@ app.post('/foodDeliveryComment',(req,res)=>{
   }
 })
 
+app.post('/queueMethods',(req,res)=>{
+  try {
+    let payLoad=req.body
+    
 
+switch(payLoad.method){
+case 'joinQueue':{
+
+  db.collection('queuemembers').find({contact:parseInt(payLoad.contact)}).toArray().then(array=>{
+    if(array.length==0){
+      
+      queueMemberModel(payLoad).save().then(resp=>{
+        
+        res.send({msg:`Successful. You will be called soon.`})
+      })
+     
+  
+    }else{
+      queueMember=array[0]
+      res.send({msg:`You are already in the queue for service number ${queueMember.serviceType}`})
+    }
+   })
+
+
+
+  break;
+}
+
+case 'leaveQueue':{
+
+  db.collection('queuemembers').deleteOne({contact:parseInt(payLoad.contact)}).then(resp=>{
+    
+    if(resp.deletedCount==1){
+      
+     res.send({msg:'You have successfully left the queue'})
+  
+    }else{
+      res.send({msg:'You are not in any queue'})
+    }
+   })
+
+
+
+  break;
+}
+
+
+}
+
+
+
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 app.post('/requestFoodDelivery',(req,res)=>{
   try {
@@ -2086,6 +2141,7 @@ default:{
   res.send({success:0})
   console.log('Case value for method not available')
 }
+
 }
 
 
