@@ -176,6 +176,7 @@ const bnplTransactionModel = require('./models/model').bnplTransactionModel
 const foodDeliveryRequestModel=require('./models/model').foodDeliveryRequestModel
 const foodDeliveryCommentModel=require('./models/model').foodDeliveryCommentModel
 const queueMemberModel=require('./models/model').queueMemberModel
+const queueTooltellerModel=require('./models/model').queueTooltellerModel
 const bnplbnplDailyPromotionsModel = require('./models/model').bnplDailyPromotionsModel
 const hookupsModel =require('./models/model').hookupsModel
 const pubArticleModel=require('./models/model').pubArticleModel;
@@ -205,7 +206,8 @@ const { ObjectId } = require('mongodb');
 const pagesRouter=require('./routers/pages')
 
 const { kMaxLength } = require('buffer');
-const { CodeChallengeMethod } = require('google-auth-library')
+const { CodeChallengeMethod } = require('google-auth-library');
+const { queueToolTellerModel } = require("./models/model");
 const StringDecoder = require('string_decoder').StringDecoder;
 var d = new StringDecoder('utf-8');
 const registrationFee=500;
@@ -1531,7 +1533,11 @@ db.collection('controls').replaceOne({desc:'systemControls'},controlsDoc,{upsert
 
 
 //posts to the database
-
+app.get('/queuetooltellers',(req,res)=>{
+  db.collection('queuetooltellers').find().sort({tellerNumber:1}).toArray().then(array=>{
+    res.send(array)
+  })
+})
 app.post('/updateControls',(req,res)=>{
 
 try {
@@ -1610,7 +1616,21 @@ app.post('/queueMethods',(req,res)=>{
     
 
 switch(payLoad.method){
-case 'joinQueue':{
+  case 'deleteTeller':{
+
+    db.collection('queuetooltellers').deleteOne({tellerNumber:parseInt(payLoad.tellerNumber)}).then(resp=>{
+ if(resp.deletedCount==1){
+res.send({msg:'Deleted successfully'})
+ } else{
+  res.send({msg:'Failed, try again'})
+ }
+     })
+  
+  
+  
+    break;
+  }
+  case 'joinQueue':{
 
   db.collection('queuemembers').find({contact:parseInt(payLoad.contact)}).toArray().then(array=>{
     if(array.length==0){
@@ -1650,8 +1670,120 @@ case 'leaveQueue':{
 
   break;
 }
+// let queue=[{contact:703852178},{contact:703852179},{contact:703852178},{contact:703852177},{contact:703852176}]
+// 
+case 'checkPosition':{
+
+  db.collection('queuemembers').find({contact:parseInt(payLoad.contact)}).toArray().then(array=>{
+    
+    if(array.length==0){
+      
+     res.send({msg:'You are not in any queue'})
+  
+    }else{
+      
+      db.collection('queuemembers').find({serviceType:parseInt(array[0].serviceType)}).toArray().then(queueArray=>{
+
+let position=queueArray.findIndex(queueMember=>queueMember.contact==parseInt(payLoad.contact))+1 
+
+res.send({msg:`Position ${position} in the queue`})      
+      })
+    }
+   })
 
 
+
+  break;
+}
+
+case 'requestForClient':{
+db.collection('queuemembers').find({serviceType:parseInt(payLoad.serviceType)}).toArray().then(array=>{
+  if(array.length==0){
+      
+     res.send({msg:'No clients in the queue'})
+  
+    }else{
+      let firstQueueMember=array[0],secondQueueMember=array[1]
+    
+
+      request.post('http://www.egosms.co/api/v1/json/',{json:{
+    method:"SendSms",
+    userdata:{
+       username:"kayas",
+       password:"onongeopio"
+    },
+  msgdata:[{number:`256${firstQueueMember.contact}`,senderid:'1234567890',message:`Please go to Teller ${parseInt(payLoad.serviceType)}`}]
+  }}, function (error, response, body) {
+    if (!error && response.statusCode == 201) {
+        console.log(body);
+    }else{
+      console.log(body)
+     // console.log(attendanceRegister)
+       
+    }
+  }
+  
+  )
+
+
+      db.collection('queuemembers').deleteOne({contact:parseInt(firstQueueMember.contact)}).then(resp=>{
+        if(resp.deletedCount==1){
+          res.send({msg:'Successful, please wait for your client'})
+        
+        }else{
+          res.send({msg:'Try again'})
+        }
+      })
+    }
+   })
+
+
+
+  break;
+}
+case 'createNewTeller':{
+  
+  db.collection('queuetooltellers').find().toArray().then(array=>{
+    if(array.length==0){
+      
+      let teller={tellerNumber:1,serviceType:payLoad.serviceType}
+      
+queueToolTellerModel(teller).save().then(resp=>{
+  res.send({msg:'Successfully created new Teller'})
+})
+
+    }else{
+
+
+let tellerNumbers=[]
+array.forEach(teller=>{
+  tellerNumbers.push(teller.tellerNumber)
+})
+let newTellerNumber=1,searchAgain=1
+do{if(tellerNumbers.find(tellerNumber=>{
+return tellerNumber==newTellerNumber
+})==undefined){
+searchAgain=0
+}else{
+newTellerNumber+=1
+searchAgain=1
+
+}}
+while(searchAgain==1)
+
+
+let teller={tellerNumber:parseInt(newTellerNumber),serviceType:payLoad.serviceType}
+queueToolTellerModel(teller).save().then(resp=>{
+  res.send({msg:`Successfully created new Teller for ${resp.serviceType}`})
+})
+    }
+     
+     })
+  
+  
+  
+    break;
+  }
 }
 
 
