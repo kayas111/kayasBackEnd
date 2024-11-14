@@ -1712,6 +1712,7 @@ db.collection('queuemembers').find({serviceType:parseInt(payLoad.serviceType)}).
        username:"kayas",
        password:"onongeopio"
     },
+    
   msgdata:[{number:`256${firstQueueMember.contact}`,senderid:'1234567890',message:`Please go to Teller ${parseInt(payLoad.serviceType)}`}]
   }}, function (error, response, body) {
     if (!error && response.statusCode == 201) {
