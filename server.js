@@ -39,7 +39,7 @@ const dbURI=onlineDb
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
     console.log(`Listening on port ${port}`)
      
-         
+ 
 //credentialsObj,arrayOfEmailReceipients,responseUrl,subject,html
 //nsibirwa emails
 /*
@@ -1706,13 +1706,13 @@ db.collection('queuemembers').find({serviceType:parseInt(payLoad.serviceType)}).
       let firstQueueMember=array[0],secondQueueMember=array[1]
     
 
-      request.post('http://www.egosms.co/api/v1/json/',{json:{
+      request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
     method:"SendSms",
     userdata:{
        username:"kayas",
        password:"onongeopio"
     },
-    
+
   msgdata:[{number:`256${firstQueueMember.contact}`,senderid:'1234567890',message:`Please go to Teller ${parseInt(payLoad.serviceType)}`}]
   }}, function (error, response, body) {
     if (!error && response.statusCode == 201) {
