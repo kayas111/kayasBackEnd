@@ -40,6 +40,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(`Listening on port ${port}`)
      
  
+    
 //credentialsObj,arrayOfEmailReceipients,responseUrl,subject,html
 //nsibirwa emails
 /*
