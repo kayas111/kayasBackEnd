@@ -210,7 +210,6 @@ webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVap
 let maxAttendeeRegisters=50
 
 
-
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/model').comments;
 const quotesModel = require('./models/model').quotes;
