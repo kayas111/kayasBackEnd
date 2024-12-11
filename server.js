@@ -81,25 +81,21 @@ Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayas7EmailApiCredent
     */
     //db.collection('traders').updateOne({contact:755643774},{$set:{accBal:1230000}}).then(resp=>{console.log(resp)})
   
-
-  /*
-      db.collection('registers').find({contact:777929447,registerId:0}).toArray().then(resp=>{
+/*
+  
+      db.collection('registers').find({contact:787384824,registerId:0}).toArray().then(resp=>{
      
         
     
- let list=resp[0].attendees,attendanceRegister=resp,final=[]
-list=list.slice(0,279);
+ let list=resp[0].attendees,attendanceRegister=resp,final=[],message=`CONAS: Next Sem starts on 18th Jan, congratulations upon completing the semester and merry Christmass. From Aston T (EC INTENDO)`
+
 
  list.forEach(receip=>{
-  message=`3days trip organized by FRANGO TOURS & TRAVELS will be taking place on 16-18th Aug at 250000 for everything. Contact Frank on 0755942387 for more`
-
-
   receip.number='256'+receip.contact,
   receip.senderid='1234567890',
   receip.message=message+' #SMS by Kayas'
 final.push(receip)
 })
-
 
 console.log(final)
 console.log(final.length)
@@ -124,15 +120,15 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
      
       })
-
 */
+
  
 
 //
 
 
 /*
-let file=excel.readFile('../readExcel/freshersevening.xlsx')
+let file=excel.readFile('../readExcel/chickenman.xlsx')
 console.log('Ensure name field is filled with any information..............')
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
 
@@ -143,27 +139,77 @@ attendee.contact=parseInt(attendee.contact)
 
 final.push(attendee) 
 }else{
-  console.log(attendee)
- console.log(`-------------is not gt----------------`)
+  console.log(`${attendee} contact is not greater than zero`)
+ 
 }
 })
-console.log(final)
-db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).
-then(resp=>{console.log("completed and pushed to messager")}) 
+
+// {// cjicken man code
+
+// let final2=[]
+// final.forEach(attendee=>{
+// let array=Array.from(attendee.name)
+// let name='',contact='',count=0
+// //console.log(array)
+
+// array.forEach(character=>{
+// if(character=='(' || parseInt(character)>-1 || character==')'){
+
+// ;
+
+// }else{
+// name+=character
+
+
+// }
+
+
+// })
+
+
+// let length=array.length, tempContact=array.slice(length-10,length)
+// tempContact.forEach(char=>{
+//   if(char==')'){;}else{
+//     contact+=char
+//   }
+// })
+
+
+
+
+
+
+
+
+
+// final2.push({name:name, contact:contact})
+
+// })
+
+// //console.log(final2)
+// console.log('wait.....')
+// db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final2}}).then(resp=>{console.log("completed and pushed to messager")}) 
+
+
+// //
+// }
+
+//console.log(final) comment out this
+
+//db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed and pushed to messager")}) 
 
 
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
 
-*/
-  
-
-
-
 }))
+
+*/
 let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
 webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
 
 let maxAttendeeRegisters=50
+
+
 
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
 const {db} = require('./models/model').comments;
