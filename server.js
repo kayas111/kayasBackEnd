@@ -200,10 +200,10 @@ final.push(attendee)
 
 
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
-
+*/
 }))
 
-*/
+
 let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
 webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
 
@@ -2413,7 +2413,7 @@ res.send(resp)
       db.collection('traders').find({contact:{$in:arrayOfFollowersContacts},accBal:{$gt:parseInt(process.env.followerUpdateSmsCost)}}).toArray().then(resp=>{
         let arrayOfEligibleTraders=resp,payLoad=[]
         arrayOfEligibleTraders.forEach(eligibleTrader=>{
-          payLoad.push({number:'256'+eligibleTrader.contact,message:`${msg} (0${senderContact} #SMS by Kayas)`,senderid:'0'+senderContact})
+          payLoad.push({number:'256'+eligibleTrader.contact,message:`${msg} (0${senderContact} #Kayas SMS)`,senderid:'0'+senderContact})
           })
      if(arrayOfEligibleTraders.length==0){
       res.send({msg:'<div style="color:red;">Not sent because no follower for this category has enough credit.</div>'})
@@ -3948,7 +3948,7 @@ let smsCost=req.body.smsCost,smsMessage=req.body.smsmessage,smsReceipients=[]
   .then(resp=>{
     
 resp[0].attendees.forEach(attendee=>{
-attendee.number='256'+attendee.contact,attendee.message=smsMessage+' #SMS by Kayas',attendee.senderid=req.body.registrarContact
+attendee.number='256'+attendee.contact,attendee.message=smsMessage+' #Kayas SMS',attendee.senderid=req.body.registrarContact
 smsReceipients.push(attendee)
 
 })
