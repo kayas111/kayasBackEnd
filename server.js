@@ -144,7 +144,31 @@ final.push(attendee)
 }
 })
 
-// {// cjicken man code
+db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed and pushed to messager")}) 
+//GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
+
+}))
+*/
+
+// cjicken man code
+// {
+//   let file=excel.readFile('../readExcel/chickenman.xlsx')
+// console.log('Ensure name field is filled with any information..............')
+// let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
+
+
+// attendees.forEach(attendee=>{
+// if(attendee.contact>0){
+// attendee.contact=parseInt(attendee.contact)
+
+// final.push(attendee) 
+// }else{
+//   console.log(`${attendee} contact is not greater than zero`)
+ 
+// }
+// })
+
+
 
 // let final2=[]
 // final.forEach(attendee=>{
@@ -193,15 +217,65 @@ final.push(attendee)
 
 // //
 // }
+// cjicken man code
 
-//console.log(final) comment out this
+
+//Mumsa
+//let file=excel.readFile('../readExcel/Mumsa.xlsx')
+//console.log('Ensure name field is filled with any information..............')
+//let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet2']),final=[]
+
+//let list1=[],list2=[]
+
+// attendees.forEach(attendee=>{
+  
+//   let contactArray=Array.from(attendee.contact)
+// if(contactArray.length==0){
+  
+// list1.push(attendee)
+// }else{
+//   list2.push(attendee)
+  
+// }
+
+// })
+
+// list2.forEach(attendee=>{
+//   let contactArray=Array.from(attendee.contact)
+//   let cont1='',contactArray2=[],contactArray3
+//   //contactArray.reverse()
+  
+// contactArray.forEach(char=>{
+//   if(char==' ' || char=='+' ){;}else{
+//     contactArray2.push(char)
+//   }
+ 
+// })
+
+// contactArray3=contactArray2.slice(contactArray2.length-9,contactArray2.length)
+
+// contactArray3.forEach(char=>{
+//   cont1+=char
+// })
+// let name=''
+
+//   if(attendee.name==undefined){name='No name'}else{name=attendee.name}
+
+// let payLoad={name:name,contact:parseInt(cont1)}
+
+// list1.push(payLoad)
+ 
+//   })
+
+// final=list1
+// console.log(list1.length)
 
 //db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed and pushed to messager")}) 
-
-
 //GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
-*/
+
 }))
+//Mumsa
+
 
 
 let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
