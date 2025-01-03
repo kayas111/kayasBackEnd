@@ -32,6 +32,8 @@ const excel=require('xlsx')
 mongoose.set('strictQuery', false)
 const bcrypt=require('bcrypt') 
 
+
+
 var formidable = require('formidable');
 let onlineDb="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority",localDb="mongodb://localhost:27017"
 const dbURI=onlineDb
@@ -39,51 +41,24 @@ const dbURI=onlineDb
 
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
+  //ReadExcelFile('shortlegendunsa','Sheet1')
     console.log(`Listening on port ${port}`)
      
  
     
-//credentialsObj,arrayOfEmailReceipients,responseUrl,subject,html
-//nsibirwa emails
-/*
-db.collection('registers').find({contact:755874269,registerId:0}).toArray().then(resp=>{
-let register=resp[0],emailReceipientsArray=[]
-
-
-
-register.attendees.forEach(doc=>{
-if(doc.email==undefined){}else{
-  emailReceipientsArray.push(doc.email)
-}
-
-
-})
-
-
-emailReceipientsArray=emailReceipientsArray.slice(500,600)
-//emailReceipientsArray=['onongeisaac@gmail.com']
-
-Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayas7EmailApiCredentialsObj),arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'https://forms.gle/6m5yGt5YLTkeyjoYA',subject:'CTF 2 Invitation For A Celebration',html:'<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Tomorrow Saturday 2pm at CTF 2. </div>A celebration showcasing the archievements of the BANG project in Makerere since 2019 will be taking place comprising of skits, poems, plays and real life experience talks and a lot more. <p></p>I have invited you too to come and attend tomorrow afternoon at 2pm in CTF 2. <p></p>Register using the "Send reply" button below to get an SMS notification to remind you tomorrow before the event.<p></p>Thank you.<p></p>Isaac Opio<br></br>BANG publicity Makerere University<br></br>0755643774 (WhatsApp)</div>'}).then(resp=>{
-  console.log(resp.accepted.length)
-})
-
-
-
-
-})
-
-*/
-//db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
 
 /*
+
+db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
+
+
     db.collection('traders').deleteOne({contact:755643774}).then(resp=>{
 
       console.log(resp)
     })
-    */
-    //db.collection('traders').updateOne({contact:755643774},{$set:{accBal:1230000}}).then(resp=>{console.log(resp)})
+    
+    db.collection('traders').updateOne({contact:755643774},{$set:{accBal:1230000}}).then(resp=>{console.log(resp)})
   
-/*
   
       db.collection('registers').find({contact:787384824,registerId:0}).toArray().then(resp=>{
      
@@ -126,15 +101,11 @@ request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 
  
 
-//
-
 
 /*
-let file=excel.readFile('../readExcel/chickenman.xlsx')
+let file=excel.readFile('../readExcel/shortlegendunsa.xlsx')
 console.log('Ensure name field is filled with any information..............')
 let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
-
-
 attendees.forEach(attendee=>{
 if(attendee.contact>0){
 attendee.contact=parseInt(attendee.contact)
@@ -146,137 +117,15 @@ final.push(attendee)
 }
 })
 
-db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed and pushed to messager")}) 
-//GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
-
-}))
+db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}})
+.then(resp=>{console.log("completed and pushed to messager")}) 
 */
 
-// cjicken man code
-// {
-//   let file=excel.readFile('../readExcel/chickenman.xlsx')
-// console.log('Ensure name field is filled with any information..............')
-// let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
-
-
-// attendees.forEach(attendee=>{
-// if(attendee.contact>0){
-// attendee.contact=parseInt(attendee.contact)
-
-// final.push(attendee) 
-// }else{
-//   console.log(`${attendee} contact is not greater than zero`)
- 
-// }
-// })
-
-
-
-// let final2=[]
-// final.forEach(attendee=>{
-// let array=Array.from(attendee.name)
-// let name='',contact='',count=0
-// //console.log(array)
-
-// array.forEach(character=>{
-// if(character=='(' || parseInt(character)>-1 || character==')'){
-
-// ;
-
-// }else{
-// name+=character
-
-
-// }
-
-
-// })
-
-
-// let length=array.length, tempContact=array.slice(length-10,length)
-// tempContact.forEach(char=>{
-//   if(char==')'){;}else{
-//     contact+=char
-//   }
-// })
-
-
-
-
-
-
-
-
-
-// final2.push({name:name, contact:contact})
-
-// })
-
-// //console.log(final2)
-// console.log('wait.....')
-// db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final2}}).then(resp=>{console.log("completed and pushed to messager")}) 
-
-
-// //
-// }
-// cjicken man code
-
-
-//Mumsa
-//let file=excel.readFile('../readExcel/Mumsa.xlsx')
-//console.log('Ensure name field is filled with any information..............')
-//let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet2']),final=[]
-
-//let list1=[],list2=[]
-
-// attendees.forEach(attendee=>{
-  
-//   let contactArray=Array.from(attendee.contact)
-// if(contactArray.length==0){
-  
-// list1.push(attendee)
-// }else{
-//   list2.push(attendee)
-  
-// }
-
-// })
-
-// list2.forEach(attendee=>{
-//   let contactArray=Array.from(attendee.contact)
-//   let cont1='',contactArray2=[],contactArray3
-//   //contactArray.reverse()
-  
-// contactArray.forEach(char=>{
-//   if(char==' ' || char=='+' ){;}else{
-//     contactArray2.push(char)
-//   }
- 
-// })
-
-// contactArray3=contactArray2.slice(contactArray2.length-9,contactArray2.length)
-
-// contactArray3.forEach(char=>{
-//   cont1+=char
-// })
-// let name=''
-
-//   if(attendee.name==undefined){name='No name'}else{name=attendee.name}
-
-// let payLoad={name:name,contact:parseInt(cont1)}
-
-// list1.push(payLoad)
- 
-//   })
-
-// final=list1
-// console.log(list1.length)
-
-//db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed and pushed to messager")}) 
-//GenerateSmsContacts([1,2,3,4],3,4,'../files/sms')
-
 }))
-//Mumsa
+
+
+
+
 
 
 
@@ -338,6 +187,27 @@ const hookupRegistrationFee=500
 
 
 //functions start
+function ReadExcelFile (fileName,sheetName){
+  console.log('Ensure name field is filled with any information.')
+  console.log('Pass file name and sheet name as arguments in string format')
+
+  
+let file=excel.readFile(`../readExcel/${fileName}.xlsx`)
+
+let attendees=excel.utils.sheet_to_json(file.Sheets[`${sheetName}`]),final=[]
+attendees.forEach(attendee=>{
+if(attendee.contact>0){
+attendee.contact=parseInt(attendee.contact)
+
+final.push(attendee) 
+}else{
+  console.log(`${attendee} contact is not greater than zero`)
+ 
+}
+})
+db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log("completed and pushed to messager")}) 
+
+}
 
 
 async function PayTrader(contact,amount){
