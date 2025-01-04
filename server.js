@@ -1177,8 +1177,7 @@ if(traderDetailsObj.permissionTokensObj.allowedToEarnFromKayas==undefined){
       }else{}
     
     //check for createPubArticleTokens
-   
-   }else{}
+      }else{}
    //check for permissionTokensObj
    
    //check for free sms object
