@@ -41,7 +41,7 @@ const dbURI=onlineDb
 
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
-  //ReadExcelFile('bangreps','Sheet1')
+ // ReadExcelFile('mitchel','Sheet1')
     console.log(`Listening on port ${port}`)
    
     
@@ -197,12 +197,13 @@ let file=excel.readFile(`../readExcel/${fileName}.xlsx`)
 
 let attendees=excel.utils.sheet_to_json(file.Sheets[`${sheetName}`]),final=[]
 attendees.forEach(attendee=>{
+ 
 if(attendee.contact>0){
 attendee.contact=parseInt(attendee.contact)
 
 final.push(attendee) 
 }else{
-  console.log(`${attendee} contact is not greater than zero`)
+  console.log(`${attendee.name}: ${attendee.contact} contact is not greater than zero and has been ignored`)
  
 }
 })
@@ -534,6 +535,11 @@ app.get('/attendeesMessage/:registrarContact/:id', (req,res)=>{
  })
  app.get('/getOpinionPolls/:description', (req,res)=>{
   db.collection('voteropinionpolls').find({description:req.params.description}).toArray().then(resp=>{
+
+    
+    // db.collection('voteropinionpolls').deleteMany({description:req.params.description}).then(resp=>{
+    //   console.log(resp)
+    // })
  res.send(resp)
  
   })
