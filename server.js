@@ -39,11 +39,15 @@ let onlineDb="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?ret
 const dbURI=onlineDb
 
 
+
+
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
- // ReadExcelFile('mitchel','Sheet1')
+//ReadExcelFile('cedat jose list','Sheet1')
     console.log(`Listening on port ${port}`)
+
    
+
     
     
     
@@ -143,6 +147,7 @@ const quotesModel = require('./models/model').quotes;
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const opinionModel = require('./models/model').opinionModel;
 const controlsModel = require('./models/model').controlsModel;
+const pendingCreditClientModel = require('./models/model').pendingCreditClientModel;
 const marqueeNewsModel = require('./models/model').marqueeNewsModel
 const bnplTransactionModel = require('./models/model').bnplTransactionModel 
 const foodDeliveryRequestModel=require('./models/model').foodDeliveryRequestModel
@@ -188,6 +193,22 @@ const hookupRegistrationFee=500
 
 
 //functions start
+function AttendanceRegisterJsonToExcel(attendanceRegisterDoc){
+  // Convert JSON to a worksheet
+const worksheet = excel.utils.json_to_sheet(attendanceRegisterDoc.attendees);
+
+// Create a new workbook and append the worksheet
+const workbook = excel.utils.book_new();
+excel.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+// Save the workbook to a file
+const filePath = `${attendanceRegisterDoc.registerTitle}.xlsx`;
+excel.writeFile(workbook, filePath);
+
+console.log(`Excel file created: ${filePath}`);
+
+}
+
 function ReadExcelFile (fileName,sheetName){
   console.log('Ensure name field is filled with any information.')
   console.log('Pass file name and sheet name as arguments in string format')
@@ -1140,7 +1161,12 @@ if(traderDetailsObj.permissionTokensObj.allowedToEarnFromKayas==undefined){
   }else{}
 
 //check for permission to earn from Kayas
+//check for permission to display articles at free cost
+if(traderDetailsObj.permissionTokensObj.displayArticlesAtFreeCost==undefined){
+  traderDetailsObj.permissionTokensObj.displayArticlesAtFreeCost=false
+  }else{}
 
+//check for permission to display articles at free cost
 
      //check for addContacttoRegisterTokens
      if(traderDetailsObj.permissionTokensObj.addContactToRegisterTokens==undefined){
@@ -1500,12 +1526,134 @@ db.collection('controls').replaceOne({desc:'systemControls'},controlsDoc,{upsert
   }
 })
 
-
-//posts to the database
 app.get('/queuetooltellers',(req,res)=>{
   db.collection('queuetooltellers').find().sort({tellerNumber:1}).toArray().then(array=>{
     res.send(array)
   })
+})
+//posts to the database
+
+
+app.post('/deposit',(req,res)=>{
+  let payLoad=req.body
+  console.log(payLoad)
+  try {
+    try {flw.MobileMoney.uganda({
+      fullname:'Kayas',
+      phone_number:`256${parseInt(payLoad.contact)}`,
+      network:"AIRTEL",
+      amount:parseInt(payLoad.amount),
+      currency: 'UGX',
+      email:'onongeisaac@gmail.com',
+     tx_ref:'676555',
+  })
+      .then(resp=>{
+          
+          res.send({redirectUrl:resp.meta.authorization.redirect})
+      })
+      .catch(console.log);}catch(error){
+          console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
+          console.log(error)
+      }
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+
+ app.post('/debitTraderAccountBalance',(req,res)=>{
+  try {
+    let payLoad=req.body
+    
+    db.collection('traders').updateOne({contact:payLoad.contact},{$inc:{'accBal':-parseInt(payLoad.amount)}}).then(resp=>{
+      console.log(resp)
+    })
+
+  } catch (error) {
+    console.log(error)
+  }
+ })
+
+app.post('/approveCreditRequest',(req,res)=>{
+  let payLoad=req.body
+  
+try {
+  db.collection('pendingcreditrequests').find({stdNo:`${payLoad.studentNo}`}).toArray().then(resp=>{
+    if(resp.length==0){
+      res.send({requestExists:0,msg:'Client has not made a request.'})
+    }else{
+      payLoad.contact=resp[0].contact,payLoad.name=resp[0].name
+      
+      db.collection('traders').updateOne({contact:payLoad.contact},{$inc:{'bnpl.debt':parseInt(payLoad.price)}})
+      .then(resp=>{
+       
+   if(resp.modifiedCount==1){
+     
+   bnplTransactionModel(payLoad).save().then(resp=>{;})
+   db.collection('kayasers').find({contact:payLoad.contact}).toArray().then(resp=>{
+   let kayaser=resp[0]
+   
+   emailReceipientsArray=[kayaser.email]
+   Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayasEmailApiCredentialsObj),arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'#',subject:`BNPL debit of ${payLoad.price}`,html:`<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Debit transaction successful.</div>You have successfully been debited with ${payLoad.price} Ugandan shillings for receiving a credit service from Kayas credit service.<p></p>You received ${payLoad.description}. Thank you.<p></p>Kayas<br></br>0703852178 (WhatsApp)</div>`}).then(resp=>{
+   ;
+   })
+   })
+   db.collection('pendingcreditrequests').deleteMany({stdNo:`${payLoad.studentNo}`}).then(resp=>{
+    ;
+   })
+   res.send({requestExists:0,msg:'Successful. Offer the product/service'})
+   }else{
+     res.send({success:false})
+   }
+   
+   
+      })
+      
+      
+      //current
+    }
+  })
+} catch (error) {
+  console.log(error)
+}
+})
+
+app.post('/requestForCredit',(req,res)=>{
+  try {
+    let payLoad=req.body
+    db.collection('traders').find({contact:parseInt(payLoad.contact)}).toArray().then(resp=>{
+      let trader=resp[0]
+      if(resp[0].bnpl.studentDetails==undefined){
+        res.send({studentDetailsPresent:0})
+      }else{
+        
+        db.collection('pendingcreditrequests').find({contact:payLoad.contact}).toArray().then(resp=>{
+          
+          
+    if(resp.length==0){
+            
+         let pendingCreditClient={}
+
+         pendingCreditClient.name=trader.name,pendingCreditClient.contact=trader.contact,pendingCreditClient.stdNo=trader.bnpl.studentDetails.studentNo
+
+ pendingCreditClientModel(pendingCreditClient).save().then(resp=>{
+  res.send({msg:"Waiting for agent at service point to complete your request"})
+ 
+ })
+
+        }else{
+           res.send({msg:"Waiting for agent at service point to complete your request"})
+           }
+        })
+        
+        
+        //res.send({studentDetailsPresent:1})
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    
+  }
 })
 app.post('/updateControls',(req,res)=>{
 
@@ -1775,38 +1923,8 @@ app.post('/requestFoodDelivery',(req,res)=>{
     console.log(error)
   }
 })
-app.post('/completeBnplTransaction',(req,res)=>{
-  try{
-    let bnplPayLoad=req.body
-   db.collection('traders').updateOne({contact:bnplPayLoad.contact},{$inc:{'bnpl.debt':bnplPayLoad.bill}}).then(resp=>{
-    
-if(resp.modifiedCount==1){
-
-db.collection('kayasers').find({contact:bnplPayLoad.contact}).toArray().then(resp=>{
-let kayaser=resp[0]
-
-emailReceipientsArray=[kayaser.email]
-Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayasEmailApiCredentialsObj),arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'#',subject:`BNPL debit of ${bnplPayLoad.bill}`,html:`<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Debit transaction successful.</div>You have successfully been debited with ${bnplPayLoad.bill} Ugandan shillings for receiving a credit service from ${bnplPayLoad.label}.<p></p>You received ${bnplPayLoad.description}. Thank you.<p></p>Kayas<br></br>0703852178 (WhatsApp)</div>`}).then(resp=>{
-;
-})
-})
-res.send({success:true})
-}else{
-  res.send({success:false})
-}
 
 
-   })
-
-bnplTransactionModel(bnplPayLoad).save().then(resp=>{
-  ;
-})
-
-
-  }catch(err){
-console.log(err)
-  }
-})
 
 
 app.post('/deleteMarqueeNews',(req,res)=>{
@@ -1931,6 +2049,8 @@ switch(receivedObj.method){// method is update either as kayaser or as admin
  
 
  db.collection('traders').find().toArray().then(array=>{
+  try {
+    
   let studentNoArray=[]
   
   array.forEach(trader=>{
@@ -1946,7 +2066,7 @@ if(trader.bnpl.studentDetails==undefined){;}else{
 if(studentNoArray.find(studentNo=>{return studentNo==receivedObj.argsObj.studentNo})==undefined){
      db.collection('traders').updateOne({contact:parseInt(receivedObj.argsObj.contact)},{$set:{'bnpl.studentDetails':studentDetails}}).then(resp=>{
             if(resp.modifiedCount==1){
-              res.send({success:1,msg:'Send a WhatsApp message to 0703852178 to complete your verification in less than 30 minutes'})
+              res.send({success:1,msg:'You can now proceed wih requesting for credit'})
         
                   }else{
               res.send({success:0,msg:'Not successful, try again'})
@@ -1957,6 +2077,10 @@ if(studentNoArray.find(studentNo=>{return studentNo==receivedObj.argsObj.student
 }else{
   res.send({msg:'Not allowed, enter your student number'})
 }
+ 
+  } catch (error) {
+    console.log(error)
+  }
  })
 
        
@@ -2071,6 +2195,50 @@ break;
    case 'updateAsAdmin':{
 
     switch(receivedObj.argsObj.fieldToUpdate){
+   
+      case 'displayArticlesAtFreeCost':{
+
+        try {
+            
+          db.collection('traders').find({contact:receivedObj.argsObj.traderContact}).toArray().then(resp=>{
+            
+            if(resp.length==0){
+             
+              res.send({msg:'Trader details do not exist.'})
+            }else{
+            let traderDetailsObj=resp[0]
+          
+            db.collection('traders').updateOne({contact:traderDetailsObj.contact},[{$set:{'permissionTokensObj.displayArticlesAtFreeCost':{$not:"$permissionTokensObj.displayArticlesAtFreeCost"}}}]).
+            
+            then(resp=>{
+              if(resp.modifiedCount==1){
+  if(traderDetailsObj.permissionTokensObj.displayArticlesAtFreeCost==true){
+   res.send({msg:`Successfully turned off`})
+  }else{
+   res.send({msg:`Successfully turned on`})
+  }
+  
+  
+                
+              }else if(resp.modifiedCount==0){
+                res.send({msg:'Upto debt'})
+              }else{
+                res.send({msg:'Unsuccessful'})
+              }
+            })
+            
+            
+            
+            }
+              })
+            
+                break;
+        } catch (error) {
+          console.log(error)
+        }
+               }
+        
+   
       case 'bnplEligibility':{
 
       try {
@@ -2127,7 +2295,7 @@ if(traderDetailsObj.bnpl.isEligible==true){
         if(resp.modifiedCount==1){
           res.send({msg:'Successful'})
         }else if(resp.modifiedCount==0){
-          res.send({msg:'Upto debt'})
+          res.send({msg:'Upto date'})
         }else{
           res.send({msg:'Unsuccessful'})
         }
@@ -5390,6 +5558,7 @@ app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
       
   
 if(req.body.data.status=="successful"){
+  console.log('payment successful')
   console.log(req.body.data)
 
 }else{
