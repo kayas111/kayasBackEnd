@@ -1542,7 +1542,7 @@ try {
 
 db.collection('kayasers').find({contact:parseInt(payLoad.beneficiary.contact)}).toArray().then(resp=>{
   payLoad.beneficiary.email=resp[0].email
-  console.log(payLoad)
+  
 
 try {
     try {flw.MobileMoney.uganda({
@@ -1609,7 +1609,7 @@ res.send({redirectUrl:flwAuthorization.redirect})
     let payLoad=req.body
     
     db.collection('traders').updateOne({contact:payLoad.contact},{$inc:{'accBal':-parseInt(payLoad.amount)}}).then(resp=>{
-      console.log(resp)
+      ;
     })
 
   } catch (error) {
@@ -1653,7 +1653,7 @@ try {
       })
       
       
-      //current
+      
     }
   })
 } catch (error) {
@@ -5601,18 +5601,39 @@ app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
   else{
       
 if(req.body.data.status=="successful"){
-  console.log('payment successful')
-  console.log(req.body.data)
-  let payLoad=req.body
+let payLoad=req.body
 
-  db.collection('pendingpayments').find({payerNo:payLoad.data.customer.phone_number}).toArray().then(resp=>{
+  db.collection('pendingpayments').find({payerNo:parseInt(payLoad.data.customer.phone_number)-256000000000}).toArray().then(resp=>{
     let paymentDetails=resp[0]
 
-    
-  })
+switch(paymentDetails.paymentReason){
+    case 'depositToKayasAccount':{
+  
 
+      db.collection('traders').updateOne({contact:paymentDetails.beneficiary.contact},{$inc:{'accBal':parseInt(payLoad.data.amount)}}).then(resp=>{
+        ;
+       })
+    
+
+break;
+  
+     }
+
+    
   
   
+  default:{
+    
+    console.log('switch case value for payment method not matched')
+  }
+  }
+  
+  
+
+
+
+  })
+ 
 
 }else{
   console.log("payment status is not succesful")
