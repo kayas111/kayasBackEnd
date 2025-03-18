@@ -145,6 +145,7 @@ const {db} = require('./models/model').comments;
 const quotesModel = require('./models/model').quotes;
 
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
+const pendingPaymentsModel = require('./models/model').pendingPaymentsModel;
 const opinionModel = require('./models/model').opinionModel;
 const controlsModel = require('./models/model').controlsModel;
 const pendingCreditClientModel = require('./models/model').pendingCreditClientModel;
@@ -1534,22 +1535,59 @@ app.get('/queuetooltellers',(req,res)=>{
 //posts to the database
 
 
-app.post('/deposit',(req,res)=>{
+app.post('/makePayment',(req,res)=>{
+try {
   let payLoad=req.body
+  
+
+db.collection('kayasers').find({contact:parseInt(payLoad.beneficiary.contact)}).toArray().then(resp=>{
+  payLoad.beneficiary.email=resp[0].email
   console.log(payLoad)
-  try {
+
+try {
     try {flw.MobileMoney.uganda({
-      fullname:'Kayas',
-      phone_number:`256${parseInt(payLoad.contact)}`,
-      network:"AIRTEL",
+      fullname:`${payLoad.beneficiary.name}`,
+      phone_number:`256${parseInt(payLoad.payerNo)}`,
+      network:["AIRTEL","MTN"],
       amount:parseInt(payLoad.amount),
       currency: 'UGX',
-      email:'onongeisaac@gmail.com',
+      email:`${payLoad.beneficiary.email}`,
      tx_ref:'676555',
   })
       .then(resp=>{
+      try {
+        let flwAuthorization=resp.meta.authorization
+        function CheckForExistingPendingPayment(payerNo){
+
+          db.collection('pendingpayments').find({payerNo:payLoad.payerNo}).toArray().then(resp=>{
+            if(resp.length==0){
+              
+              pendingPaymentsModel(payLoad).save().then(resp=>{
+                if(resp.payerNo==payLoad.payerNo){
+res.send({redirectUrl:flwAuthorization.redirect})
+                }else{
+                  ;
+                }
+              })
+
+            }else{
+              
+              db.collection('pendingpayments').deleteMany({payerNo:payLoad.payerNo}).then(resp=>{
+              CheckForExistingPendingPayment(payLoad.payerNo)
+              })
+              
+            }
+
+
+          })
+        }
+
+        CheckForExistingPendingPayment(payLoad.payerNo)
+
+      } catch (error) {
+        console.log(error)
+      }
           
-          res.send({redirectUrl:resp.meta.authorization.redirect})
       })
       .catch(console.log);}catch(error){
           console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
@@ -1558,6 +1596,11 @@ app.post('/deposit',(req,res)=>{
   } catch (error) {
     console.log(error)
   }
+})
+} catch (error) {
+  console.log(error)
+}
+  
 })
 
 
@@ -5547,7 +5590,8 @@ console.log("error is result from entering a wrong student number format by "+fi
   
 app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
 
-  const secretHash = '1962';
+  try {
+    const secretHash = '1962';
   const signature = req.headers["verif-hash"];
   if (!signature || (signature !== secretHash)) {
       console.log("signature error hense webhook is not from flutter")
@@ -5556,10 +5600,19 @@ app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
   }
   else{
       
-  
 if(req.body.data.status=="successful"){
   console.log('payment successful')
   console.log(req.body.data)
+  let payLoad=req.body
+
+  db.collection('pendingpayments').find({payerNo:payLoad.data.customer.phone_number}).toArray().then(resp=>{
+    let paymentDetails=resp[0]
+
+    
+  })
+
+  
+  
 
 }else{
   console.log("payment status is not succesful")
@@ -5571,6 +5624,9 @@ if(req.body.data.status=="successful"){
   
   }
   
+  } catch (error) {
+    console.log(error)
+  }
       })
       app.post('/submitMessageFromContactCapture',bodyParser.json(), (req,res)=>{
  
