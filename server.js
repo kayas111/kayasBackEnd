@@ -955,6 +955,10 @@ if(array.length==0){
         })
 
 
+
+
+
+        
 }) 
 app.get('/pubarticleopinions/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
    try{ if(array[0]==undefined){
