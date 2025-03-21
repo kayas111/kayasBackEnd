@@ -902,13 +902,7 @@ if(array.length==0){
 }else{
 
   db.collection('pubarticles').updateOne({id:parseInt(req.params.articleId)},{$set:{visits:array[0].visits+parseInt(req.params.valueToAdd)}}).then(resp=>{
-    if (article.visits%3==0){
-    
-    PayTrader(parseInt(article.contact),15)
-    
-    }else{
-    
-    }
+    PayTrader(parseInt(article.contact),30)
     })
     
 
@@ -958,7 +952,7 @@ if(array.length==0){
 
 
 
-        
+
 }) 
 app.get('/pubarticleopinions/:id', (req,res)=>{db.collection('pubarticles').find({id:parseInt(req.params.id)}).toArray().then((array)=>{
    try{ if(array[0]==undefined){
@@ -3701,7 +3695,7 @@ app.post('/deleteArticle',bodyParser.json(),(req,res)=>{
 res.send({presence:0})
   }else{
     db.collection('pubarticles').deleteOne({id:req.body.articleId}).then(resp=>{
-      res.send({presence:1})
+      res.send(resp)
       db.collection('articleassessments').deleteMany({articleId:req.body.articleId}).then(resp=>{;})
     })
   }
@@ -3824,12 +3818,12 @@ searchAgain=1
 
 }}
 while(searchAgain==1)
-let payLoad={id:parseInt(newId),visits:1,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"off",recentCommentOnTop:"off"}
+let payLoad={id:parseInt(newId),visits:0,headline1:req.body.headline1,author:req.body.author,institution:req.body.institution,contact:parseInt(req.body.contact),body:req.body.body,pubArticleOpinions:[{name:"Kayas",contact:parseInt(703852178),msg:"Thank you for using Kayas"}],showCustomerMessage:"on",showCustomerContact:"off",recentCommentOnTop:"off"}
 
 pubArticleModel(payLoad)
 .save().then((resp)=>{
   
-  PayTrader(parseInt(resp.contact),150)
+  //PayTrader(parseInt(resp.contact),150)
 res.send({msg:"Article created",contact:resp.contact,id:resp.id,headline1:resp.headline1})
 })
 
