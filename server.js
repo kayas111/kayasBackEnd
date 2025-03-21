@@ -3798,7 +3798,7 @@ app.post('/createArticle',bodyParser.json(),(req,res)=>{
 
 db.collection('pubarticles').find({contact:req.body.contact}).toArray().then(resp=>{
 
-if(resp.length>59){
+if(resp.length>99){
   res.send({limitReached:1})
 }else{
 try{   
@@ -5590,7 +5590,7 @@ console.log("error is result from entering a wrong student number format by "+fi
   
 app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
 
-  
+
   try {
     const secretHash = '1962';
   const signature = req.headers["verif-hash"];
