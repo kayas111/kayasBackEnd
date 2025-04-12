@@ -25,3 +25,5 @@
 let contact='256703852178'
 
 console.log(parseInt(contact)-256000000000)
+let isOn=true
+console.log(!isOn)

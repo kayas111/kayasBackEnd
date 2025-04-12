@@ -45,8 +45,44 @@ const dbURI=onlineDb
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
 //ReadExcelFile('cedat jose list','Sheet1')
     console.log(`Listening on port ${port}`)
+    /*
+    {
+let count=0
 
-   
+
+     setInterval(()=>{
+      if(count==80){
+        console.log('Limit reached')
+      }else{request.post('http://sandbox.egosms.co/api/v1/json/',{json:{ 
+        method:"SendSms",
+        userdata:{
+           username:"kayas",
+           password:"onongeopio"
+        },
+        msgdata:[{number:`256744575120`,senderid:'1234567890',message:`Kevin, kindly clear your pending debt to avoid futher interruptions`}]
+      }}, function (error, response, body) {
+        if (!error && response.statusCode == 201) {
+            console.log(body);
+            console.log('Error one in free sending sms')
+            res.send({success:0})
+        }else{
+          console.log(body)
+          if(body.Status=='OK'){
+console.log(`sent ${++count}`)
+           }else{
+            res.send({success:0})
+            console.log('Error two in sending free sms')
+          }
+           
+        }
+      }
+      
+      )}
+     },60000)
+    
+
+    }
+   */
 
     
     
@@ -906,7 +942,7 @@ if(array.length==0){
     })
     
 
-    
+
 
 
 }
@@ -1123,7 +1159,20 @@ if(traderDetailsObj.bnpl.promotionTokens==undefined){
 }else{}
   }else{}
 
+//check for deliveryServiceObj
+if(traderDetailsObj.deliveryService==undefined || traderDetailsObj.deliveryService!=undefined ){
+  if(traderDetailsObj.deliveryService==undefined){
+  traderDetailsObj.deliveryService={}
+  }else{;}
 
+if(traderDetailsObj.deliveryService.isDeliveryAgent==undefined){
+  traderDetailsObj.deliveryService.isDeliveryAgent=false
+}else{}
+if(traderDetailsObj.deliveryService.isAvailable==undefined){
+  traderDetailsObj.deliveryService.isAvailable=false
+}else{}
+
+  }else{}
 
    //check for pagesVisitsNo
    if(traderDetailsObj.pagesVisitsNo==undefined || traderDetailsObj.pagesVisitsNo!=undefined ){
@@ -1532,7 +1581,41 @@ app.get('/queuetooltellers',(req,res)=>{
   })
 })
 //posts to the database
+app.post('/initiateDelivery',(req,res)=>{
+  try {
+    let payLoad=req.body,Data=[{number:`256${payLoad.contact}`,senderid:`0${payLoad.contact}`,message:`0${payLoad.client} needs your service. #Kayas SMS`}]
+    
+  
+  request.post('http://www.egosms.co/api/v1/json/',{json:{
+    method:"SendSms",
+    userdata:{
+       username:"kayas",
+       password:"onongeopio"
+    },
 
+  msgdata:Data
+  }}, function (error, response, body) {
+    if (!error && response.statusCode == 201) {
+        //console.log(body);
+        
+        
+    }else{
+     // console.log(body)
+      
+     res.send({success:true,msg:'Successful, you will receive a call in 10 minutes'})
+     // console.log(attendanceRegister)
+       
+    }
+  }
+  
+  )
+  
+ 
+  } catch (error) {
+    console.log(error)
+  }
+    
+  })
 
 app.post('/makePayment',(req,res)=>{
 try {
@@ -1634,6 +1717,7 @@ try {
    bnplTransactionModel(payLoad).save().then(resp=>{;})
    db.collection('kayasers').find({contact:payLoad.contact}).toArray().then(resp=>{
    let kayaser=resp[0]
+   
    
    emailReceipientsArray=[kayaser.email]
    Functions.SendEmail({credentialsObj:JSON.parse(process.env.kayasEmailApiCredentialsObj),arrayOfEmailReceipients:emailReceipientsArray,responseUrl:'#',subject:`BNPL debit of ${payLoad.price}`,html:`<div><div style="color:maroon;font-size:15px;padding-bottom:10px;font-weight:bold;">Debit transaction successful.</div>You have successfully been debited with ${payLoad.price} Ugandan shillings for receiving a credit service from Kayas credit service.<p></p>You received ${payLoad.description}. Thank you.<p></p>Kayas<br></br>0703852178 (WhatsApp)</div>`}).then(resp=>{
@@ -2082,7 +2166,43 @@ switch(receivedObj.method){// method is update either as kayaser or as admin
   case 'updateAsKayaser':{
 
     switch(receivedObj.argsObj.fieldToUpdate){
+      case 'isAvailable':{
 
+        try {
+            
+          db.collection('traders').find({contact:receivedObj.argsObj.traderContact}).toArray().then(resp=>{
+            
+            if(resp.length==0){
+             
+              res.send({msg:'Trader details do not exist.'})
+            }else{
+            let traderDetailsObj=resp[0]
+     
+            db.collection('traders').updateOne({contact:traderDetailsObj.contact},[{$set:{'deliveryService.isAvailable':{$not:"$deliveryService.isAvailable"}}}]).
+            
+            then(resp=>{
+              
+              if(resp.modifiedCount==1){
+                res.send({success:true,msg:`Successful`})
+  
+                
+              }else if(resp.modifiedCount==0){
+                res.send({msg:'Upto debt'})
+              }else{
+                res.send({success:false,msg:`Not Successful`})
+              }
+            })
+            
+            
+            
+            }
+              })
+            
+                break;
+        } catch (error) {
+          console.log(error)
+        }
+               }
 
       case 'addStudentDetails':{
         try {
@@ -2280,7 +2400,48 @@ break;
         }
                }
         
-   
+               case 'isDeliveryAgent':{
+
+                try {
+                    
+                  db.collection('traders').find({contact:receivedObj.argsObj.traderContact}).toArray().then(resp=>{
+                    
+                    if(resp.length==0){
+                     
+                      res.send({msg:'Trader details do not exist.'})
+                    }else{
+                    let traderDetailsObj=resp[0]
+                  
+                    db.collection('traders').updateOne({contact:traderDetailsObj.contact},[{$set:{'deliveryService.isDeliveryAgent':{$not:"$deliveryService.isDeliveryAgent"}}}]).
+                    
+                    then(resp=>{
+                      if(resp.modifiedCount==1){
+          if(traderDetailsObj.deliveryService.isDeliveryAgent==true){
+           res.send({msg:`Successfully turned off`})
+          }else{
+           res.send({msg:`Successfully turned on`})
+          }
+          
+          
+                        
+                      }else if(resp.modifiedCount==0){
+                        res.send({msg:'Upto debt'})
+                      }else{
+                        res.send({msg:'Unsuccessful'})
+                      }
+                    })
+                    
+                    
+                    
+                    }
+                      })
+                    
+                        break;
+                } catch (error) {
+                  console.log(error)
+                }
+                       }
+                
       case 'bnplEligibility':{
 
       try {
