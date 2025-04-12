@@ -182,6 +182,7 @@ const quotesModel = require('./models/model').quotes;
 
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const pendingPaymentsModel = require('./models/model').pendingPaymentsModel;
+const deliveryAgentModel = require('./models/model').deliveryAgentModel;
 const opinionModel = require('./models/model').opinionModel;
 const controlsModel = require('./models/model').controlsModel;
 const pendingCreditClientModel = require('./models/model').pendingCreditClientModel;
@@ -1580,7 +1581,42 @@ app.get('/queuetooltellers',(req,res)=>{
     res.send(array)
   })
 })
+
+app.get('/getDeliveryAgents',(req,res)=>{
+  db.collection('deliveryagents').find().toArray().then(array=>{
+    res.send(array)
+  })
+})
+
 //posts to the database
+app.post('/addDeliveryAgent',(req,res)=>{
+  try {
+
+function AddDeliveryAgent(payLoad){
+ db.collection('deliveryagents').find({contact:payLoad.contact}).toArray().then(resp=>{
+  if(resp.length==0){
+
+deliveryAgentModel(payLoad).save().then(resp=>{
+res.send({success:true,msg:'Successful'})
+})
+  }else{
+db.collection('deliveryagents').deleteMany({contact:payLoad.contact}).then(resp=>{
+  if(resp.deletedCount==1){
+    AddDeliveryAgent(payLoad)
+  }else{;}
+})
+  }
+ })
+}
+
+    let payLoad=req.body
+    AddDeliveryAgent(payLoad)
+
+  } catch (error) {
+    console.log(error)
+  }
+    
+  })
 app.post('/initiateDelivery',(req,res)=>{
   try {
     let payLoad=req.body,Data=[{number:`256${payLoad.contact}`,senderid:`0${payLoad.contact}`,message:`0${payLoad.client} needs your service. #Kayas SMS`}]
