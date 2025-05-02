@@ -43,15 +43,18 @@ const dbURI=onlineDb
 
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
-//ReadExcelFile('cedat jose list','Sheet1')
+//ReadExcelFile('2ND Shift','Sheet1')
     console.log(`Listening on port ${port}`)
-    /*
+
+
+   
+  /*  
     {
 let count=0
 
 
      setInterval(()=>{
-      if(count==80){
+      if(count==10){
         console.log('Limit reached')
       }else{request.post('http://sandbox.egosms.co/api/v1/json/',{json:{ 
         method:"SendSms",
@@ -59,18 +62,18 @@ let count=0
            username:"kayas",
            password:"onongeopio"
         },
-        msgdata:[{number:`256744575120`,senderid:'1234567890',message:`Kevin, kindly clear your pending debt to avoid futher interruptions`}]
+        msgdata:[{number:`256771219536`,senderid:'1234567890',message:`Kindly respond to the matter about clearing the pending balance #Kayas SMS`}]
       }}, function (error, response, body) {
         if (!error && response.statusCode == 201) {
             console.log(body);
             console.log('Error one in free sending sms')
-            res.send({success:0})
+            
         }else{
           console.log(body)
           if(body.Status=='OK'){
 console.log(`sent ${++count}`)
            }else{
-            res.send({success:0})
+            
             console.log('Error two in sending free sms')
           }
            
@@ -78,7 +81,7 @@ console.log(`sent ${++count}`)
       }
       
       )}
-     },60000)
+     },600000)
     
 
     }
@@ -183,6 +186,7 @@ const quotesModel = require('./models/model').quotes;
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const pendingPaymentsModel = require('./models/model').pendingPaymentsModel;
 const deliveryAgentModel = require('./models/model').deliveryAgentModel;
+const donationModel = require('./models/model').donationModel;
 const opinionModel = require('./models/model').opinionModel;
 const controlsModel = require('./models/model').controlsModel;
 const pendingCreditClientModel = require('./models/model').pendingCreditClientModel;
@@ -1619,7 +1623,7 @@ db.collection('deliveryagents').deleteMany({contact:payLoad.contact}).then(resp=
   })
 app.post('/initiateDelivery',(req,res)=>{
   try {
-    let payLoad=req.body,Data=[{number:`256${payLoad.contact}`,senderid:`0${payLoad.contact}`,message:`0${payLoad.client} needs your service. #Kayas SMS`}]
+    let payLoad=req.body,Data=[{number:`256${payLoad.contact}`,senderid:`0${payLoad.contact}`,message:`0${payLoad.client} needs your service. Call now. #Kayas SMS`}]
     
   
   request.post('http://www.egosms.co/api/v1/json/',{json:{
@@ -1654,67 +1658,132 @@ app.post('/initiateDelivery',(req,res)=>{
   })
 
 app.post('/makePayment',(req,res)=>{
-try {
-  let payLoad=req.body
   
-
-db.collection('kayasers').find({contact:parseInt(payLoad.beneficiary.contact)}).toArray().then(resp=>{
-  payLoad.beneficiary.email=resp[0].email
-  
-
 try {
-    try {flw.MobileMoney.uganda({
-      fullname:`${payLoad.beneficiary.name}`,
-      phone_number:`256${parseInt(payLoad.payerNo)}`,
-      network:["AIRTEL","MTN"],
-      amount:parseInt(payLoad.amount),
-      currency: 'UGX',
-      email:`${payLoad.beneficiary.email}`,
-     tx_ref:'676555',
-  })
-      .then(resp=>{
-      try {
-        let flwAuthorization=resp.meta.authorization
-        function CheckForExistingPendingPayment(payerNo){
 
-          db.collection('pendingpayments').find({payerNo:payLoad.payerNo}).toArray().then(resp=>{
-            if(resp.length==0){
-              
-              pendingPaymentsModel(payLoad).save().then(resp=>{
-                if(resp.payerNo==payLoad.payerNo){
-res.send({redirectUrl:flwAuthorization.redirect})
-                }else{
-                  ;
-                }
-              })
+ 
+  async function CheckForExistingPendingPayment(payLoad){
+      
+    return(await db.collection('pendingpayments').deleteMany({payerNo:payLoad.payerNo}).then(async (resp)=>{
+     
 
-            }else{
-              
-              db.collection('pendingpayments').deleteMany({payerNo:payLoad.payerNo}).then(resp=>{
-              CheckForExistingPendingPayment(payLoad.payerNo)
-              })
-              
-            }
-
-
-          })
-        }
-
-        CheckForExistingPendingPayment(payLoad.payerNo)
-
-      } catch (error) {
-        console.log(error)
-      }
+return (await pendingPaymentsModel(payLoad).save().then(resp=>{
+        if(resp.payerNo==payLoad.payerNo){
+         
           
-      })
-      .catch(console.log);}catch(error){
-          console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
-          console.log(error)
-      }
-  } catch (error) {
-    console.log(error)
+          return ({redirect:true,msg:'New Pending payment created, kindly redirect accordingly'})
+
+        }else{
+          return ({redirect:false})
+        }
+      }))
+      
+      }))
+    
   }
+ function InitiatePayment(PendingPaymentReport,Authorization){
+   
+  if(PendingPaymentReport.redirect==true && Authorization != undefined){
+          
+    res.send({redirect:true,redirectUrl:Authorization.meta.authorization.redirect})
+  }else{
+    console.log('Error in Authroization object of payment')
+    }
+ }
+
+
+
+  let payLoad=req.body
+ switch(payLoad.paymentReason){
+  case 'depositToKayasAccount':{
+  db.collection('kayasers').find({contact:parseInt(payLoad.beneficiary.contact)}).toArray().then(resp=>{
+      payLoad.beneficiary.email=resp[0].email
+   try {
+        try {
+          flw.MobileMoney.uganda({
+          fullname:`${payLoad.beneficiary.name}`,
+          phone_number:`256${parseInt(payLoad.payerNo)}`,
+          network:"MTN",
+          amount:parseInt(payLoad.amount),
+          currency: 'UGX',
+          email:`${payLoad.beneficiary.email}`,
+         tx_ref:'676555',
+      })
+          .then((resp)=>{
+            
+          try {
+           
+                     
+            CheckForExistingPendingPayment(payLoad).then(resp=>{
+              InitiatePayment(resp,Authorization)
+             })
+    
+          } catch (error) {
+            console.log('error in initiating flutter wave')
+            console.log(error)
+          }
+              
+          })
+          .catch(console.log);}catch(error){
+              console.log("Kayas, error originated from initiating a mobile money payment for registration and it is: ")
+              console.log(error)
+          }
+      } catch (error) {
+        console.log('error in initiating flutter wave')
+       console.log(error)
+      }
+    })
+    
+
+break;
+
+   }
+ 
+ case 'donate':{
+try {
+  
+  try {flw.MobileMoney.uganda({
+    fullname:`${payLoad.name}`,
+    phone_number:`256${parseInt(payLoad.payerNo)}`,
+    network:"MTN",
+    amount:parseInt(payLoad.amount),
+    currency: 'UGX',
+    email:`onongeisaac@gmail.com`,
+   tx_ref:'676555',
 })
+    .then((resp)=>{
+    try {
+      let Authorization=resp
+    
+      CheckForExistingPendingPayment(payLoad).then(resp=>{
+       InitiatePayment(resp,Authorization)
+      })
+
+    } catch (error) {
+      console.log(error)
+    }
+        
+    })
+    .catch(console.log);}catch(error){
+        console.log("Kayas, error originated from initiating a mobile money payment for donation: ")
+        console.log(error)
+    }
+} catch (error) {
+  console.log(error)
+}
+
+  break;
+ }
+
+
+default:{
+  res.send({success:0})
+  console.log('Case value for method not available')
+}
+}
+
+
+
 } catch (error) {
   console.log(error)
 }
@@ -5816,6 +5885,17 @@ break;
   
      }
 
+     case 'donate':{
+  
+donationModel(paymentDetails).save().then(resp=>{
+  ;
+})
+    
+    
+
+break;
+  
+     }
     
   
   

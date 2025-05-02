@@ -175,6 +175,7 @@ module.exports.pendingCreditClientModel=mongoose.model('pendingCreditRequests',n
 module.exports.controlsModel=mongoose.model('controls',new mongoose.Schema({},{strict:false}))
 module.exports.pendingPaymentsModel=mongoose.model('pendingpayments',new mongoose.Schema({},{strict:false}))
 module.exports.deliveryAgentModel=mongoose.model('deliveryagents',new mongoose.Schema({},{strict:false}))
+module.exports.donationModel=mongoose.model('donations',new mongoose.Schema({},{strict:false}))
 module.exports.imageModel=mongoose.model('images',new mongoose.Schema({img:{data: Buffer,contentType: String}},{strict:false}))
 //module.exports.pubArticleModel=mongoose.model('pubarticles',new mongoose.Schema({dynamic:String},{strict:false}))
 
