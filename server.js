@@ -5886,8 +5886,7 @@ break;
      }
 
      case 'donate':{
-  
-donationModel(paymentDetails).save().then(resp=>{
+  donationModel(paymentDetails).save().then(resp=>{
   ;
 })
     
