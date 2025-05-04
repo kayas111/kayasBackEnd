@@ -1701,13 +1701,13 @@ return (await pendingPaymentsModel(payLoad).save().then(resp=>{
    try {
         try {
           flw.MobileMoney.uganda({
-          fullname:`${payLoad.beneficiary.name}`,
-          phone_number:`256${parseInt(payLoad.payerNo)}`,
-          network:"MTN",
-          amount:parseInt(payLoad.amount),
-          currency: 'UGX',
-          email:`${payLoad.beneficiary.email}`,
-         tx_ref:'676555'
+          "fullname":`${payLoad.beneficiary.name}`,
+          "phone_number":`256${parseInt(payLoad.payerNo)}`,
+          "network":"MTN",
+          "amount":parseInt(payLoad.amount),
+          "currency": 'UGX',
+          "email":`${payLoad.beneficiary.email}`,
+         "tx_ref":'676555'
       })
           .then((resp)=>{
             
@@ -1743,13 +1743,13 @@ break;
 try {
   
   try {flw.MobileMoney.uganda({
-    fullname:`${payLoad.name}`,
-    phone_number:`256${parseInt(payLoad.payerNo)}`,
-    network:"MTN",
-    amount:parseInt(payLoad.amount),
-    currency: 'UGX',
-    email:`onongeisaac@gmail.com`,
-   tx_ref:'676555'
+    "fullname":`${payLoad.name}`,
+    "phone_number":`256${parseInt(payLoad.payerNo)}`,
+    "network":"MTN",
+    "amount":parseInt(payLoad.amount),
+    "currency": 'UGX',
+    "email":`onongeisaac@gmail.com`,
+   "tx_ref":'676555'
 })
     .then((resp)=>{
     try {
@@ -5790,13 +5790,13 @@ const pendingKayaser=new pendingRegistrationModel(data)
 pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to register ......."))
 
    try {flw.MobileMoney.uganda({
-        fullname:fields.name,
-        phone_number:fields.payerNo,
-        network:"AIRTEL",
-        amount:hookupRegistrationFee,
-        currency: 'UGX',
-        email:fields.email,
-       tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2
+        "fullname":fields.name,
+        "phone_number":fields.payerNo,
+        "network":"AIRTEL",
+        "amount":hookupRegistrationFee,
+        "currency": 'UGX',
+        "email":fields.email,
+       "tx_ref":parseInt(fields.contact)+parseInt(fields.contact)/2
     })
         .then(resp=>{
             console.log("Initiating payment for registration of "+fields.contact+" ........")
@@ -5887,6 +5887,7 @@ break;
      }
 
      case 'donate':{
+      paymentDetails.settled=false
   donationModel(paymentDetails).save().then(resp=>{
   ;
 })
