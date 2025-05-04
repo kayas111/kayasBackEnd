@@ -1707,12 +1707,12 @@ return (await pendingPaymentsModel(payLoad).save().then(resp=>{
           amount:parseInt(payLoad.amount),
           currency: 'UGX',
           email:`${payLoad.beneficiary.email}`,
-         tx_ref:'676555',
+         tx_ref:'676555'
       })
           .then((resp)=>{
             
           try {
-           
+            let Authorization=resp
                      
             CheckForExistingPendingPayment(payLoad).then(resp=>{
               InitiatePayment(resp,Authorization)
@@ -1749,7 +1749,7 @@ try {
     amount:parseInt(payLoad.amount),
     currency: 'UGX',
     email:`onongeisaac@gmail.com`,
-   tx_ref:'676555',
+   tx_ref:'676555'
 })
     .then((resp)=>{
     try {
@@ -5796,7 +5796,7 @@ pendingKayaser.save().then(res=>console.log(fields.contact+" has opted to regist
         amount:hookupRegistrationFee,
         currency: 'UGX',
         email:fields.email,
-       tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2,
+       tx_ref:parseInt(fields.contact)+parseInt(fields.contact)/2
     })
         .then(resp=>{
             console.log("Initiating payment for registration of "+fields.contact+" ........")
@@ -5868,6 +5868,7 @@ app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
       
 if(req.body.data.status=="successful"){
 let payLoad=req.body
+console.log(payLoad)
 
   db.collection('pendingpayments').find({payerNo:parseInt(payLoad.data.customer.phone_number)-256000000000}).toArray().then(resp=>{
     let paymentDetails=resp[0]
