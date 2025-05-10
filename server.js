@@ -649,9 +649,7 @@ app.get('/attendees/:registrarContact/:id', (req,res)=>{
 app.get('/collection_controls_visits', (req,res)=>{
 
     db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((array)=>{
-        let no=array[0].noOfVisits+1;
-        db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{noOfVisits:no}})
-    
+        
         res.send(array)
     
         })
@@ -660,6 +658,23 @@ app.get('/collection_controls_visits', (req,res)=>{
 
     
     }) 
+
+    app.get('/increment_website_visits', (req,res)=>{
+
+      db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((array)=>{
+          let no=array[0].noOfVisits+1;
+          db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{noOfVisits:no}})
+      
+          
+      
+          })
+         
+  
+  
+      
+      }) 
+
+
     app.get('/deleteAllBids', (req,res)=>{
     
 
@@ -5869,7 +5884,7 @@ app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
       
 if(req.body.data.status=="successful"){
 let payLoad=req.body
-console.log(payLoad)
+
 
   db.collection('pendingpayments').find({payerNo:parseInt(payLoad.data.customer.phone_number)-256000000000}).toArray().then(resp=>{
     let paymentDetails=resp[0]
