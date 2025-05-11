@@ -655,8 +655,6 @@ app.get('/collection_controls_visits', (req,res)=>{
         })
        
 
-
-    
     }) 
 
     app.get('/increment_website_visits', (req,res)=>{
