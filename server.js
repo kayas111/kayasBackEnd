@@ -1282,7 +1282,7 @@ if(traderDetailsObj.permissionTokensObj.displayArticlesAtFreeCost==undefined){
      }else{}
    //check for free sms object
       
-   db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj,{upsert:true}).then(resp=>{
+   db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj.toObject(),{upsert:true}).then(resp=>{
      res.send([traderDetailsObj])
    })
    
