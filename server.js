@@ -47,7 +47,9 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 //ReadExcelFile('2ND Shift','Sheet1')
     console.log(`Listening on port ${port}`)
 
-
+  
+    
+    
    
   /*  
     {
@@ -1132,7 +1134,7 @@ try{
      }else{
        kayaserDetailsObj=resp[0]
 
-    
+    //now
    db.collection('traders').find({contact:parseInt(kayaserDetailsObj.contact)}).toArray().then(async (resp)=>{
    if(resp.length==0){
     
@@ -1282,7 +1284,7 @@ if(traderDetailsObj.permissionTokensObj.displayArticlesAtFreeCost==undefined){
      }else{}
    //check for free sms object
       
-   db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj.toObject(),{upsert:true}).then(resp=>{
+   db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj,{upsert:true}).then(resp=>{
      res.send([traderDetailsObj])
    })
    
