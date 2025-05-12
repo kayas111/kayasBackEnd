@@ -1118,14 +1118,15 @@ if(resp.length==0){
 
 
 app.get('/getTradingDetails/:trader', (req,res)=>{
-  //traderModel({name:kayaserObj.name,contact:parseInt(kayaserObj.contact),accBal:0,pagesVisitsNo:1,institution:kayaserObj.institution,sendSmsTokens:1,freeSmsObj:{freeSmsNotice:`Sponsored by ${kayaserObj.name}`,allowFreeSmsSending:1,freeSmsUsers:[]}})
-  //dependencies: sendfree sms, contact registers, account page
-  
+
 try{
   // new
   db.collection('kayasers').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
   try{
+    
 
+  
+    
 
     let traderDetailsObj,kayaserDetailsObj
      if(resp.length==0){
@@ -1133,13 +1134,19 @@ try{
        
      }else{
        kayaserDetailsObj=resp[0]
-
-    //now
+   
    db.collection('traders').find({contact:parseInt(kayaserDetailsObj.contact)}).toArray().then(async (resp)=>{
    if(resp.length==0){
     
      traderDetailsObj = await traderModel({name:kayaserDetailsObj.name,contact:parseInt(kayaserDetailsObj.contact)}).save().then(resp=> {return resp})
-   
+    if (traderDetailsObj instanceof mongoose.Document) {
+         traderDetailsObj=traderDetailsObj.toObject()
+     } else {
+         ;
+     }
+     
+
+
    }else{
      traderDetailsObj=resp[0]
    }
