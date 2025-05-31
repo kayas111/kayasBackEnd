@@ -44,13 +44,46 @@ const dbURI=onlineDb
 
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
-//ReadExcelFile('2ND Shift','Sheet1')
+//ReadExcelFile('youth','Sheet1')
     console.log(`Listening on port ${port}`)
-
-  
     
+/*
+    db.collection('registers').find({contact:704061572,registerId:0}).toArray().then(resp=>{
+     
+        
     
-   
+      let list=resp[0].attendees,final=[]
+     
+     
+      list.forEach(receip=>{
+        let message=`Hello ${receip.name.trim()}, congratulations upon winning the election and trust of youth to serve them. Ndubirira okusisinkana era tuwayeemu kungeri entuufu yokukikiriramu abavubuka. Hon. Nassolo Sharon Umutoni (0788246621) - Central youth MP aspirant 2026-2031`
+       receip.number='256'+receip.contact,
+       receip.senderid='1234567890',
+       receip.message=message+' #Kayas SMS'
+     final.push(receip)
+     })
+     
+     console.log(final)
+     console.log(final.length)
+     request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+         method:"SendSms",
+         userdata:{
+            username:"kayas",
+            password:"onongeopio"
+         },
+         msgdata:final
+       }}, function (error, response, body) {
+         if (!error && response.statusCode == 201) {
+             console.log(body);
+         }else{
+           console.log(body)
+          // console.log(attendanceRegister)
+            
+         }
+       }
+       
+       )
+      })*/
   /*  
     {
 let count=0
@@ -59,7 +92,8 @@ let count=0
      setInterval(()=>{
       if(count==10){
         console.log('Limit reached')
-      }else{request.post('http://sandbox.egosms.co/api/v1/json/',{json:{ 
+      }else{
+        request.post('http://sandbox.egosms.co/api/v1/json/',{json:{ 
         method:"SendSms",
         userdata:{
            username:"kayas",
@@ -117,7 +151,7 @@ db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
  list.forEach(receip=>{
   receip.number='256'+receip.contact,
   receip.senderid='1234567890',
-  receip.message=message+' #SMS by Kayas'
+  receip.message=message+' #Kayas SMS'
 final.push(receip)
 })
 
