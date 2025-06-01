@@ -5503,7 +5503,8 @@ articleGrantModel({name:kayaser.name,contact:parseInt(req.body.contact),createTo
        try{
       db.collection('kayasers').find({contact:req.body.contact}).toArray().then(resp=>{
 if(resp.length==0){res.send({presence:0})}else{
-switch(req.body.fieldToUpdate){
+  
+switch(req.body.fieldToUpdate.trim()){
   case 'name':{
     db.collection('kayasers').updateOne({contact:req.body.contact},{$set:{name:req.body.fieldValue}}).then(resp=>{
      if(resp.modifiedCount==1){
