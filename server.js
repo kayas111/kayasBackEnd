@@ -222,6 +222,7 @@ const quotesModel = require('./models/model').quotes;
 
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const pendingPaymentsModel = require('./models/model').pendingPaymentsModel;
+const ticketModel = require('./models/model').ticketModel;
 const deliveryAgentModel = require('./models/model').deliveryAgentModel;
 const donationModel = require('./models/model').donationModel;
 const opinionModel = require('./models/model').opinionModel;
@@ -1650,6 +1651,213 @@ app.get('/getDeliveryAgents',(req,res)=>{
 })
 
 //posts to the database
+app.post('/approveticketpayment',async (req,res)=>{
+  try {
+   
+    let payLoad=req.body,filteredArray=[]
+ 
+
+await db.collection('tickets').find({ticketId:{ $regex: `^${payLoad.ticketId}$`, $options: "i" }}).toArray().then(resp=>{
+ 
+if(resp.length==0){
+  res.send({msg:'Ticket does not exit.'})
+
+}else{
+let ticket=resp[0]
+
+  filteredArray=ticket.payments.filter(payment=>(payment.paymentSecretCode==payLoad.paymentSecretCode))
+   
+  if(filteredArray.length==0){
+    
+    res.send({msg:'Not paid'}) 
+   }else{
+let payment=filteredArray[0]
+
+
+
+if(payment.paymentApproved==false){
+  db.collection('tickets').updateOne({ ticketId: { $regex: `^${payment.ticketId}$`, $options: "i"},"payments.paymentSecretCode":payment.paymentSecretCode},{ $set: { "payments.$.paymentApproved": true } }).then(resp=>{
+    
+    if(resp.modifiedCount==1){
+      res.send({msg:'Approved'})
+  
+    }else{
+      res.send({msg:'Error must have occured, try again.'})
+    }
+  })
+  
+
+
+
+
+}else if(payment.paymentApproved==true){
+  res.send({msg:'This ticket was already approved'})
+} else{
+  res.send({msg:'Error must have occured'})
+}
+    
+  }
+}
+
+
+
+
+
+
+})
+
+
+  } catch (error) {
+    console.log(error)
+  }
+    
+  })
+app.post('/getMyTickets',async (req,res)=>{
+  try {
+   
+    let payLoad=req.body
+ 
+
+db.collection('tickets').find({ticketOwner:payLoad.contact}).toArray().then(resp=>{
+  res.send(resp)
+})
+
+
+  } catch (error) {
+    console.log(error)
+  }
+    
+  })
+app.post('/payForTicket',async (req,res)=>{
+  try {
+   
+    let payLoad=req.body
+ 
+
+db.collection('tickets').find({ticketId:payLoad.ticketId}).toArray().then(resp=>{
+   
+  let ticket=resp[0],filteredArray=[]
+
+
+ if((ticket.noOfTickets-ticket.payments.length)>0){
+  
+  
+  filteredArray=ticket.payments.filter(payment=>(payment.contact==payLoad.contact && payment.paymentSecretCode==payLoad.paymentSecretCode))
+  
+  
+  if(filteredArray.length==0){
+
+    
+
+    db.collection('tickets').updateOne({ticketId:payLoad.ticketId},{$push:{payments:payLoad}}).then(resp=>{
+      if(resp.modifiedCount==1){
+        
+
+db.collection('traders').updateOne({contact:payLoad.contact},{ $inc: { accBal: parseInt(-payLoad.amount) } }).then(resp=>{
+
+  if(resp.modifiedCount==1){
+    res.send({msg:'Successful. Do not forget your payment secret code because you will be asked for it'})
+
+
+
+  }else{
+    res.send({msg:'Error must have occured, try again.'})
+  }
+})
+
+      }else{
+        res.send({msg:'Error must have occured, try again.'})
+      }
+    })
+  }else{
+    res.send({msg:'You already have this ticket. Change the payment secret code to get another ticket'})
+  }
+ }else{
+  res.send({msg:`No more tickets, contact 0${ticket.ticketOwner}`})
+ }
+
+
+
+
+})
+
+
+  } catch (error) {
+    console.log(error)
+  }
+    
+  })
+app.post('/getMyPayments',(req,res)=>{
+  try {
+   
+    let payLoad=req.body
+    //console.log(payLoad)
+  db.collection('tickets').find().toArray().then(async (resp)=>{
+   
+   if(resp.length==0){
+    res.send([])
+   }else{
+let tickets=resp, myPayments=[]
+tickets.forEach((ticket)=>{
+  let filteredArray=ticket.payments.filter((payment)=>payment.contact==payLoad.contact)
+  
+  myPayments= myPayments.concat(filteredArray)
+  
+
+})
+
+res.send(myPayments)
+   }
+    
+  })
+
+
+  } catch (error) {
+    console.log(error)
+  }
+    
+  })
+app.post('/getTicketDetails',(req,res)=>{
+  try {
+   
+    let payLoad=req.body
+  db.collection('tickets').find( { ticketId: { $regex: `^${payLoad.ticketId}$`, $options: "i" } }).toArray().then(async (resp)=>{
+   
+    res.send(resp)
+  })
+
+
+  } catch (error) {
+    console.log(error)
+  }
+  
+  })
+app.post('/createTicket',(req,res)=>{
+  try {
+
+    let payLoad=req.body
+  db.collection('tickets').find({ ticketId: { $regex: `^${payLoad.ticketId}$`, $options: "i" }}).toArray().then(async (resp)=>{
+   
+    if(resp.length==0){
+await ticketModel(payLoad).save().then(resp=>{
+  if(resp.ticketId==payLoad.ticketId){
+    res.send({msg:'Successful. Share the ticket ID such that people can search for your tickets.'})
+  }else{
+    res.send({msg:'Error must have occured. Try again'})
+  }
+})
+    }else{
+res.send({msg:`${payLoad.ticketId} is already in use. Create another ticket ID`})
+
+    }
+  })
+
+
+  } catch (error) {
+    console.log(error)
+  }
+    
+  })
 app.post('/addDeliveryAgent',(req,res)=>{
   try {
 
