@@ -1821,8 +1821,9 @@ app.post('/getTicketDetails',(req,res)=>{
   try {
    
     let payLoad=req.body
-  db.collection('tickets').find( { ticketId: { $regex: `^${payLoad.ticketId}$`, $options: "i" } }).toArray().then(async (resp)=>{
    
+  db.collection('tickets').find( { ticketId: { $regex: `^${payLoad.ticketId}$`, $options: "i" } }).toArray().then(async (resp)=>{
+
     res.send(resp)
   })
 
