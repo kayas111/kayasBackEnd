@@ -4636,7 +4636,7 @@ else{
   let traderDetailsObj=resp[0]
   
   traderDetailsObj.accBal=traderDetailsObj.accBal-smsCost
-  traderDetailsObj.permissionTokensObj.sendSmsTokens=traderDetailsObj.permissionTokensObj.sendSmsTokens-1
+  traderDetailsObj.permissionTokensObj.sendSmsTokens=traderDetailsObj.permissionTokensObj.sendSmsTokens-0
   db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj).then(resp=>{
     
     res.send(['Message sent'])
