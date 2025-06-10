@@ -1651,6 +1651,40 @@ app.get('/getDeliveryAgents',(req,res)=>{
 })
 
 //posts to the database
+app.post('/predictNutrients',async (req,res)=>{
+  try {
+   
+    let payLoad=req.body
+    
+ 
+    request({
+      url: 'https://feed-nutrient-level-prediction-api.onrender.com/predict',
+      method: 'POST',
+      json: true,
+      body: payLoad
+    }, function (error, response, body) {
+      if (!error && response.statusCode == 201) {
+          console.log('error')
+        console.log(body);
+        
+          
+      }else{
+      
+        res.send(body)
+       // console.log(attendanceRegister)
+         
+      }
+    }
+    
+    )
+
+
+
+  } catch (error) {
+    console.log(error)
+  }
+    
+  })
 app.post('/approveticketpayment',async (req,res)=>{
   try {
    
@@ -1729,6 +1763,7 @@ db.collection('tickets').find({ticketOwner:payLoad.contact}).toArray().then(resp
     
   })
 app.post('/payForTicket',async (req,res)=>{
+  //uncomment the update balance operation
   try {
    
     let payLoad=req.body
@@ -1752,18 +1787,18 @@ db.collection('tickets').find({ticketId:payLoad.ticketId}).toArray().then(resp=>
     db.collection('tickets').updateOne({ticketId:payLoad.ticketId},{$push:{payments:payLoad}}).then(resp=>{
       if(resp.modifiedCount==1){
         
+        res.send({msg:'Successful. Do not forget your payment secret code because you will be asked for it'})
+// db.collection('traders').updateOne({contact:payLoad.contact},{ $inc: { accBal: parseInt(-payLoad.amount) } }).then(resp=>{
 
-db.collection('traders').updateOne({contact:payLoad.contact},{ $inc: { accBal: parseInt(-payLoad.amount) } }).then(resp=>{
-
-  if(resp.modifiedCount==1){
-    res.send({msg:'Successful. Do not forget your payment secret code because you will be asked for it'})
+//   if(resp.modifiedCount==1){
+//     res.send({msg:'Successful. Do not forget your payment secret code because you will be asked for it'})
 
 
 
-  }else{
-    res.send({msg:'Error must have occured, try again.'})
-  }
-})
+//   }else{
+//     res.send({msg:'Error must have occured, try again.'})
+//   }
+// })
 
       }else{
         res.send({msg:'Error must have occured, try again.'})
