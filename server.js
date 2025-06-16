@@ -1769,11 +1769,10 @@ app.post('/payForTicket',async (req,res)=>{
     let payLoad=req.body
  
 
-    
+
 db.collection('tickets').find({ticketId:payLoad.ticketId}).toArray().then(resp=>{
    
   let ticket=resp[0],filteredArray=[]
-
 
  if((ticket.noOfTickets-ticket.payments.length)>0){
   
