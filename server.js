@@ -1655,6 +1655,7 @@ app.post('/predictNutrients',async (req,res)=>{
   try {
    
     let payLoad=req.body
+   
     
  
     request({
