@@ -1656,7 +1656,7 @@ app.post('/predictNutrients',async (req,res)=>{
    
     let payLoad=req.body
    
-    
+
  
     request({
       url: 'https://feed-nutrient-level-prediction-api.onrender.com/predict',
@@ -1700,7 +1700,7 @@ if(resp.length==0){
 }else{
 let ticket=resp[0]
 
-  filteredArray=ticket.payments.filter(payment=>(payment.paymentSecretCode==payLoad.paymentSecretCode))
+  filteredArray=ticket.payments.filter(payment=>(payment.paymentSecretCode==payLoad.paymentSecretCode && payment.contact==payLoad.contact))
    
   if(filteredArray.length==0){
     
@@ -1714,7 +1714,7 @@ if(payment.paymentApproved==false){
   db.collection('tickets').updateOne({ ticketId: { $regex: `^${payment.ticketId}$`, $options: "i"},"payments.paymentSecretCode":payment.paymentSecretCode},{ $set: { "payments.$.paymentApproved": true } }).then(resp=>{
     
     if(resp.modifiedCount==1){
-      res.send({msg:'Approved'})
+      res.send({msg:'Paid'})
   
     }else{
       res.send({msg:'Error must have occured, try again.'})
@@ -1726,7 +1726,7 @@ if(payment.paymentApproved==false){
 
 
 }else if(payment.paymentApproved==true){
-  res.send({msg:'This ticket was already approved'})
+  res.send({msg:'This ticket was already approved. Try another ticket'})
 } else{
   res.send({msg:'Error must have occured'})
 }
@@ -1805,7 +1805,7 @@ db.collection('tickets').find({ticketId:payLoad.ticketId}).toArray().then(resp=>
       }
     })
   }else{
-    res.send({msg:'You already have this ticket. Change the payment secret code to get another ticket'})
+    res.send({msg:'You already have this ticket. Change the payment secret code to buy another ticket'})
   }
  }else{
   res.send({msg:`No more tickets, contact 0${ticket.ticketOwner}`})
