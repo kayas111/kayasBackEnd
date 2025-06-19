@@ -1723,8 +1723,6 @@ if(payment.paymentApproved==false){
   
 
 
-
-
 }else if(payment.paymentApproved==true){
   res.send({msg:'This ticket was already approved. Try another ticket'})
 } else{
