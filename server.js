@@ -2095,7 +2095,7 @@ default:{
     let payLoad=req.body
     
     db.collection('traders').updateOne({contact:payLoad.contact},{$inc:{'accBal':-parseInt(payLoad.amount)}}).then(resp=>{
-      ;
+      res.send(resp);
     })
 
   } catch (error) {
@@ -3440,12 +3440,12 @@ app.post('/registerPageVisitOfTrader', (req,res)=>{
   try{
 
   db.collection('traders').find({contact:req.body.recommender}).toArray().then(resp=>{
-   if(resp.length==0){;
+   if(resp.length==0){
   db.collection('kayasers').find({contact:req.body.recommender}).toArray().then(resp=>{
 if(resp.length==0){;}else{
 
   InstantiateTraderModel(resp[0]).then(resp=>{
-   // res.send([resp])
+ res.send([resp])
       
   })
   
@@ -3456,7 +3456,9 @@ if(resp.length==0){;}else{
   })
   }else{
     let traderDoc=resp[0]
-    db.collection('traders').updateOne({contact:req.body.recommender},{$set:{pagesVisitsNo:traderDoc.pagesVisitsNo+1}}).then(resp=>{;})
+    db.collection('traders').updateOne({contact:req.body.recommender},{$set:{pagesVisitsNo:traderDoc.pagesVisitsNo+1}}).then(resp=>{
+      res.send(resp)
+    })
    }
   })
  }catch(err){
