@@ -1762,7 +1762,7 @@ db.collection('tickets').find({ticketOwner:payLoad.contact}).toArray().then(resp
     
   })
 app.post('/payForTicket',async (req,res)=>{
-  //uncomment the update balance operation
+  
   try {
    
     let payLoad=req.body
@@ -1784,19 +1784,18 @@ db.collection('tickets').find({ticketId:payLoad.ticketId}).toArray().then(resp=>
 
     db.collection('tickets').updateOne({ticketId:payLoad.ticketId},{$push:{payments:payLoad}}).then(resp=>{
       if(resp.modifiedCount==1){
-        
-        res.send({msg:'Successful. Do not forget your payment secret code because you will be asked for it'})
-// db.collection('traders').updateOne({contact:payLoad.contact},{ $inc: { accBal: parseInt(-payLoad.amount) } }).then(resp=>{
+      
+db.collection('traders').updateOne({contact:payLoad.contact},{ $inc: { accBal: parseInt(-payLoad.amount) } }).then(resp=>{
 
-//   if(resp.modifiedCount==1){
-//     res.send({msg:'Successful. Do not forget your payment secret code because you will be asked for it'})
-
+  if(resp.modifiedCount==1){
+    res.send({msg:'Successful. Do not forget your payment secret code because you will be asked for it'})
 
 
-//   }else{
-//     res.send({msg:'Error must have occured, try again.'})
-//   }
-// })
+
+  }else{
+    res.send({msg:'Error must have occured, try again.'})
+  }
+})
 
       }else{
         res.send({msg:'Error must have occured, try again.'})
@@ -2948,7 +2947,7 @@ if(traderDetailsObj.bnpl.isEligible==true){
           res.send(['<div style="color:red;">trader details do not exist!</div>'])
         }else{
         let traderDetailsObj=resp[0]
-        traderDetailsObj.accBal=parseInt(receivedObj.argsObj.updateValue)
+        traderDetailsObj.accBal=traderDetailsObj.accBal+parseInt(receivedObj.argsObj.updateValue)
         db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj).then(resp=>{
           if(resp.modifiedCount==1){
             res.send(['<div style="color:green;">Successful!</div>'])
