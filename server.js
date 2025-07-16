@@ -44,7 +44,7 @@ const dbURI=onlineDb
 
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
-//ReadExcelFile('nakku phionah - meetings','Sheet1')  
+//ReadExcelFileDebug('working','Sheet1')  
     console.log(`Listening on port ${port}`)
 
    
@@ -100,7 +100,7 @@ let count=0
            username:"kayas",
            password:"onongeopio"
         },
-        msgdata:[{number:`256771219536`,senderid:'1234567890',message:`Kindly respond to the matter about clearing the pending balance #Kayas SMS`}]
+        msgdata:[{number:`256771219536`,senderid:'1234567890',message:`Kindly respond to the matter about clearing the pending balance #KayasSMS`}]
       }}, function (error, response, body) {
         if (!error && response.statusCode == 201) {
             console.log(body);
@@ -152,7 +152,7 @@ db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
  list.forEach(receip=>{
   receip.number='256'+receip.contact,
   receip.senderid='1234567890',
-  receip.message=message+' #Kayas SMS'
+  receip.message=message+' #KayasSMS'
 final.push(receip)
 })
 
@@ -290,7 +290,7 @@ console.log(`Excel file created: ${filePath}`);
 
 }
 
-function ReadExcelFile (fileName,sheetName){
+function ReadExcelFileOriginal (fileName,sheetName){
   console.log('Ensure name field is filled with any information.')
   console.log('Pass file name and sheet name as arguments in string format')
 
@@ -312,22 +312,66 @@ console.log(`Invalid length ${length} at position: ${position} - Name: ${attende
 
 }else{
   attendee.contact=parseInt(attendee.contact)
-
   final.push(attendee)
 }
-
-
 }
-
- 
 }else{
-  console.log(`Position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact} is not greater than zero and has been ignored`)
- 
+console.log(`Position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact} is not greater than zero and has been ignored: PayLoad: ${array}`)
+
+
+
 }
 })
 db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log(`Completed and replaced with ${final.length} contacts in messager`)}) 
 
 }
+
+function ReadExcelFileDebug (fileName,sheetName){
+  console.log('Ensure name field is filled with any information.')
+  console.log('Pass file name and sheet name as arguments in string format')
+
+  
+let file=excel.readFile(`../readExcel/${fileName}.xlsx`)
+
+let attendees=excel.utils.sheet_to_json(file.Sheets[`${sheetName}`]),final=[], position=1
+attendees.forEach(attendee=>{
+  position++;
+ 
+if(parseInt(attendee.contact)>0){
+if(parseInt(attendee.contact)>799999999){
+  console.log(`Position: ${position} - Error with:  ${attendee.contact}`)
+}else{
+
+let cont=attendee.contact, array=Array.from(String(cont)), length=array.length
+if(length<9 || length>10){
+//console.log(`Invalid length ${length} at position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact}`)
+
+}else{
+  attendee.contact=parseInt(attendee.contact)
+  final.push(attendee)
+}
+}
+}else{
+//console.log(`Position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact} is not greater than zero and has been ignored: PayLoad: ${array}`)
+let array1=Array.from(attendee.contact),array2=[]
+array1.forEach(character=>{
+  if(parseInt(character)==0 || parseInt(character)>0){
+array2.push(character)
+  }else{;}
+})
+ 
+let joined = array2.join('');
+let cleaned = joined.replace(/\D/g, '');
+let contact= parseInt(cleaned);
+attendee.contact=contact
+final.push(attendee)
+
+}
+})
+db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log(`Completed and replaced with ${final.length} contacts in messager`)}) 
+
+}
+
 
 
 async function PayTrader(contact,amount){
@@ -1938,7 +1982,7 @@ db.collection('deliveryagents').deleteMany({contact:payLoad.contact}).then(resp=
   })
 app.post('/initiateDelivery',(req,res)=>{
   try {
-    let payLoad=req.body,Data=[{number:`256${payLoad.contact}`,senderid:`0${payLoad.contact}`,message:`0${payLoad.client} needs your service. Call now. #Kayas SMS`}]
+    let payLoad=req.body,Data=[{number:`256${payLoad.contact}`,senderid:`0${payLoad.contact}`,message:`0${payLoad.client} needs your service. Call now. #KayasSMS`}]
     
   
   request.post('http://www.egosms.co/api/v1/json/',{json:{
@@ -3127,7 +3171,7 @@ res.send(resp)
       db.collection('traders').find({contact:{$in:arrayOfFollowersContacts},accBal:{$gt:parseInt(process.env.followerUpdateSmsCost)}}).toArray().then(resp=>{
         let arrayOfEligibleTraders=resp,payLoad=[]
         arrayOfEligibleTraders.forEach(eligibleTrader=>{
-          payLoad.push({number:'256'+eligibleTrader.contact,message:`${msg} (0${senderContact} #Kayas SMS)`,senderid:'0'+senderContact})
+          payLoad.push({number:'256'+eligibleTrader.contact,message:`${msg} (0${senderContact} #KayasSMS)`,senderid:'0'+senderContact})
           })
      if(arrayOfEligibleTraders.length==0){
       res.send({msg:'<div style="color:red;">Not sent because no follower for this category has enough credit.</div>'})
@@ -4660,7 +4704,7 @@ let smsCost=req.body.smsCost,smsMessage=req.body.smsmessage,smsReceipients=[]
   .then(resp=>{
     
 resp[0].attendees.forEach(attendee=>{
-attendee.number='256'+attendee.contact,attendee.message=smsMessage+' #Kayas SMS',attendee.senderid=req.body.registrarContact
+attendee.number='256'+attendee.contact,attendee.message=smsMessage+' #KayasSMS',attendee.senderid=req.body.registrarContact
 smsReceipients.push(attendee)
 
 })
