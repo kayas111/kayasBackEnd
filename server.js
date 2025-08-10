@@ -44,47 +44,69 @@ const dbURI=onlineDb
 
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
-//ReadExcelFileDebug('working','Sheet1')  
+//ReadExcelFile('working','Sheet1')  
+
     console.log(`Listening on port ${port}`)
 
+
+// db.collection('registers').find({contact:764639151,registerId:0}
+//   ).toArray().then(resp=>{
    
-/*
-    db.collection('registers').find({contact:704061572,registerId:0}).toArray().then(resp=>{
-     
-        
-    
-      let list=resp[0].attendees,final=[]
-     
-     
-      list.forEach(receip=>{
-        let message=`Hello ${receip.name.trim()}, congratulations upon winning the election and trust of youth to serve them. Ndubirira okusisinkana era tuwayeemu kungeri entuufu yokukikiriramu abavubuka. Hon. Nassolo Sharon Umutoni (0788246621) - Central youth MP aspirant 2026-2031`
-       receip.number='256'+receip.contact,
-       receip.senderid='1234567890',
-       receip.message=message+' #Kayas SMS'
-     final.push(receip)
-     })
-     
-     console.log(final)
-     console.log(final.length)
-     request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
-         method:"SendSms",
-         userdata:{
-            username:"kayas",
-            password:"onongeopio"
-         },
-         msgdata:final
-       }}, function (error, response, body) {
-         if (!error && response.statusCode == 201) {
-             console.log(body);
-         }else{
-           console.log(body)
-          // console.log(attendanceRegister)
-            
-         }
-       }
+//  let list=resp[0].attendees,attendanceRegister=resp,final=[],message=`Dear 1222222222222222222222222, I kindly request for your VOTE for tangible outcomes and trust as the 8th Speaker, National Youth Parliament. Let's Unite behind progress! - ADRONI RODNEY (0700456883)`
+
+
+//  list.forEach(receip=>{
+//   receip.number='256'+receip.contact,
+//   receip.senderid='1234567890',
+//   receip.message=`Hello ${receip.name}, as you travel to Parliament today Friday 8th at 8:30am, I not only still kindly request for your VOTE as the 8th Speaker, National Youth Parliament but also do wish you a safe journey as well. I pray to the Almighty to safe guard you! - ADRONI RODNEY (0700456883)`+' #KayasSMS'
+// final.push(receip)
+// })
+
+// console.log(final)
+// console.log(final.length)
+// request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+//     method:"SendSms",
+//     userdata:{
+//        username:"kayas",
+//        password:"onongeopio"
+//     },
+//     msgdata:final
+//   }}, function (error, response, body) {
+//     if (!error && response.statusCode == 201) {
+//         console.log(body);
+//     }else{
+//       console.log(body)
+//      // console.log(attendanceRegister)
        
-       )
-      })*/
+//     }
+//   }
+  
+//   )
+
+     
+//       })
+
+
+
+
+
+
+
+//     db.collection('registers').find({contact:786804825,registerId:0}
+//     ).toArray().then(resp=>{
+// let doc=resp[0]
+
+// doc.attendees.forEach(voter=>{
+// if(voter.contact==774391465){
+// console.log(voter.name)
+// }else{}
+// })
+    
+//     })
+
+
+
+
   /*  
     {
 let count=0
@@ -290,7 +312,7 @@ console.log(`Excel file created: ${filePath}`);
 
 }
 
-function ReadExcelFileOriginal (fileName,sheetName){
+function ReadExcelFile (fileName,sheetName){
   console.log('Ensure name field is filled with any information.')
   console.log('Pass file name and sheet name as arguments in string format')
 
@@ -298,35 +320,46 @@ function ReadExcelFileOriginal (fileName,sheetName){
 let file=excel.readFile(`../readExcel/${fileName}.xlsx`)
 
 let attendees=excel.utils.sheet_to_json(file.Sheets[`${sheetName}`]),final=[], position=1
-attendees.forEach(attendee=>{
-  position++;
- 
-if(parseInt(attendee.contact)>0){
-if(parseInt(attendee.contact)>799999999){
-  console.log(`Position: ${position} - Error with:  ${attendee.contact}`)
+
+
+if(attendees[0].name==undefined || attendees[0].contact==undefined ){
+  console.log('********* Name or contact is not defined well in sheet. Possibly remove trailing spaces ***********')
 }else{
-
-let cont=attendee.contact, array=Array.from(String(cont)), length=array.length
-if(length<9 || length>10){
-console.log(`Invalid length ${length} at position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact}`)
-
-}else{
-  attendee.contact=parseInt(attendee.contact)
-  final.push(attendee)
+  attendees.forEach(attendee=>{
+    position++;
+   
+  
+  if(parseInt(attendee.contact)>0){
+  if(parseInt(attendee.contact)>799999999){
+    console.log(`Position: ${position} - Error with:  ${attendee.contact}`)
+  }else{
+  
+  let cont=attendee.contact, array=Array.from(String(cont)), length=array.length
+  if(length<9 || length>10){
+  console.log(`Invalid length ${length} at position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact}`)
+  
+  }else{
+    attendee.contact=parseInt(attendee.contact)
+    final.push(attendee)
+  }
+  }
+  }else{
+    
+  console.log(`Position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact} is not greater than zero and has been ignored.`)
+  
+  
+  
+  }
+  })
+  db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log(`Completed and replaced with ${final.length} contacts in messager`)}) 
+  
 }
-}
-}else{
-console.log(`Position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact} is not greater than zero and has been ignored: PayLoad: ${array}`)
 
-
-
-}
-})
-db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log(`Completed and replaced with ${final.length} contacts in messager`)}) 
 
 }
 
 function ReadExcelFileDebug (fileName,sheetName){
+  console.log(`Reading in debug mode.................................`)
   console.log('Ensure name field is filled with any information.')
   console.log('Pass file name and sheet name as arguments in string format')
 
@@ -339,36 +372,69 @@ attendees.forEach(attendee=>{
  
 if(parseInt(attendee.contact)>0){
 if(parseInt(attendee.contact)>799999999){
-  console.log(`Position: ${position} - Error with:  ${attendee.contact}`)
+  console.log(`Greater than 799999999 at position: ${position} - Error with:  ${attendee.contact}`)
 }else{
 
 let cont=attendee.contact, array=Array.from(String(cont)), length=array.length
 if(length<9 || length>10){
 //console.log(`Invalid length ${length} at position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact}`)
+cont=cont.replace(/\D/g, '')
+attendee.contact=parseInt(cont)
+//console.log(attendee)
+final.push(attendee)
+
+
 
 }else{
   attendee.contact=parseInt(attendee.contact)
   final.push(attendee)
 }
 }
-}else{
-//console.log(`Position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact} is not greater than zero and has been ignored: PayLoad: ${array}`)
-let array1=Array.from(attendee.contact),array2=[]
-array1.forEach(character=>{
-  if(parseInt(character)==0 || parseInt(character)>0){
-array2.push(character)
-  }else{;}
-})
+ }else{
+   console.log(parseInt(attendee.contact))
+   console.log(position)
+  
+  //
+  
+// if(attendee.contact==undefined){
+
+// console.log(`undefined contact at ${attendee.name} **************************************`)
+
+// }else{
+//   let contat=attendee.contact.replace(/\D/g, '')
+//   attendee.contact=parseInt(contat)
+//   //console.log(attendee)
+//   final.push(attendee)
+// }
+
+
+
+
+
+// //console.log(`Position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact} is not greater than zero and has been ignored: PayLoad: ${array}`)
+// // let array1=Array.from(attendee.contact),array2=[]
+// // array1.forEach(character=>{
+// //   if(parseInt(character)==0 || parseInt(character)>0){
+// // array2.push(character)
+// //   }else{;}
+// // })
  
-let joined = array2.join('');
-let cleaned = joined.replace(/\D/g, '');
-let contact= parseInt(cleaned);
-attendee.contact=contact
-final.push(attendee)
+// // let joined = array2.join('');
+// // let cleaned = joined.replace(/\D/g, '');
+// // let contact= parseInt(cleaned);
+
+// // attendee.contact=contact
+// // console.log(`${attendee.name} : ${attendee.contact}`)
+// // final.push(attendee)
 
 }
 })
-db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log(`Completed and replaced with ${final.length} contacts in messager`)}) 
+
+
+db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{
+  console.log(`Completed and replaced with ${final.length} contacts in messager`)}) 
+
+
 
 }
 
