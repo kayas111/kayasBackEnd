@@ -44,7 +44,7 @@ const dbURI=onlineDb
 
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
-//ReadExcelFile('working','Sheet1')  
+//ReadExcelFile('NRM chairpersons final','Sheet1')  
 
     console.log(`Listening on port ${port}`)
 
@@ -1286,10 +1286,6 @@ try{
   db.collection('kayasers').find({contact:parseInt(req.params.trader)}).toArray().then(resp=>{
   try{
     
-
-  
-    
-
     let traderDetailsObj,kayaserDetailsObj
      if(resp.length==0){
     res.send([])
@@ -1321,7 +1317,7 @@ try{
    //check for accBal
    if(traderDetailsObj.accBal==undefined || traderDetailsObj.accBal!=undefined ){
    if(traderDetailsObj.accBal==undefined){
-   traderDetailsObj.accBal=0
+   traderDetailsObj.accBal=200 //Credit each new account with 200 shs
    }else{}
    }else{}
    
