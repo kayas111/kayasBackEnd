@@ -1296,7 +1296,7 @@ try{
    db.collection('traders').find({contact:parseInt(kayaserDetailsObj.contact)}).toArray().then(async (resp)=>{
    if(resp.length==0){
     
-     traderDetailsObj = await traderModel({name:kayaserDetailsObj.name,contact:parseInt(kayaserDetailsObj.contact)}).save().then(resp=> {return resp})
+     traderDetailsObj = await traderModel({name:kayaserDetailsObj.name,contact:parseInt(kayaserDetailsObj.contact),accBal:200}).save().then(resp=> {return resp}) //Credit each new account with 200
     if (traderDetailsObj instanceof mongoose.Document) {
          traderDetailsObj=traderDetailsObj.toObject()
      } else {
@@ -1317,7 +1317,7 @@ try{
    //check for accBal
    if(traderDetailsObj.accBal==undefined || traderDetailsObj.accBal!=undefined ){
    if(traderDetailsObj.accBal==undefined){
-   traderDetailsObj.accBal=200 //Credit each new account with 200 shs
+   traderDetailsObj.accBal=0 
    }else{}
    }else{}
    
