@@ -1292,21 +1292,24 @@ try{
        
      }else{
        kayaserDetailsObj=resp[0]
-   
+       
    db.collection('traders').find({contact:parseInt(kayaserDetailsObj.contact)}).toArray().then(async (resp)=>{
    if(resp.length==0){
     
-     traderDetailsObj = await traderModel({name:kayaserDetailsObj.name,contact:parseInt(kayaserDetailsObj.contact),accBal:200}).save().then(resp=> {return resp}) //Credit each new account with 200
+     traderDetailsObj = await traderModel({name:kayaserDetailsObj.name,contact:parseInt(kayaserDetailsObj.contact)}).save().then(resp=> {return resp}) 
     if (traderDetailsObj instanceof mongoose.Document) {
          traderDetailsObj=traderDetailsObj.toObject()
      } else {
          ;
      }
      
-
+console.log(traderDetailsObj)
 
    }else{
+    
      traderDetailsObj=resp[0]
+     traderDetailsObj.accBal=200 //Credit each new account with 200
+     
    }
    
    traderDetailsObj.name=kayaserDetailsObj.name,
