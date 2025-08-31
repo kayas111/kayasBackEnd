@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkclient=self.webpackChunkclient||[]).push([[6797],{76797:(e,s,l)=>{l.r(s),l.d(s,{FoodDeliveryControls:()=>c,default:()=>d});l(66756);var n=l(70579);function c(){return(0,n.jsxs)("div",{style:{padding:"5px"},children:[(0,n.jsx)("div",{class:"pageLabel",children:"Food delivery controls"}),(0,n.jsx)("p",{})]})}const d=c}}]);
+//# sourceMappingURL=6797.8f4e332d.chunk.js.map
