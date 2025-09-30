@@ -44,7 +44,7 @@ const dbURI=onlineDb
 
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
-//ReadExcelFile('owen','Sheet1')  
+//ReadExcelFile('working','Sheet1')  
 
     console.log(`Listening on port ${port}`)
 
@@ -226,6 +226,9 @@ db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}
 */
 
 }))
+
+
+
 
 
 
@@ -4830,7 +4833,7 @@ smsReceipients.push(attendee)
 
 })
   
-console.log(smsReceipients)
+
 
   request.post('http://www.egosms.co/api/v1/json/',{json:{
   method:"SendSms",
