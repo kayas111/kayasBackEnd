@@ -6343,7 +6343,6 @@ console.log("error is result from entering a wrong student number format by "+fi
   
 app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
 
-
   try {
     const secretHash = '1962';
   const signature = req.headers["verif-hash"];
