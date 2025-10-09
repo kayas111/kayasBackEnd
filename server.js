@@ -272,7 +272,7 @@ const articleAssessmentModel=require('./models/model').articleAssessmentModel;
 
 const SmsSubscribersModel = require('./models/model').SmsSubscribersModel;
 const linkModel = require('./models/model').linkModel;
-const followingsModel = require('./models/model').followingsModel;
+const audienceModel = require('./models/model').audienceModel;
 const recommendationModel = require('./models/model').recommendationModel;
 const requestsModel = require('./models/model').requestsModel;
 const messagerModel = require('./models/model').messagerModel;
@@ -3211,33 +3211,38 @@ default:{
 
 
 })
-app.post('/followingsPostRequest',(req,res)=>{
+app.post('/AudiencePostRequest',(req,res)=>{
 
 try{
 
   let receivedObj=req.body
   switch(receivedObj.method){// method is update either as kayaser or as admin
-    case 'createFollowersCategory':{
+    case 'createAudience':{
    
-   db.collection('followings').find({contact:receivedObj.args.contact}).toArray().then(resp=>{
-Functions.CreateIntId(resp,'categoryId').then(resp=>{
-  let categoryId=resp,payLoad={categoryId:categoryId,name:receivedObj.args.name,contact:receivedObj.args.contact,categoryName:receivedObj.args.categoryName,followers:[]}
-followingsModel(payLoad).save().then(resp=>{
-  
-  res.send(resp)
+   db.collection('audiences').find({audienceName:{ $regex: `^${receivedObj.args.audienceName}$`, $options: "i" }}).toArray().then(resp=>{
 
+    if(resp.length==0){
+audienceModel(receivedObj.args).save().then(resp=>{
+  console.log(resp)
+  if(resp.audienceName==receivedObj.args.audienceName){
+    res.send({success:1,audience:resp})
+  }else{
+    res.send({Error:1})
+  }
 })
-
-})
+}else{
+res.send({nameExists:1})
+}
 
 
    })
   break;
   
      }
-    case 'getFollowersCategories':{
+    case 'getAudience':{
    
-   db.collection('followings').find({contact:receivedObj.args.contact}).toArray().then(resp=>{
+ 
+   db.collection('audiences').find({audienceName:{ $regex: `^${receivedObj.args.audienceName}$`, $options: "i" }}).toArray().then(resp=>{
     
 res.send(resp)
    })
@@ -3347,33 +3352,23 @@ res.send(resp)
   
      }
     
-    case 'subscribeToACategory':{
-    db.collection('followings').find({contact:receivedObj.args.contactToFollow,categoryId:receivedObj.args.categoryId}).toArray().then(resp=>{
-let caseFollower=receivedObj.args.follower
+    case 'followAnAudience':{
+      
+
+    db.collection('audiences').find({audienceName:receivedObj.args.audienceName}).toArray().then(resp=>{
 if(resp.length==0){
-  res.send({msg:'This category ID does not exit.'})
+  res.send({msg:'This audience does not exit.'})
 }else{
- let categoryDoc=resp[0],followers=categoryDoc.followers
-if(followers.find(follower=>{return follower.contact==caseFollower.contact})==undefined){
-followers.push(caseFollower)
-categoryDoc.followers=followers
+ let audience=resp[0],followers=audience.followers,caseFollowerContact=receivedObj.args.contact
+ 
+if(followers.find(follower=>follower.contact==caseFollowerContact)==undefined){
 
-db.collection('traders').find({contact:caseFollower.contact}).toArray().then(resp=>{
-if(resp[0].accBal<process.env.minAccBalToFollowACategory){
-  res.send({msg:`<div style="color:red;">Account balance should be atleast ${process.env.minAccBalToFollowACategory} in order to follow a category. WhatsApp Kayas on 0703852178 to recharge your account.</div>`})
-}else{
-  db.collection('followings').replaceOne({contact:categoryDoc.contact,categoryId:categoryDoc.categoryId},categoryDoc).then(resp=>{
-    if(resp.modifiedCount==1){
-  res.send({msg:'Successful'})
-    }else{
-      res.send({msg:'Error may have occured, try again'})
-    }
+  db.collection('audiences').updateOne({audienceName:receivedObj.args.audienceName},{ $push:{ followers: {name:receivedObj.args.name,contact:receivedObj.args.contact} } }).then(resp=>{
+    
+    res.send(resp)
   })
-  
-  
-}
 
-})
+
 
 
 
@@ -3388,34 +3383,30 @@ if(resp[0].accBal<process.env.minAccBalToFollowACategory){
   break;
   
      }
-    
-    case 'unsubscribeFromACategory':{
-    db.collection('followings').find({contact:receivedObj.args.contactToFollow,categoryId:receivedObj.args.categoryId}).toArray().then(resp=>{
-let caseFollower=receivedObj.args.follower
+    case 'unfollowAnAudience':{
+      
+    db.collection('audiences').find({audienceName:receivedObj.args.audienceName}).toArray().then(resp=>{
 if(resp.length==0){
-  res.send({msg:'This category ID does not exit.'})
+  res.send({msg:'This audience does not exit.'})
 }else{
-  let categoryDoc=resp[0],followers=categoryDoc.followers,newFollowers=[]
-if(followers.find(follower=>{return follower.contact==caseFollower.contact})!=undefined){
-followers.forEach(follower=>{
-  if(follower.contact==caseFollower.contact){
-    ;
-  }else{
-    newFollowers.push(follower)
-  }
-})
-categoryDoc.followers=newFollowers
-db.collection('followings').replaceOne({contact:categoryDoc.contact,categoryId:categoryDoc.categoryId},categoryDoc).then(resp=>{
-  if(resp.modifiedCount==1){
-res.send({msg:'Successful'})
-  }else{
-    res.send({msg:'Error may have occured, try again'})
-  }
-})
+ let audience=resp[0],followers=audience.followers,caseFollowerContact=receivedObj.args.contact
+
+if(followers.find(follower=>follower.contact==caseFollowerContact)==undefined){
+
+;
+
+
 
 }else{
-  res.send({msg:'You do not subscribe to this category'})
+  
+  db.collection('audiences').updateOne({audienceName:receivedObj.args.audienceName},{ $pull:{ followers: {name:receivedObj.args.name,contact:receivedObj.args.contact} } }).then(resp=>{
+    
+    res.send(resp)
+  })
+
+
 }
+
 
 }
 
@@ -3423,6 +3414,72 @@ res.send({msg:'Successful'})
   break;
   
      }
+    
+    case 'sendMessageToAudience':{
+      
+    db.collection('audiences').find({audienceName:receivedObj.args.audienceName}).toArray().then(resp=>{
+if(resp.length==0){
+  res.send({msg:'This audience does not exit.'})
+}else{
+  
+ let audience=resp[0],followers=audience.followers
+
+ db.collection('traders').find({$and:[{$or:followers},{accBal:{$gte:receivedObj.args.audienceSmsCost}}]})
+ .toArray().then(resp=>{
+  
+  if(resp.length==0){
+    res.send({NoEligibleReceipients:true})
+  }else{
+    let followers=resp
+  let smsReceipients=[]
+
+  followers.forEach(follower=>{
+    follower.number='256'+follower.contact,follower.message=receivedObj.args.message,follower.senderid=follower.contact
+    smsReceipients.push(follower)
+    
+    })
+     request.post('http://www.egosms.co/api/v1/json/',{json:{
+      method:"SendSms",
+      userdata:{
+         username:"kayas",
+         password:"onongeopio"
+      },
+      msgdata:smsReceipients
+    }}, function (error, response, body) {
+      if (!error && response.statusCode == 201) {
+          console.log(body);
+        
+      }else{
+        if(body.Status=='OK'){
+    
+      res.send({success:1,NoOfReceipients:smsReceipients.length})
+        }else{
+          
+          res.send({success:0}) 
+    
+        }
+    
+    
+       
+      }
+    }
+    
+    )
+      
+
+  }
+
+ })
+
+
+}
+
+   })
+  break;
+  
+     }
+    
+ 
     
   
   default:{
