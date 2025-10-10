@@ -3424,7 +3424,13 @@ if(resp.length==0){
   
  let audience=resp[0],followers=audience.followers
 
- db.collection('traders').find({$and:[{$or:followers},{accBal:{$gte:receivedObj.args.audienceSmsCost}}]})
+ 
+
+
+ if(followers.length==0){
+  res.send({NoFollowers:true})
+ }else{
+  db.collection('traders').find({$and:[{$or:followers},{accBal:{$gte:receivedObj.args.audienceSmsCost}}]})
  .toArray().then(resp=>{
   
   if(resp.length==0){
@@ -3470,7 +3476,7 @@ if(resp.length==0){
   }
 
  })
-
+ }
 
 }
 
