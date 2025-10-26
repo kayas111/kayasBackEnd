@@ -49,22 +49,20 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
     console.log(`Listening on port ${port}`)
 
 
-// db.collection('registers').find({contact:764639151,registerId:0}
+// db.collection('registers').find({contact:703852178,registerId:48}
 //   ).toArray().then(resp=>{
    
 //  let list=resp[0].attendees,attendanceRegister=resp,final=[],message=`Dear 1222222222222222222222222, I kindly request for your VOTE for tangible outcomes and trust as the 8th Speaker, National Youth Parliament. Let's Unite behind progress! - ADRONI RODNEY (0700456883)`
-
-
 //  list.forEach(receip=>{
 //   receip.number='256'+receip.contact,
 //   receip.senderid='1234567890',
-//   receip.message=`Hello ${receip.name}, as you travel to Parliament today Friday 8th at 8:30am, I not only still kindly request for your VOTE as the 8th Speaker, National Youth Parliament but also do wish you a safe journey as well. I pray to the Almighty to safe guard you! - ADRONI RODNEY (0700456883)`+' #KayasSMS'
+//   receip.message=`${receip.name}, I'll be at Warehouse Lounge before 9pm waiting. Kindly make it, I'll be glad. Thanks (Kayas 0703852178)`+' #KayasSMS'
 // final.push(receip)
 // })
 
 // console.log(final)
 // console.log(final.length)
-// request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+// request.post('http://www.egosms.co/api/v1/json/',{json:{
 //     method:"SendSms",
 //     userdata:{
 //        username:"kayas",
@@ -1402,7 +1400,7 @@ if(traderDetailsObj.deliveryService.isAvailable==undefined){
 
 //check for permission to send SMS without tag
 if(traderDetailsObj.permissionTokensObj.sendSmsWithoutTag==undefined){
-  traderDetailsObj.permissionTokensObj.sendSmsWithoutTag=false
+  traderDetailsObj.permissionTokensObj.sendSmsWithoutTag=true
   
   }else{}
 
