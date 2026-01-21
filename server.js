@@ -36,7 +36,8 @@ const bcrypt=require('bcrypt')
 
 
 var formidable = require('formidable');
-let onlineDb="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority",localDb="mongodb://localhost:27017"
+let onlineDb="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority",
+localDb="mongodb://localhost:27017"
 const dbURI=onlineDb
 
 
@@ -48,21 +49,75 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
     console.log(`Listening on port ${port}`)
 
+// request.post('http://www.egosms.co/api/v1/json/',{json:{
+//     method:"SendSms",
+//     userdata:{
+//        username:"kayas",
+//        password:"onongeopio"
+//     },
+//     msgdata:[{number:256772418739,senderid:1234567891,message:"Gain 1 out of 7 is: Peace. Let's protect it"}]
+//   }}, function (error, response, body) {
+//     if (!error && response.statusCode == 201) {
+//         console.log(body);
+//     }else{
+//       console.log(body)
+//      // console.log(attendanceRegister)
+       
+//     }
+//   }
+  
+//   )
 
-// db.collection('registers').find({contact:703852178,registerId:48}
+// let count=1
+// setInterval(()=>{
+
+//    request.post('http://www.egosms.co/api/v1/json/',{json:{
+//     method:"SendSms",
+//     userdata:{
+//        username:"kayas",
+//        password:"onongeopio"
+//     },
+//     msgdata:[{number:256782116298,senderid:1234567891,message:'Kindly pay your debt of 20,000/= (Kayas).'}]
+//   }}, function (error, response, body) {
+//     if (!error && response.statusCode == 201) {
+//         console.log(body);
+//     }else{
+//       console.log(body)
+//      // console.log(attendanceRegister)
+       
+//     }
+//   }
+  
+//   )
+//   console.log(`Sent ${count}`)
+//   count++
+
+// },5000)
+     
+    
+
+    // db.collection('registers').find({contact:764639151,registerId:3}
+    //    ).toArray().then(resp=>{
+    //     console.log(resp[0])
+    //     AttendanceRegisterJsonToExcel(resp[0])
+    //    })
+
+
+// db.collection('registers').find({contact:785669748,registerId:10}
 //   ).toArray().then(resp=>{
    
-//  let list=resp[0].attendees,attendanceRegister=resp,final=[],message=`Dear 1222222222222222222222222, I kindly request for your VOTE for tangible outcomes and trust as the 8th Speaker, National Youth Parliament. Let's Unite behind progress! - ADRONI RODNEY (0700456883)`
+//  let list=resp[0].attendees.slice(0,200),attendanceRegister=resp,final=[],message=`Send an SMS message like this one to many voters at once. Call/WhatApp 0703852178 to get started`
 //  list.forEach(receip=>{
 //   receip.number='256'+receip.contact,
 //   receip.senderid='1234567890',
-//   receip.message=`${receip.name}, I'll be at Warehouse Lounge before 9pm waiting. Kindly make it, I'll be glad. Thanks (Kayas 0703852178)`+' #KayasSMS'
+//   receip.message=message
 // final.push(receip)
 // })
 
 // console.log(final)
 // console.log(final.length)
-// request.post('http://www.egosms.co/api/v1/json/',{json:{
+
+// request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
 //     method:"SendSms",
 //     userdata:{
 //        username:"kayas",
@@ -82,7 +137,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 //   )
 
      
-//       })
+//     })
 
 
 
@@ -306,10 +361,14 @@ const workbook = excel.utils.book_new();
 excel.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
 // Save the workbook to a file
-const filePath = `${attendanceRegisterDoc.registerTitle}.xlsx`;
-excel.writeFile(workbook, filePath);
+if(attendanceRegisterDoc.registerTitle.includes("/") ){
+  attendanceRegisterDoc.registerTitle=attendanceRegisterDoc.registerTitle.replace('/','-')
+}
 
-console.log(`Excel file created: ${filePath}`);
+const directory = path.join(__dirname,`${attendanceRegisterDoc.registerTitle}.xlsx`);
+excel.writeFile(workbook, directory);
+
+console.log(`Excel file created: ${directory}`);
 
 }
 
@@ -5015,7 +5074,7 @@ presentCount++;
 
 db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:finalMessagees}}).then(resp=>{
   res.send({statusOk:1,category:category})
-  console.log(`Added ${absentCount} contacts to messager, ${presentCount} out of the ${newMessagees.length} captured contacts were present in the messager list`)
+  console.log(`Added ${absentCount} contacts to messager, ${presentCount} out of the ${newMessagees.length} captured contacts were repeated`)
 
 }) 
 
