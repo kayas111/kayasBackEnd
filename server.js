@@ -96,17 +96,23 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
      
     
 
-    // db.collection('registers').find({contact:764639151,registerId:3}
+    // db.collection('registers').find({contact:703852178,registerId:49}
     //    ).toArray().then(resp=>{
     //     console.log(resp[0])
     //     AttendanceRegisterJsonToExcel(resp[0])
     //    })
 
 
-// db.collection('registers').find({contact:785669748,registerId:10}
+
+
+
+
+
+
+// db.collection('registers').find({contact:703852178,registerId:49}
 //   ).toArray().then(resp=>{
    
-//  let list=resp[0].attendees.slice(0,200),attendanceRegister=resp,final=[],message=`Send an SMS message like this one to many voters at once. Call/WhatApp 0703852178 to get started`
+//  let list=resp[0].attendees.slice(140,200),attendanceRegister=resp,final=[],message=`To send one SMS message to many numbers at once, use the KAYAS SMS sender. Use it to remind people about new stock, meetings, etc. WhatsApp 0772043895 to get it`
 //  list.forEach(receip=>{
 //   receip.number='256'+receip.contact,
 //   receip.senderid='1234567890',
