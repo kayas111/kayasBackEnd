@@ -109,10 +109,10 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
 
 
-// db.collection('registers').find({contact:703852178,registerId:49}
+// db.collection('registers').find({contact:703852178,registerId:43}
 //   ).toArray().then(resp=>{
    
-//  let list=resp[0].attendees.slice(200,300),attendanceRegister=resp,final=[],message=`To send one SMS message to many contacts at once, get the KAYAS SMS sender. Use it to remind people about new items, meetings, etc. WhatsApp 0772043895`
+//  let list=resp[0].attendees.slice(266,305),attendanceRegister=resp,final=[],message=`To send one SMS message to many contacts at once, get the KAYAS SMS sender from 0772043895 (WhatsApp). Use it to remind people about meetings, new items etc.`
 //  list.forEach(receip=>{
 //   receip.number='256'+receip.contact,
 //   receip.senderid='1234567890',
