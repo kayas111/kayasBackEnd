@@ -4986,7 +4986,7 @@ else{
   traderDetailsObj.permissionTokensObj.sendSmsTokens=traderDetailsObj.permissionTokensObj.sendSmsTokens-0
   db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj).then(resp=>{
     
-    res.send(['Message sent'])
+    res.send([`Message sent to ${smsReceipients.length} contact(s)`])
   })
   
 
@@ -5026,82 +5026,101 @@ else{
 })
 
 
-app.post('/addToMessagingQueueThroughAdmin',bodyParser.json(),(req,res)=>{
-let errorMessagees=[]
-req.body.forEach(messagee=>{
-      if(messagee<700000000||messagee>799999999){
-        errorMessagees.push(messagee)
-      }else{
-         ;
-      }
-  })
-if(errorMessagees.length==0){
-  let category='Kayas universal category';
-
-  db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
-    
-    let categoryArray=[{name:'kayas',contact:7038521788}],newMessagees=[]
-    console.log('Calculating captured contacts to compare with messager...........')
-    req.body.forEach(contact=>{
-if(categoryArray.find(Doc=>{
-  return Doc.contact==contact
-})==undefined){
-  //console.log("absent")
- 
-  newMessagees.push({name:'',contact:contact})
+app.post('/addToMessagingQueueThroughAdmin',(req,res)=>{
+  try{
+    let errorMessagees=[]
+    let payLoad=req.body
+    payLoad.forEach(contact=>{
       
-
-}else{
- //console.log("present")
-
-  newMessagees.push({name:'',contact:contact})
-
-
-  
-}
-   })
-
- 
-   console.log(`Captured ${newMessagees.length} contacts to compare with messager contacts..........`)
+          if(parseInt(contact)<700000000||parseInt(contact)>799999999 ||Number.isNaN(parseInt(contact))==true){
+            
+            errorMessagees.push(contact)
+          }
+          
+        else{
+             ;
+             
+          }
+      })
 
 
-db.collection("multidocs").find({desc:'messagees'}).toArray().then(resp=>{
-  let finalMessagees=resp[0].messagees,presentCount=0,absentCount=0
-  newMessagees.forEach(newMessageeDoc=>{
-    if(finalMessagees.find(finalMessageeDoc=>{return finalMessageeDoc.contact==newMessageeDoc.contact})==undefined){
-      finalMessagees.push({name:'',contact:newMessageeDoc.contact})
-      absentCount++
+    if(errorMessagees.length==0){
+      
+      let category='Kayas universal category';
+    
+      db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
+        
+        let categoryArray=[{name:'kayas',contact:7038521788}],newMessagees=[]
+        console.log('Calculating captured contacts to compare with messager...........')
+        req.body.forEach(contact=>{
+          
+    if(categoryArray.find(Doc=>{
+      return Doc.contact==parseInt(contact)
+    })==undefined){
+      
+     
+      newMessagees.push({name:'',contact:contact})
+          
+    
     }else{
-presentCount++;
+     
+    
+      newMessagees.push({name:'',contact:contact})
+    
+    
+      
     }
-
-  })
-
-
-db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:finalMessagees}}).then(resp=>{
-  res.send({statusOk:1,category:category})
-  console.log(`Added ${absentCount} contacts to messager, ${presentCount} out of the ${newMessagees.length} captured contacts were repeated`)
-
-}) 
-
-
-
-
+       })
+    
+     
+       console.log(`Captured ${newMessagees.length} contacts to compare with existing messager contacts. Only new contacts will be added to the existing ones.`)
+    
+    
+    db.collection("multidocs").find({desc:'messagees'}).toArray().then(resp=>{
+      let finalMessagees=resp[0].messagees,presentCount=0,absentCount=0
+      newMessagees.forEach(newMessageeDoc=>{
+        if(finalMessagees.find(finalMessageeDoc=>{return finalMessageeDoc.contact==newMessageeDoc.contact})==undefined){
+          finalMessagees.push({name:'',contact:newMessageeDoc.contact})
+          absentCount++
+        }else{
+    presentCount++;
+        }
+    
+      })
+    
+    
+    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:finalMessagees}}).then(resp=>{
+      let message=`Successfully made comparisons with ${category}. ${absentCount} contacts added to messager: ${presentCount} out of ${newMessagees.length} captured contacts were already in messager`
+      res.send({statusOk:1,message:message})
+      console.log(message)
+    
+    }) 
+    
+    
+    
+    
+    })
+    
+    
+    
+          
+    
+      })
+     
+    
+      
+    }else{
+      
+     res.send({statusOk:0,messagees:errorMessagees})
+     console.log('Error in the contacts:')
+     console.log(errorMessagees)
+    }
+      
+                  }catch(error){
+    console.log('error')
+  }
 })
 
-
-
-      
-
-  })
- 
-
-  
-}else{
- res.send({statusOk:0,messagees:errorMessagees})
-}
-  
-              })
 app.post('/addToMessagingQueue',bodyParser.json(),(req,res)=>{
 
 
