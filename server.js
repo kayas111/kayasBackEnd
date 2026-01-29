@@ -6500,12 +6500,12 @@ app.post('/flw-webhook/kayaspayment',bodyParser.json(),(req,res)=>{
       
 if(req.body.data.status=="successful"){
 let payLoad=req.body
-console.log(req.body.data.status)
+
 
 
   db.collection('pendingpayments').find({payerNo:parseInt(payLoad.data.customer.phone_number)-256000000000}).toArray().then(resp=>{
     let paymentDetails=resp[0]
-    console.log(paymentDetails)
+    
 
 switch(paymentDetails.paymentReason){
     case 'depositToKayasAccount':{
