@@ -109,14 +109,15 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
 
 
-// db.collection('registers').find({contact:703852178,registerId:43}
+// db.collection('registers').find({contact:703852178,registerId:49}
 //   ).toArray().then(resp=>{
    
-//  let list=resp[0].attendees.slice(266,305),attendanceRegister=resp,final=[],message=`To send one SMS message to many contacts at once, get the KAYAS SMS sender from 0772043895 (WhatsApp). Use it to remind people about meetings, new items etc.`
+//  let list=resp[0].attendees.slice(305,405),attendanceRegister=resp,final=[],message=`To send one SMS message to many contacts at once, get the "Kayas SMS sender" from 0772043895. Use it to remind people about meetings, new items, weddings, etc`,
+//  message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
 //  list.forEach(receip=>{
 //   receip.number='256'+receip.contact,
 //   receip.senderid='1234567890',
-//   receip.message=message
+//   receip.message=message2
 // final.push(receip)
 // })
 
