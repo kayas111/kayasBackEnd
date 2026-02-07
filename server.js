@@ -46,6 +46,7 @@ const dbURI=onlineDb
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
 //ReadExcelFile('working','Sheet1')  
+CreditFromExcel('working','Sheet1')  
 
     console.log(`Listening on port ${port}`)
 
@@ -420,6 +421,72 @@ if(attendees[0].name==undefined || attendees[0].contact==undefined ){
   }
   })
   db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log(`Completed and replaced with ${final.length} contacts in messager`)}) 
+  
+}
+
+
+}
+function CreditFromExcel (fileName,sheetName){
+  console.log('Ensure name field is filled with any information.')
+  console.log('Pass file name and sheet name as arguments in string format')
+
+  
+let file=excel.readFile(`../readExcel/${fileName}.xlsx`)
+
+let attendees=excel.utils.sheet_to_json(file.Sheets[`${sheetName}`]),final=[], position=1
+
+
+if(attendees[0].name==undefined || attendees[0].contact==undefined ){
+  console.log('********* Name or contact is not defined well in sheet. Possibly remove trailing spaces ***********')
+}else{
+  attendees.forEach(attendee=>{
+    position++;
+   
+  
+  if(parseInt(attendee.contact)>0){
+  if(parseInt(attendee.contact)>799999999){
+    console.log(`Position: ${position} - Error with:  ${attendee.contact}`)
+  }else{
+  
+  let cont=attendee.contact, array=Array.from(String(cont)), length=array.length
+  if(length<9 || length>10){
+  console.log(`Invalid length ${length} at position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact}`)
+  
+  }else{
+    attendee.contact=parseInt(attendee.contact)
+    final.push(attendee)
+  }
+  }
+  }else{
+    
+  console.log(`Position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact} is not greater than zero and has been ignored.`)
+  
+  
+  
+  }
+  })
+//final=[{name:'no name',contact:773367078}]
+  
+  
+  
+  
+  let contacts=final.map(c=>c.contact)
+  
+
+  // db.collection('traders').updateMany({ contact: { $in: contacts } },
+  //   { $inc: { accBal: 100 } }).then(resp=>{
+  //     console.log(resp)
+  //   })
+
+  db.collection('traders').find({contact:{$in:contacts}}).toArray().then(resp=>{
+    let count=0;
+   resp.forEach(trader=>{
+    if(trader.accBal<100){count++}else{}
+   })
+
+   console.log(count)
+  })
+  
   
 }
 
