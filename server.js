@@ -46,7 +46,7 @@ const dbURI=onlineDb
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
 //ReadExcelFile('working','Sheet1')  
-CreditFromExcel('working','Sheet1')  
+//CreditFromExcel('working','Sheet1')  
 
     console.log(`Listening on port ${port}`)
 
@@ -6534,7 +6534,7 @@ res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-
 app.post('/collection_kayasers_registerFree',bodyParser.json(),(req,res)=>{
   
  
-  
+
 try{
  
 registrationModel({name:req.body.name,institution:req.body.institution,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
