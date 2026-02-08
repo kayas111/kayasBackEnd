@@ -2259,8 +2259,15 @@ return (await pendingPaymentsModel(payLoad).save().then(resp=>{
  function InitiatePayment(PendingPaymentReport,Authorization){
    
   if(PendingPaymentReport.redirect==true && Authorization != undefined){
+ if(Authorization.meta==undefined){
+  res.send({redirect:false})
+
+ }else{
+  res.send({redirect:true,redirectUrl:Authorization.meta.authorization.redirect})
+ }
+
           
-    res.send({redirect:true,redirectUrl:Authorization.meta.authorization.redirect})
+    
   }else{
     console.log('Error in Authroization object of payment')
     }
