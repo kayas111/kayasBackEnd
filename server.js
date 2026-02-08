@@ -2269,6 +2269,7 @@ return (await pendingPaymentsModel(payLoad).save().then(resp=>{
           
     
   }else{
+    res.send({redirect:false})
     console.log('Error in Authroization object of payment')
     }
  }
