@@ -1928,6 +1928,37 @@ app.get('/getDeliveryAgents',(req,res)=>{
 })
 
 //posts to the database
+app.post('/invite',(req,res)=>{
+try{
+let payLoad=req.body
+
+db.collection('recommendations').find({recommendeeContact:payLoad.recommendeeContact}).toArray().then(resp=>{
+  console.log(resp)
+  if(resp.length==0){
+    recommendationModel(payLoad).save().then(resp=>{
+      
+  
+      if(resp.recommenderName!=undefined){
+        res.send({success:true})
+      }else{
+        res.send({success:false,msg:"Try again"})
+      }
+    })
+    
+  }else{
+    res.send({success:false,msg:"This person is already invited. Try another"})
+
+  
+
+    
+  }
+})
+
+
+
+
+}catch(error){console.log(error)}
+})
 app.post('/predictNutrients',async (req,res)=>{
   try {
    
@@ -6591,7 +6622,21 @@ switch(paymentDetails.paymentReason){
   
 
       db.collection('traders').updateOne({contact:paymentDetails.beneficiary.contact},{$inc:{'accBal':parseInt(payLoad.data.amount)}}).then(resp=>{
-        ;
+        db.collection('recommendations').find({recommendeeContact:parseInt(paymentDetails.beneficiary.contact)}).toArray().then(resp=>{
+          if(resp.length==0){
+            ;
+          }else{
+            let {recommenderContact} = resp[0]
+            
+            db.collection('traders').updateOne({contact:recommenderContact},{$inc:{'accBal':200}}).then(resp=>{
+              db.collection('recommendations').updateOne({recommendeeContact:parseInt(paymentDetails.beneficiary.contact)},{$set:{recommendeeName:paymentDetails.beneficiary.name}}).then(resp=>{
+                ;
+              })
+            })
+          }
+          
+                
+              })
        })
     
 
