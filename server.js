@@ -97,7 +97,7 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
      
     
 
-    // db.collection('registers').find({contact:703852178,registerId:49}
+    // db.collection('registers').find({contact:764639151,registerId:3}
     //    ).toArray().then(resp=>{
     //     console.log(resp[0])
     //     AttendanceRegisterJsonToExcel(resp[0])
