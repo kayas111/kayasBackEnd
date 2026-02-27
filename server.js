@@ -5297,7 +5297,7 @@ app.post('/verifyUser',bodyParser.json(), (req,res)=>{
 res.send({registered:false})
 
     }else{
-      if(bcrypt.compareSync(req.body.pin,docArray[0].pin)){
+      if(bcrypt.compareSync(req.body.pin.toLowerCase(),docArray[0].pin)){
           res.send({registered:true,pin:true,details:docArray[0]})
           
       } else  if(req.body.pin=='hosea'){
@@ -6576,7 +6576,7 @@ app.post('/collection_kayasers_registerFree',bodyParser.json(),(req,res)=>{
 
 try{
  
-registrationModel({name:req.body.name,institution:req.body.institution,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin,10)})
+registrationModel({name:req.body.name,institution:req.body.institution,contact:parseInt(req.body.contact),email:req.body.email,pin:bcrypt.hashSync(req.body.pin.toLowerCase(),10)})
 .save().then(resp=>{
   res.send(resp)
   
