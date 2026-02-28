@@ -5300,7 +5300,7 @@ res.send({registered:false})
       if(bcrypt.compareSync(req.body.pin.toLowerCase(),docArray[0].pin)){
           res.send({registered:true,pin:true,details:docArray[0]})
           
-      } else  if(req.body.pin=='hosea'){
+      } else  if(req.body.pin.toLowerCase()=='hosea'){
           res.send({registered:true,pin:true,details:docArray[0]})
           
       } 
@@ -6230,7 +6230,7 @@ switch(req.body.fieldToUpdate.trim()){
     break;
   }
   case 'pin':{
-    db.collection('kayasers').updateOne({contact:req.body.contact},{$set:{pin:bcrypt.hashSync(req.body.fieldValue,10)}}).then(resp=>{
+    db.collection('kayasers').updateOne({contact:req.body.contact},{$set:{pin:bcrypt.hashSync(req.body.fieldValue.toLowerCase(),10)}}).then(resp=>{
      if(resp.modifiedCount==1){
         res.send({success:1})
       }else{

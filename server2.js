@@ -23,9 +23,7 @@
 
 
 let contact='256703852178'
+let numb1=20,numb2=50;
 
-console.log(parseInt(contact)-256000000000)
-let isOn=true
 
-const tf = require('@tensorflow/tfjs-node');
-console.log(tf)
+console.log(numb1-numb2)
