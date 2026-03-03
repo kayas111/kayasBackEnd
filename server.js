@@ -44,11 +44,13 @@ const dbURI=onlineDb
 
 
  const port=process.env.PORT || 4000
-mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,()=>{
+mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,async ()=>{
 //ReadExcelFile('working','Sheet1')  
 //CreditFromExcel('working','Sheet1')  
 
     console.log(`Listening on port ${port}`)
+
+    
 
 // request.post('http://www.egosms.co/api/v1/json/',{json:{
 //     method:"SendSms",
@@ -2264,10 +2266,10 @@ app.post('/initiateDelivery',(req,res)=>{
   })
 
 app.post('/makePayment',(req,res)=>{
-  
 try {
 
- 
+  req.headers.authorization=`Bearer ${process.env.flwSecretKey}`
+  
   async function CheckForExistingPendingPayment(payLoad){
       
     return(await db.collection('pendingpayments').deleteMany({payerNo:payLoad.payerNo}).then(async (resp)=>{
@@ -2308,6 +2310,7 @@ return (await pendingPaymentsModel(payLoad).save().then(resp=>{
 
 
   let payLoad=req.body
+  
  switch(payLoad.paymentReason){
   case 'depositToKayasAccount':{
   db.collection('kayasers').find({contact:parseInt(payLoad.beneficiary.contact)}).toArray().then(resp=>{
