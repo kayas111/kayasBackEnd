@@ -113,18 +113,23 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=
 
 
 
-// db.collection('registers').find({contact:703852178,registerId:49}
+// db.collection('registers').find({contact:703852178,registerId:43}
 //   ).toArray().then(resp=>{
    
-//  let list=resp[0].attendees.slice(305,405),attendanceRegister=resp,final=[],message=`To send one SMS message to many contacts at once, get the "Kayas SMS sender" from 0772043895. Use it to remind people about meetings, new items, weddings, etc`,
+//  let list=resp[0],attendanceRegister=resp,final=[],message=`Join this Makerere information group for authentic Campus updates: https://chat.whatsapp.com/BETxxyrBg5E2Z2qk3yUqQf?mode=hqctcla`,
 //  message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
-//  list.forEach(receip=>{
+
+// console.log(list)
+
+
+//  list.attendees.forEach(receip=>{
 //   receip.number='256'+receip.contact,
 //   receip.senderid='1234567890',
-//   receip.message=message2
+//   receip.message=message
 // final.push(receip)
 // })
 
+// final=final.slice(0,600)
 // console.log(final)
 // console.log(final.length)
 
