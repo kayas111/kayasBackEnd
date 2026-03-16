@@ -5051,7 +5051,7 @@ app.post('/setAttendeeRegisterSms',bodyParser.json(),(req,res)=>{
 
   db.collection('registers').updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{smsmessage:req.body.smsmessage}}).then(resp=>{
   if(resp.modifiedCount==1){
-      res.send(["Successfully updated SMS"])
+      res.send(["Saved"])
     }else if(resp.modifiedCount==0){
       res.send(["Already upto date!"])
     }else{
