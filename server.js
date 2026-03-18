@@ -46,9 +46,10 @@ const dbURI=onlineDb
  const port=process.env.PORT || 4000
 mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,async ()=>{
 //ReadExcelFile('working','Sheet1')  
-//CreditNewKayasers(1351,100)  
+//CreditNewKayasers(1375,150)  
 
     console.log(`Listening on port ${port}`)
+   
 
     
 
@@ -612,6 +613,8 @@ function GenerateSmsContacts(contactsArray,fromPosition,toPosition,storageDirect
 
 
 }
+
+
 
 async function DndFilter(contactsArray,callBackFunction){
   let result =[]
