@@ -46,264 +46,259 @@ const dbURI=onlineDb
  const port=process.env.PORT || 4000
 
 
- 
 
-try{
-  mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,async ()=>{
-    //ReadExcelFile('working','Sheet1')  
-    //CreditNewKayasers(1413,150)  
+ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,async ()=>{
+  //ReadExcelFile('working','Sheet1')  
+  //CreditNewKayasers(1413,150)  
+  
+      console.log(`Listening on port ${port}`)
+     
+  
+      
+  
+  // request.post('http://www.egosms.co/api/v1/json/',{json:{
+  //     method:"SendSms",
+  //     userdata:{
+  //        username:"kayas",
+  //        password:"onongeopio"
+  //     },
+  //     msgdata:[{number:256772418739,senderid:1234567891,message:"Gain 1 out of 7 is: Peace. Let's protect it"}]
+  //   }}, function (error, response, body) {
+  //     if (!error && response.statusCode == 201) {
+  //         console.log(body);
+  //     }else{
+  //       console.log(body)
+  //      // console.log(attendanceRegister)
+         
+  //     }
+  //   }
     
-        console.log(`Listening on port ${port}`)
+  //   )
+  
+  // let count=1
+  // setInterval(()=>{
+  
+  //    request.post('http://www.egosms.co/api/v1/json/',{json:{
+  //     method:"SendSms",
+  //     userdata:{
+  //        username:"kayas",
+  //        password:"onongeopio"
+  //     },
+  //     msgdata:[{number:256782116298,senderid:1234567891,message:'Kindly pay your debt of 20,000/= (Kayas).'}]
+  //   }}, function (error, response, body) {
+  //     if (!error && response.statusCode == 201) {
+  //         console.log(body);
+  //     }else{
+  //       console.log(body)
+  //      // console.log(attendanceRegister)
+         
+  //     }
+  //   }
+    
+  //   )
+  //   console.log(`Sent ${count}`)
+  //   count++
+  
+  // },5000)
        
-    
-        
-    
-    // request.post('http://www.egosms.co/api/v1/json/',{json:{
-    //     method:"SendSms",
-    //     userdata:{
-    //        username:"kayas",
-    //        password:"onongeopio"
-    //     },
-    //     msgdata:[{number:256772418739,senderid:1234567891,message:"Gain 1 out of 7 is: Peace. Let's protect it"}]
-    //   }}, function (error, response, body) {
-    //     if (!error && response.statusCode == 201) {
-    //         console.log(body);
-    //     }else{
-    //       console.log(body)
-    //      // console.log(attendanceRegister)
-           
-    //     }
-    //   }
       
-    //   )
-    
-    // let count=1
-    // setInterval(()=>{
-    
-    //    request.post('http://www.egosms.co/api/v1/json/',{json:{
-    //     method:"SendSms",
-    //     userdata:{
-    //        username:"kayas",
-    //        password:"onongeopio"
-    //     },
-    //     msgdata:[{number:256782116298,senderid:1234567891,message:'Kindly pay your debt of 20,000/= (Kayas).'}]
-    //   }}, function (error, response, body) {
-    //     if (!error && response.statusCode == 201) {
-    //         console.log(body);
-    //     }else{
-    //       console.log(body)
-    //      // console.log(attendanceRegister)
-           
-    //     }
-    //   }
-      
-    //   )
-    //   console.log(`Sent ${count}`)
-    //   count++
-    
-    // },5000)
+  
+      // db.collection('registers').find({contact:764639151,registerId:3}
+      //    ).toArray().then(resp=>{
+      //     console.log(resp[0])
+      //     AttendanceRegisterJsonToExcel(resp[0])
+      //    })
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  // db.collection('registers').find({contact:703852178,registerId:43}
+  //   ).toArray().then(resp=>{
+     
+  //  let list=resp[0],attendanceRegister=resp,final=[],message=`Join this Makerere information group for authentic Campus updates: https://chat.whatsapp.com/BETxxyrBg5E2Z2qk3yUqQf?mode=hqctcla`,
+  //  message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
+  
+  // console.log(list)
+  
+  
+  //  list.attendees.forEach(receip=>{
+  //   receip.number='256'+receip.contact,
+  //   receip.senderid='1234567890',
+  //   receip.message=message
+  // final.push(receip)
+  // })
+  
+  // final=final.slice(0,600)
+  // console.log(final)
+  // console.log(final.length)
+  
+  // request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+  //     method:"SendSms",
+  //     userdata:{
+  //        username:"kayas",
+  //        password:"onongeopio"
+  //     },
+  //     msgdata:final
+  //   }}, function (error, response, body) {
+  //     if (!error && response.statusCode == 201) {
+  //         console.log(body);
+  //     }else{
+  //       console.log(body)
+  //      // console.log(attendanceRegister)
          
-        
+  //     }
+  //   }
     
-        // db.collection('registers').find({contact:764639151,registerId:3}
-        //    ).toArray().then(resp=>{
-        //     console.log(resp[0])
-        //     AttendanceRegisterJsonToExcel(resp[0])
-        //    })
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // db.collection('registers').find({contact:703852178,registerId:43}
-    //   ).toArray().then(resp=>{
+  //   )
+  
        
-    //  let list=resp[0],attendanceRegister=resp,final=[],message=`Join this Makerere information group for authentic Campus updates: https://chat.whatsapp.com/BETxxyrBg5E2Z2qk3yUqQf?mode=hqctcla`,
-    //  message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
-    
-    // console.log(list)
-    
-    
-    //  list.attendees.forEach(receip=>{
-    //   receip.number='256'+receip.contact,
-    //   receip.senderid='1234567890',
-    //   receip.message=message
-    // final.push(receip)
-    // })
-    
-    // final=final.slice(0,600)
-    // console.log(final)
-    // console.log(final.length)
-    
-    // request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
-    //     method:"SendSms",
-    //     userdata:{
-    //        username:"kayas",
-    //        password:"onongeopio"
-    //     },
-    //     msgdata:final
-    //   }}, function (error, response, body) {
-    //     if (!error && response.statusCode == 201) {
-    //         console.log(body);
-    //     }else{
-    //       console.log(body)
-    //      // console.log(attendanceRegister)
-           
-    //     }
-    //   }
+  //     })
+  
+  
+  
+  
+  
+  
+  
+  //     db.collection('registers').find({contact:786804825,registerId:0}
+  //     ).toArray().then(resp=>{
+  // let doc=resp[0]
+  
+  // doc.attendees.forEach(voter=>{
+  // if(voter.contact==774391465){
+  // console.log(voter.name)
+  // }else{}
+  // })
       
-    //   )
-    
-         
-    //     })
-    
-    
-    
-    
-    
-    
-    
-    //     db.collection('registers').find({contact:786804825,registerId:0}
-    //     ).toArray().then(resp=>{
-    // let doc=resp[0]
-    
-    // doc.attendees.forEach(voter=>{
-    // if(voter.contact==774391465){
-    // console.log(voter.name)
-    // }else{}
-    // })
-        
-    //     })
-    
-    
-    
-    
-      /*  
-        {
-    let count=0
-    
-    
-         setInterval(()=>{
-          if(count==10){
-            console.log('Limit reached')
-          }else{
-            request.post('http://sandbox.egosms.co/api/v1/json/',{json:{ 
-            method:"SendSms",
-            userdata:{
-               username:"kayas",
-               password:"onongeopio"
-            },
-            msgdata:[{number:`256771219536`,senderid:'1234567890',message:`Kindly respond to the matter about clearing the pending balance #KayasSMS`}]
-          }}, function (error, response, body) {
-            if (!error && response.statusCode == 201) {
-                console.log(body);
-                console.log('Error one in free sending sms')
-                
-            }else{
-              console.log(body)
-              if(body.Status=='OK'){
-    console.log(`sent ${++count}`)
-               }else{
-                
-                console.log('Error two in sending free sms')
-              }
-               
-            }
-          }
-          
-          )}
-         },600000)
-        
-    
-        }
-       */
-    
-        
-        
-        
-    
-    /*
-    
-    db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
-    
-    
-        db.collection('traders').deleteOne({contact:755643774}).then(resp=>{
-    
-          console.log(resp)
-        })
-        
-        db.collection('traders').updateOne({contact:755643774},{$set:{accBal:1230000}}).then(resp=>{console.log(resp)})
-      
-      
-          db.collection('registers').find({contact:787384824,registerId:0}).toArray().then(resp=>{
-         
-            
-        
-     let list=resp[0].attendees,attendanceRegister=resp,final=[],message=`CONAS: Next Sem starts on 18th Jan, congratulations upon completing the semester and merry Christmass. From Aston T (EC INTENDO)`
-    
-    
-     list.forEach(receip=>{
-      receip.number='256'+receip.contact,
-      receip.senderid='1234567890',
-      receip.message=message+' #KayasSMS'
-    final.push(receip)
-    })
-    
-    console.log(final)
-    console.log(final.length)
-    request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
-        method:"SendSms",
-        userdata:{
-           username:"kayas",
-           password:"onongeopio"
-        },
-        msgdata:final
-      }}, function (error, response, body) {
-        if (!error && response.statusCode == 201) {
-            console.log(body);
+  //     })
+  
+  
+  
+  
+    /*  
+      {
+  let count=0
+  
+  
+       setInterval(()=>{
+        if(count==10){
+          console.log('Limit reached')
         }else{
-          console.log(body)
-         // console.log(attendanceRegister)
-           
+          request.post('http://sandbox.egosms.co/api/v1/json/',{json:{ 
+          method:"SendSms",
+          userdata:{
+             username:"kayas",
+             password:"onongeopio"
+          },
+          msgdata:[{number:`256771219536`,senderid:'1234567890',message:`Kindly respond to the matter about clearing the pending balance #KayasSMS`}]
+        }}, function (error, response, body) {
+          if (!error && response.statusCode == 201) {
+              console.log(body);
+              console.log('Error one in free sending sms')
+              
+          }else{
+            console.log(body)
+            if(body.Status=='OK'){
+  console.log(`sent ${++count}`)
+             }else{
+              
+              console.log('Error two in sending free sms')
+            }
+             
+          }
         }
-      }
+        
+        )}
+       },600000)
       
-      )
+  
+      }
+     */
+  
+      
+      
+      
+  
+  /*
+  
+  db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
+  
+  
+      db.collection('traders').deleteOne({contact:755643774}).then(resp=>{
+  
+        console.log(resp)
+      })
+      
+      db.collection('traders').updateOne({contact:755643774},{$set:{accBal:1230000}}).then(resp=>{console.log(resp)})
     
+    
+        db.collection('registers').find({contact:787384824,registerId:0}).toArray().then(resp=>{
+       
+          
+      
+   let list=resp[0].attendees,attendanceRegister=resp,final=[],message=`CONAS: Next Sem starts on 18th Jan, congratulations upon completing the semester and merry Christmass. From Aston T (EC INTENDO)`
+  
+  
+   list.forEach(receip=>{
+    receip.number='256'+receip.contact,
+    receip.senderid='1234567890',
+    receip.message=message+' #KayasSMS'
+  final.push(receip)
+  })
+  
+  console.log(final)
+  console.log(final.length)
+  request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+      method:"SendSms",
+      userdata:{
+         username:"kayas",
+         password:"onongeopio"
+      },
+      msgdata:final
+    }}, function (error, response, body) {
+      if (!error && response.statusCode == 201) {
+          console.log(body);
+      }else{
+        console.log(body)
+       // console.log(attendanceRegister)
          
-          })
-    */
-    
-     
-    
-    
-    /*
-    let file=excel.readFile('../readExcel/shortlegendunsa.xlsx')
-    console.log('Ensure name field is filled with any information..............')
-    let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
-    attendees.forEach(attendee=>{
-    if(attendee.contact>0){
-    attendee.contact=parseInt(attendee.contact)
-    
-    final.push(attendee) 
-    }else{
-      console.log(`${attendee} contact is not greater than zero`)
-     
+      }
     }
-    })
     
-    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}})
-    .then(resp=>{console.log("completed and pushed to messager")}) 
-    */
-    
-    }))
-}catch(error){
-  console.log('Error connecting to database')
-}
+    )
+  
+       
+        })
+  */
+  
+   
+  
+  
+  /*
+  let file=excel.readFile('../readExcel/shortlegendunsa.xlsx')
+  console.log('Ensure name field is filled with any information..............')
+  let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
+  attendees.forEach(attendee=>{
+  if(attendee.contact>0){
+  attendee.contact=parseInt(attendee.contact)
+  
+  final.push(attendee) 
+  }else{
+    console.log(`${attendee} contact is not greater than zero`)
+   
+  }
+  })
+  
+  db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}})
+  .then(resp=>{console.log("completed and pushed to messager")}) 
+  */
+  
+  }))
 
 
 
