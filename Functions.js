@@ -16,6 +16,11 @@ function ConvertFileToBase64(file){
     })
   }
   
+
+  
+
+  
+
   async function ReturnArrayChunks(dataArray,chunkSize){
 
 

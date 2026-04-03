@@ -5051,8 +5051,8 @@ else{
 }
 
 )
-  
-  
+
+
 
 
   })
@@ -5088,42 +5088,39 @@ app.post('/addToMessagingQueueThroughAdmin',(req,res)=>{
 
 
     if(errorMessagees.length==0){
-      
-      let category='Kayas universal category';
-    
-      db.collection('multidocs').find({desc:category}).toArray().then(resp=>{
-        
-        let categoryArray=[{name:'kayas',contact:7038521788}],newMessagees=[]
+      let newMessagees=[{ name: '', contact: '773367078' }]
         console.log('Calculating captured contacts to compare with messager...........')
         req.body.forEach(contact=>{
           
-    if(categoryArray.find(Doc=>{
+    if(newMessagees.find(Doc=>{
       return Doc.contact==parseInt(contact)
     })==undefined){
-      
+      console.log('absent push')
      
-      newMessagees.push({name:'',contact:contact})
+      newMessagees.push({name:'',contact:parseInt(contact)})
           
     
     }else{
      
-    
-      newMessagees.push({name:'',contact:contact})
+    console.log('present dont push')
+      
     
     
       
     }
        })
+
+       console.log(newMessagees)
     
      
        console.log(`Captured ${newMessagees.length} contacts to compare with existing messager contacts. Only new contacts will be added to the existing ones.`)
     
     
-    db.collection("multidocs").find({desc:'messagees'}).toArray().then(resp=>{
+    db.collection("multidocs").find({description:'messagees'}).toArray().then(resp=>{
       let finalMessagees=resp[0].messagees,presentCount=0,absentCount=0
       newMessagees.forEach(newMessageeDoc=>{
         if(finalMessagees.find(finalMessageeDoc=>{return finalMessageeDoc.contact==newMessageeDoc.contact})==undefined){
-          finalMessagees.push({name:'',contact:newMessageeDoc.contact})
+          finalMessagees.push(newMessageeDoc)
           absentCount++
         }else{
     presentCount++;
@@ -5132,8 +5129,8 @@ app.post('/addToMessagingQueueThroughAdmin',(req,res)=>{
       })
     
     
-    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:finalMessagees}}).then(resp=>{
-      let message=`Successfully made comparisons with ${category}. ${absentCount} contacts added to messager: ${presentCount} out of ${newMessagees.length} captured contacts were already in messager`
+    db.collection('multidocs').updateOne({description:'messagees'},{$set:{messagees:finalMessagees}}).then(resp=>{
+      let message=`Successfull. ${absentCount} contacts added to messager. Out of ${newMessagees.length} captured contacts, ${presentCount} were present in messager`
       res.send({statusOk:1,message:message})
       console.log(message)
     
@@ -5148,7 +5145,7 @@ app.post('/addToMessagingQueueThroughAdmin',(req,res)=>{
     
           
     
-      })
+     
      
     
       
