@@ -4296,7 +4296,7 @@ db.collection('multidocs').find({description:'messagees'}).toArray().then(resp=>
     }) 
   
   
-    
+
   
   db.collection("registers").updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{attendees:registerAttendees}}).then(resp=>{
   
@@ -4343,12 +4343,7 @@ db.collection('multidocs').find({description:'messagees'}).toArray().then(resp=>
     console.log(err)
   }
 })
-app.post('/setMessagerIntroStatement',bodyParser.json(),(req,res)=>{
-  
- db.collection('controls').updateOne({_id:new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{messagerIntroStatement:req.body.statement}}).then(resp=>{
-    res.send(["Successful"])
-  })
-  })
+
 
 app.post('/mapAttendanceRegisterToMessager',bodyParser.json(),(req,res)=>{
 
@@ -4852,96 +4847,23 @@ res.send({id:payLoad.articleId})
 }
 })
 
-app.post('/deleteMessageesList',bodyParser.json(),(req,res)=>{
-
-  if(req.body.categoryId=='none'){
-      db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:[]}}).then(statusresp=>{
-          res.send({category:1}) 
+app.get('/deleteMessageesList',(req,res)=>{
+  
+db.collection('multidocs').updateOne({description:'messagees'},{$set:{messagees:[]}}).then(resp=>{
+  console.log(resp)
+  if(resp.modifiedCount==1){
+    res.send({success:1}) 
+  }else  if(resp.modifiedCount==0){
+    res.send({success:0}) 
+  } else {
+    res.send({success:false}) 
+  }
+          
        })
-  }else{
-try{db.collection('multidocs').find({desc:req.body.categoryId}).toArray().then(resp=>{
-  if(resp.length==0){
-    
-   
-   res.send({category:0})
-  }else{
-   db.collection('multidocs').find({desc:'messagees'}).toArray().then(docArray=>{
-if(docArray[0].messagees.length==0){
-   ;
-}else{ 
-  /*
-  db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:[]}}).then(statusresp=>{
-   
-  })*/
-   let currentMessagees=docArray[0].messagees
-   currentMessagees.forEach(caseMessagee=>{
-  if( resp[0].messagees.find(messagee=>{
-return messagee.contact==caseMessagee.contact
-   })==undefined){
-    resp[0].messagees.push(caseMessagee)
-   }else{
-;
-   }
+  
 
 })
 
-db.collection('multidocs').updateOne({desc:req.body.categoryId},{$set:{messagees:resp[0].messagees}}).then(resp=>{
-  res.send({category:1}) 
-  })
-
-
-}
-   })
-   
-
-  }
-})
-}catch(err){
-  console.log("kayas, the error originated from attempting to top up to an institutional contacts category and it is:")
-  console.log(err)
-}
-
-
-  }
-
-
-})
-app.post('/removeMessageeInMessager',bodyParser.json(),(req,res)=>{
-
-try{db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
-  let newMessagees=[]
-if(resp[0].messagees.find(messagee=>{return messagee==req.body.contact})==undefined){
-
-  res.send({presence:0})
-}else{
-
-resp[0].messagees.forEach(messagee=>{
-  if(messagee==req.body.contact){
-  ;
-  
-  }else{
-    newMessagees.push(messagee)
-  
-  }
-  
-    })
-  
-    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:newMessagees}}).then(resp=>{
-  res.send({success:1})
-  
-    })
-
-}
-
-
-
-
-})
-}catch(err){
-  console.log(err)
-}
-
-})
 
 app.post('/registerClick',bodyParser.json(),(req,res)=>{
   console.log("clicked")
@@ -5242,29 +5164,7 @@ app.post('/addToMessagingQueueThroughAdmin',(req,res)=>{
   }
 })
 
-app.post('/addToMessagingQueue',bodyParser.json(),(req,res)=>{
 
-
-
-db.collection('multidocs').find({desc:'messagees'}).toArray().then(docArray=>{
-     if(docArray[0].messagees.find(messageeDoc=>{
-          return messageeDoc.contact==parseInt(req.body.contact)
-      })==undefined){
- 
-      
-db.collection('multidocs').updateOne({desc:'messagees'},{$push:{messagees:{name:"",contact:parseInt(req.body.contact)}}}).then(resp=>{
-      res.send({presence:0})
-      
-  })
-
-      }else{
-          res.send({presence:1})
-      }
-  })
- 
-
-
-})
 app.post('/deleteClientOpinions',bodyParser.json(),(req,res)=>{
 
 
