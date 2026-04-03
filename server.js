@@ -438,7 +438,7 @@ if(attendees[0].name==undefined || attendees[0].contact==undefined ){
   
   }
   })
-  db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log(`Completed and replaced with ${final.length} contacts in messager`)}) 
+  db.collection('multidocs').updateOne({description:'messagees'},{$set:{messagees:final}}).then(resp=>{console.log(`Completed and replaced with ${final.length} contacts in messager`)}) 
   
 }
 
@@ -862,6 +862,7 @@ app.get('/attendeesMessage/:registrarContact/:id', (req,res)=>{
 
   try{
    db.collection('registers').find({contact:parseInt(req.params.registrarContact),registerId:parseInt(req.params.id)}).toArray().then(resp=>{
+    console.log()
      if(resp.length==0){
        ;
      }else{
@@ -901,26 +902,10 @@ res.send(resp)
 app.get('/attendees/:registrarContact/:id', (req,res)=>{
 
  try{
-  db.collection('controls').find({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(docArray=>{
-   
- if(docArray.length==0){;}else{
   db.collection('registers').find({contact:parseInt(req.params.registrarContact),registerId:parseInt(req.params.id)}).toArray().then(resp=>{
-    if(resp.length==0){
-      ;
-    }else{
-    res.send({brandTop:docArray[0].brandTop,registerDoc:resp[0],closed:resp[0].closed})
-    
+  res.send(resp)
   
-
-    }
-   
-  
-  })   
-  
- }
-})
-
-
+  }) 
 
  
 }catch(err){
@@ -978,18 +963,31 @@ app.get('/collection_controls_visits', (req,res)=>{
       }
     })}) 
     app.get('/collection_registers_registers', (req,res)=>{db.collection('registers').find().toArray().then((array)=>{res.send(array)})}) 
-    app.get('/messagees', (req,res)=>{db.collection('multidocs').find({desc:"messagees"}).toArray().then((array)=>{
-     
-      db.collection('controls').find({_id:new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then(docArray=>{
-      
-       if(doArray.length==0){;}else{
-        res.send({messagees:array[0].messagees,introStatement:docArray[0].messagerIntroStatement})
-       }
-    })
-      
    
-    
-    })}) 
+    app.get('/messagees', (req,res)=>{
+      
+      db.collection('multidocs').find({description:'messagees'}).toArray().then((array)=>{
+  if(array.length==0){
+    db.collection('multidocs').updateOne(
+      {description:'messagees'}, 
+      { $setOnInsert: { messagees:[]} },
+      { upsert: true }
+    ).then(resp=>{
+      
+      if(resp.upsertedCount==1){res.send([])}else{
+      ;
+      }
+    })
+  }else{
+    res.send(array[0].messagees)
+  }
+  
+      })
+
+
+     
+
+    }) 
 
 
     app.get('/getCurrentPushNotification', (req,res)=>{db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then((array)=>{
@@ -1131,13 +1129,7 @@ SendReport(subscriptionNumb,numbOfNotified,numbOfErrors)
   })   
 app.get('/attendanceregs/:registrar/:id', (req,res)=>{db.collection('registers').find({contact:parseInt(req.params.registrar),registerId:parseInt(req.params.id)}).toArray().then((array)=>{
   
-  if(array.length==0){
-    res.send({presence:0})
-  }else{ 
- 
-res.send({name:array[0].name,institution:array[0].institution,registerTitle:array[0].registerTitle,contact:array[0].contact})
-  }
-  
+ res.send(array)
   
 })})
 
@@ -4284,57 +4276,61 @@ app.post('/pushToAttendanceRegister',bodyParser.json(),(req,res)=>{
 res.send(["Register does not exist."])
     }else{
 let registerAttendees=resp[0].attendees
-db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
+db.collection('multidocs').find({description:'messagees'}).toArray().then(resp=>{
  
- if(resp[0].messagees.length==0){
-  res.send(["Messagees list is empty"])
- }else if (resp[0].messagees[0].name==undefined){
-
-  resp[0].messagees.forEach(messageeContact=>{
-    if(registerAttendees.find(registerAttendee=>{return registerAttendee.contact==messageeContact})==undefined){
-
-      registerAttendees.push({name:"",contact:messageeContact})
-    }else{
-;
-
-    }
-  }) 
-
-
-
-db.collection("registers").updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{attendees:registerAttendees}}).then(resp=>{
-
-if(resp.modifiedCount==1){
-  res.send(["succesfully added more."])
-}else{
-  res.send(["Already upto date!"])
-}
-})
-
+ if(resp.length==0){
+  res.send(["Messagees doc does not exist."])
  }else{
-
-  resp[0].messagees.forEach(attendeeDoc=>{
-    if(registerAttendees.find(registerAttendee=>{return registerAttendee.contact==attendeeDoc.contact})==undefined){
-
-      registerAttendees.push(attendeeDoc)
-    }else{
-;
-
-    }
-  }) 
+  if(resp[0].messagees.length==0){
+    res.send(["Messagees list is empty"])
+   }else if (resp[0].messagees[0].name==undefined){
+  
+    resp[0].messagees.forEach(messageeContact=>{
+      if(registerAttendees.find(registerAttendee=>{return registerAttendee.contact==messageeContact})==undefined){
+  
+        registerAttendees.push({name:"",contact:messageeContact})
+      }else{
+  ;
+  
+      }
+    }) 
+  
+  
+  
   db.collection("registers").updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{attendees:registerAttendees}}).then(resp=>{
-
-    if(resp.modifiedCount==1){
-      res.send(["succesfully added more."])
-    }else{
-      res.send(["Already upto date!"])
-    }
-    })
-
-
-
-
-
+  
+  if(resp.modifiedCount==1){
+    res.send(["succesfully added more."])
+  }else{
+    res.send(["Already upto date!"])
+  }
+  })
+  
+   }else{
+  
+    resp[0].messagees.forEach(attendeeDoc=>{
+      if(registerAttendees.find(registerAttendee=>{return registerAttendee.contact==attendeeDoc.contact})==undefined){
+  
+        registerAttendees.push(attendeeDoc)
+      }else{
+  ;
+  
+      }
+    }) 
+    db.collection("registers").updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{attendees:registerAttendees}}).then(resp=>{
+  
+      if(resp.modifiedCount==1){
+        res.send(["succesfully added more."])
+      }else{
+        res.send(["Already upto date!"])
+      }
+      })
+  
+  
+  
+  
+  
+   }
  }
 })
 
