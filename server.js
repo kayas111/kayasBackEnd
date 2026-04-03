@@ -29,7 +29,7 @@ const emailValidator = require('deep-email-validator');
 const mongoose=require('mongoose')
 const webpush=require('web-push')
 const excel=require('xlsx')
-// messager is located in multidocs collection
+
 mongoose.set('strictQuery', false)
 const bcrypt=require('bcrypt') 
 
@@ -37,268 +37,275 @@ const bcrypt=require('bcrypt')
 
 var formidable = require('formidable');
 let onlineDb="mongodb+srv://isaac:onongeopio@cluster0.xjf8j.mongodb.net/mydb?retryWrites=true&w=majority",
+backupDb="mongodb+srv://isaacbackup:onongeopio@cluster0.ckwjn3t.mongodb.net/?appName=Cluster0",
 localDb="mongodb://localhost:27017"
-const dbURI=onlineDb
+const dbURI=backupDb
 
 
 
 
  const port=process.env.PORT || 4000
 
+ 
 
+ 
 
- mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,async ()=>{
-  //ReadExcelFile('working','Sheet1')  
-  //CreditNewKayasers(1413,150)  
-  
-      console.log(`Listening on port ${port}`)
-     
-  
-      
-  
-  // request.post('http://www.egosms.co/api/v1/json/',{json:{
-  //     method:"SendSms",
-  //     userdata:{
-  //        username:"kayas",
-  //        password:"onongeopio"
-  //     },
-  //     msgdata:[{number:256772418739,senderid:1234567891,message:"Gain 1 out of 7 is: Peace. Let's protect it"}]
-  //   }}, function (error, response, body) {
-  //     if (!error && response.statusCode == 201) {
-  //         console.log(body);
-  //     }else{
-  //       console.log(body)
-  //      // console.log(attendanceRegister)
-         
-  //     }
-  //   }
+try{
+  mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,async ()=>{
+    //ReadExcelFile('working','Sheet1')  
+    //CreditNewKayasers(1413,150)  
     
-  //   )
-  
-  // let count=1
-  // setInterval(()=>{
-  
-  //    request.post('http://www.egosms.co/api/v1/json/',{json:{
-  //     method:"SendSms",
-  //     userdata:{
-  //        username:"kayas",
-  //        password:"onongeopio"
-  //     },
-  //     msgdata:[{number:256782116298,senderid:1234567891,message:'Kindly pay your debt of 20,000/= (Kayas).'}]
-  //   }}, function (error, response, body) {
-  //     if (!error && response.statusCode == 201) {
-  //         console.log(body);
-  //     }else{
-  //       console.log(body)
-  //      // console.log(attendanceRegister)
-         
-  //     }
-  //   }
-    
-  //   )
-  //   console.log(`Sent ${count}`)
-  //   count++
-  
-  // },5000)
+        console.log(`Listening on port ${port}`)
        
-      
-  
-      // db.collection('registers').find({contact:764639151,registerId:3}
-      //    ).toArray().then(resp=>{
-      //     console.log(resp[0])
-      //     AttendanceRegisterJsonToExcel(resp[0])
-      //    })
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  // db.collection('registers').find({contact:703852178,registerId:43}
-  //   ).toArray().then(resp=>{
-     
-  //  let list=resp[0],attendanceRegister=resp,final=[],message=`Join this Makerere information group for authentic Campus updates: https://chat.whatsapp.com/BETxxyrBg5E2Z2qk3yUqQf?mode=hqctcla`,
-  //  message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
-  
-  // console.log(list)
-  
-  
-  //  list.attendees.forEach(receip=>{
-  //   receip.number='256'+receip.contact,
-  //   receip.senderid='1234567890',
-  //   receip.message=message
-  // final.push(receip)
-  // })
-  
-  // final=final.slice(0,600)
-  // console.log(final)
-  // console.log(final.length)
-  
-  // request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
-  //     method:"SendSms",
-  //     userdata:{
-  //        username:"kayas",
-  //        password:"onongeopio"
-  //     },
-  //     msgdata:final
-  //   }}, function (error, response, body) {
-  //     if (!error && response.statusCode == 201) {
-  //         console.log(body);
-  //     }else{
-  //       console.log(body)
-  //      // console.log(attendanceRegister)
-         
-  //     }
-  //   }
     
-  //   )
-  
-       
-  //     })
-  
-  
-  
-  
-  
-  
-  
-  //     db.collection('registers').find({contact:786804825,registerId:0}
-  //     ).toArray().then(resp=>{
-  // let doc=resp[0]
-  
-  // doc.attendees.forEach(voter=>{
-  // if(voter.contact==774391465){
-  // console.log(voter.name)
-  // }else{}
-  // })
-      
-  //     })
-  
-  
-  
-  
-    /*  
-      {
-  let count=0
-  
-  
-       setInterval(()=>{
-        if(count==10){
-          console.log('Limit reached')
-        }else{
-          request.post('http://sandbox.egosms.co/api/v1/json/',{json:{ 
-          method:"SendSms",
-          userdata:{
-             username:"kayas",
-             password:"onongeopio"
-          },
-          msgdata:[{number:`256771219536`,senderid:'1234567890',message:`Kindly respond to the matter about clearing the pending balance #KayasSMS`}]
-        }}, function (error, response, body) {
-          if (!error && response.statusCode == 201) {
-              console.log(body);
-              console.log('Error one in free sending sms')
-              
-          }else{
-            console.log(body)
-            if(body.Status=='OK'){
-  console.log(`sent ${++count}`)
-             }else{
-              
-              console.log('Error two in sending free sms')
-            }
-             
-          }
-        }
         
-        )}
-       },600000)
-      
-  
-      }
-     */
-  
-      
-      
-      
-  
-  /*
-  
-  db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
-  
-  
-      db.collection('traders').deleteOne({contact:755643774}).then(resp=>{
-  
-        console.log(resp)
-      })
-      
-      db.collection('traders').updateOne({contact:755643774},{$set:{accBal:1230000}}).then(resp=>{console.log(resp)})
     
-    
-        db.collection('registers').find({contact:787384824,registerId:0}).toArray().then(resp=>{
-       
-          
+    // request.post('http://www.egosms.co/api/v1/json/',{json:{
+    //     method:"SendSms",
+    //     userdata:{
+    //        username:"kayas",
+    //        password:"onongeopio"
+    //     },
+    //     msgdata:[{number:256772418739,senderid:1234567891,message:"Gain 1 out of 7 is: Peace. Let's protect it"}]
+    //   }}, function (error, response, body) {
+    //     if (!error && response.statusCode == 201) {
+    //         console.log(body);
+    //     }else{
+    //       console.log(body)
+    //      // console.log(attendanceRegister)
+           
+    //     }
+    //   }
       
-   let list=resp[0].attendees,attendanceRegister=resp,final=[],message=`CONAS: Next Sem starts on 18th Jan, congratulations upon completing the semester and merry Christmass. From Aston T (EC INTENDO)`
-  
-  
-   list.forEach(receip=>{
-    receip.number='256'+receip.contact,
-    receip.senderid='1234567890',
-    receip.message=message+' #KayasSMS'
-  final.push(receip)
-  })
-  
-  console.log(final)
-  console.log(final.length)
-  request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
-      method:"SendSms",
-      userdata:{
-         username:"kayas",
-         password:"onongeopio"
-      },
-      msgdata:final
-    }}, function (error, response, body) {
-      if (!error && response.statusCode == 201) {
-          console.log(body);
-      }else{
-        console.log(body)
-       // console.log(attendanceRegister)
+    //   )
+    
+    // let count=1
+    // setInterval(()=>{
+    
+    //    request.post('http://www.egosms.co/api/v1/json/',{json:{
+    //     method:"SendSms",
+    //     userdata:{
+    //        username:"kayas",
+    //        password:"onongeopio"
+    //     },
+    //     msgdata:[{number:256782116298,senderid:1234567891,message:'Kindly pay your debt of 20,000/= (Kayas).'}]
+    //   }}, function (error, response, body) {
+    //     if (!error && response.statusCode == 201) {
+    //         console.log(body);
+    //     }else{
+    //       console.log(body)
+    //      // console.log(attendanceRegister)
+           
+    //     }
+    //   }
+      
+    //   )
+    //   console.log(`Sent ${count}`)
+    //   count++
+    
+    // },5000)
          
-      }
-    }
+        
     
-    )
-  
+        // db.collection('registers').find({contact:764639151,registerId:3}
+        //    ).toArray().then(resp=>{
+        //     console.log(resp[0])
+        //     AttendanceRegisterJsonToExcel(resp[0])
+        //    })
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // db.collection('registers').find({contact:703852178,registerId:43}
+    //   ).toArray().then(resp=>{
        
+    //  let list=resp[0],attendanceRegister=resp,final=[],message=`Join this Makerere information group for authentic Campus updates: https://chat.whatsapp.com/BETxxyrBg5E2Z2qk3yUqQf?mode=hqctcla`,
+    //  message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
+    
+    // console.log(list)
+    
+    
+    //  list.attendees.forEach(receip=>{
+    //   receip.number='256'+receip.contact,
+    //   receip.senderid='1234567890',
+    //   receip.message=message
+    // final.push(receip)
+    // })
+    
+    // final=final.slice(0,600)
+    // console.log(final)
+    // console.log(final.length)
+    
+    // request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+    //     method:"SendSms",
+    //     userdata:{
+    //        username:"kayas",
+    //        password:"onongeopio"
+    //     },
+    //     msgdata:final
+    //   }}, function (error, response, body) {
+    //     if (!error && response.statusCode == 201) {
+    //         console.log(body);
+    //     }else{
+    //       console.log(body)
+    //      // console.log(attendanceRegister)
+           
+    //     }
+    //   }
+      
+    //   )
+    
+         
+    //     })
+    
+    
+    
+    
+    
+    
+    
+    //     db.collection('registers').find({contact:786804825,registerId:0}
+    //     ).toArray().then(resp=>{
+    // let doc=resp[0]
+    
+    // doc.attendees.forEach(voter=>{
+    // if(voter.contact==774391465){
+    // console.log(voter.name)
+    // }else{}
+    // })
+        
+    //     })
+    
+    
+    
+    
+      /*  
+        {
+    let count=0
+    
+    
+         setInterval(()=>{
+          if(count==10){
+            console.log('Limit reached')
+          }else{
+            request.post('http://sandbox.egosms.co/api/v1/json/',{json:{ 
+            method:"SendSms",
+            userdata:{
+               username:"kayas",
+               password:"onongeopio"
+            },
+            msgdata:[{number:`256771219536`,senderid:'1234567890',message:`Kindly respond to the matter about clearing the pending balance #KayasSMS`}]
+          }}, function (error, response, body) {
+            if (!error && response.statusCode == 201) {
+                console.log(body);
+                console.log('Error one in free sending sms')
+                
+            }else{
+              console.log(body)
+              if(body.Status=='OK'){
+    console.log(`sent ${++count}`)
+               }else{
+                
+                console.log('Error two in sending free sms')
+              }
+               
+            }
+          }
+          
+          )}
+         },600000)
+        
+    
+        }
+       */
+    
+        
+        
+        
+    
+    /*
+    
+    db.collection('traders').find({contact:}).then(resp=>{console.log(resp)})
+    
+    
+        db.collection('traders').deleteOne({contact:755643774}).then(resp=>{
+    
+          console.log(resp)
         })
-  */
-  
-   
-  
-  
-  /*
-  let file=excel.readFile('../readExcel/shortlegendunsa.xlsx')
-  console.log('Ensure name field is filled with any information..............')
-  let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
-  attendees.forEach(attendee=>{
-  if(attendee.contact>0){
-  attendee.contact=parseInt(attendee.contact)
-  
-  final.push(attendee) 
-  }else{
-    console.log(`${attendee} contact is not greater than zero`)
-   
-  }
-  })
-  
-  db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}})
-  .then(resp=>{console.log("completed and pushed to messager")}) 
-  */
-  
-  }))
+        
+        db.collection('traders').updateOne({contact:755643774},{$set:{accBal:1230000}}).then(resp=>{console.log(resp)})
+      
+      
+          db.collection('registers').find({contact:787384824,registerId:0}).toArray().then(resp=>{
+         
+            
+        
+     let list=resp[0].attendees,attendanceRegister=resp,final=[],message=`CONAS: Next Sem starts on 18th Jan, congratulations upon completing the semester and merry Christmass. From Aston T (EC INTENDO)`
+    
+    
+     list.forEach(receip=>{
+      receip.number='256'+receip.contact,
+      receip.senderid='1234567890',
+      receip.message=message+' #KayasSMS'
+    final.push(receip)
+    })
+    
+    console.log(final)
+    console.log(final.length)
+    request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+        method:"SendSms",
+        userdata:{
+           username:"kayas",
+           password:"onongeopio"
+        },
+        msgdata:final
+      }}, function (error, response, body) {
+        if (!error && response.statusCode == 201) {
+            console.log(body);
+        }else{
+          console.log(body)
+         // console.log(attendanceRegister)
+           
+        }
+      }
+      
+      )
+    
+         
+          })
+    */
+    
+     
+    
+    
+    /*
+    let file=excel.readFile('../readExcel/shortlegendunsa.xlsx')
+    console.log('Ensure name field is filled with any information..............')
+    let attendees=excel.utils.sheet_to_json(file.Sheets['Sheet1']),final=[]
+    attendees.forEach(attendee=>{
+    if(attendee.contact>0){
+    attendee.contact=parseInt(attendee.contact)
+    
+    final.push(attendee) 
+    }else{
+      console.log(`${attendee} contact is not greater than zero`)
+     
+    }
+    })
+    
+    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}})
+    .then(resp=>{console.log("completed and pushed to messager")}) 
+    */
+    
+    }))
+}catch(error){
+  console.log('Error connecting to database')
+}
 
 
 
@@ -622,17 +629,20 @@ function GenerateSmsContacts(contactsArray,fromPosition,toPosition,storageDirect
 async function DndFilter(contactsArray,callBackFunction){
   let result =[]
   await db.collection('controls').find({ _id: new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(resp=>{
+  if(resp.length==0) {;}else{
     contactsArray.forEach(contact=>{
-    if(resp[0].dndContactsArray.find(dndContact=>{return dndContact==contact})==undefined){
-      result.push(contact)
-    }else{;
-
-    }
-
+      if(resp[0].dndContactsArray.find(dndContact=>{return dndContact==contact})==undefined){
+        result.push(contact)
+      }else{;
+  
+      }
+  
+    })
+  
+  
+  
+  }
   })
-
-
-})
 
 callBackFunction({dndFilteredArray:result})
 }
@@ -893,19 +903,21 @@ app.get('/attendees/:registrarContact/:id', (req,res)=>{
  try{
   db.collection('controls').find({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(docArray=>{
    
-    db.collection('registers').find({contact:parseInt(req.params.registrarContact),registerId:parseInt(req.params.id)}).toArray().then(resp=>{
-      if(resp.length==0){
-        ;
-      }else{
-      res.send({brandTop:docArray[0].brandTop,registerDoc:resp[0],closed:resp[0].closed})
-      
+ if(docArray.length==0){;}else{
+  db.collection('registers').find({contact:parseInt(req.params.registrarContact),registerId:parseInt(req.params.id)}).toArray().then(resp=>{
+    if(resp.length==0){
+      ;
+    }else{
+    res.send({brandTop:docArray[0].brandTop,registerDoc:resp[0],closed:resp[0].closed})
     
   
-      }
-     
-    
-    })   
-    
+
+    }
+   
+  
+  })   
+  
+ }
 })
 
 
@@ -920,8 +932,10 @@ app.get('/collection_controls_visits', (req,res)=>{
 
     db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((array)=>{
         
-        res.send(array)
+     if(array.length==0){;}else{
+      res.send(array)
     
+     }
         })
        
 
@@ -930,10 +944,12 @@ app.get('/collection_controls_visits', (req,res)=>{
     app.get('/increment_website_visits', (req,res)=>{
 
       db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((array)=>{
+         if(array.length==0){}else{
           let no=array[0].noOfVisits+1;
           db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{noOfVisits:no}})
       
           
+         }
       
           })
          
@@ -956,13 +972,19 @@ app.get('/collection_controls_visits', (req,res)=>{
    
 
    app.get('/smssubscribers', (req,res)=>{db.collection('smssubscribers').find().toArray().then((array)=>{res.send(array)})})
-    app.get('/pushNotificationDelays', (req,res)=>{db.collection('controls').find({_id:new ObjectId('6446c593a0c184843ed48174')}).toArray().then((array)=>{res.send(array)})}) 
+    app.get('/pushNotificationDelays', (req,res)=>{db.collection('controls').find({_id:new ObjectId('6446c593a0c184843ed48174')}).toArray().then((array)=>{
+      if(array.length==0){}else{
+        res.send(array)
+      }
+    })}) 
     app.get('/collection_registers_registers', (req,res)=>{db.collection('registers').find().toArray().then((array)=>{res.send(array)})}) 
     app.get('/messagees', (req,res)=>{db.collection('multidocs').find({desc:"messagees"}).toArray().then((array)=>{
      
       db.collection('controls').find({_id:new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then(docArray=>{
       
+       if(doArray.length==0){;}else{
         res.send({messagees:array[0].messagees,introStatement:docArray[0].messagerIntroStatement})
+       }
     })
       
    
@@ -970,44 +992,50 @@ app.get('/collection_controls_visits', (req,res)=>{
     })}) 
 
 
-    app.get('/getCurrentPushNotification', (req,res)=>{db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then((array)=>{res.send(array)})})
+    app.get('/getCurrentPushNotification', (req,res)=>{db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then((array)=>{
+      if(array.length==0){;}else{
+        res.send(array)
+      }
+    })})
  app.get('/sendPushNotifications',bodyParser.json(),(req,res)=>{
   try{
     db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then(docArray=>{
+      if(docArray.length==0){;}else{
+        
   const payLoad=JSON.stringify({title:'🔥Kayas: '+docArray[0].notification.title,body:docArray[0].notification.body})
 
  
     
-      db.collection('webpushsubscriptions').find().toArray().then(resp=>{
-      let numbOfNotified=0,numbOfErrors=0,count=0;
+  db.collection('webpushsubscriptions').find().toArray().then(resp=>{
+  let numbOfNotified=0,numbOfErrors=0,count=0;
 let subscriptionNumb=resp.length
 
 function SendReport(subscribers,success,errors){
-  if(subscriptionNumb==count){;
-  
-    webpush.sendNotification({
-       _id: new ObjectId("6448c710f019e4aafbda6f7b"),
-       endpoint: 'https://fcm.googleapis.com/fcm/send/c8iYt7U2iVo:APA91bE2wVqgPY2L2Ia86uYX9ycrrQjdRjJmDSzdroGYXucAu2x-gKQau1yCxTKcOa7RgUsGXvWWjJ1j_UVHTtmQ2nx9lHn126egNJ2wAIhq45Fis8ebDzHWYsh7iFfsVjPHdbkU10IT',
-       expirationTime: null,
-       keys: {
-         p256dh: 'BFuPmmkLruLDIkodmSdSbnZY0tZGitWTRZ3pK5poRHL0dqxAMaygyxspXNqeIQkSNAw5_Fo0N90yJUG0nH98VXo',
-         auth: 'L5m0UPPo5Ku8GFs9pt7AAw'
-       },
-       __v: 0,
-       contact: 703852178
-     },JSON.stringify({title:`🔥Kayas: Subscribers: ${subscribers} `,body:`Notified ${success}, Errors: ${errors}`})).then(resp=>{
-     
-       
-     }).catch(err=>console.log(err))
-    
+if(subscriptionNumb==count){;
+
+webpush.sendNotification({
+   _id: new ObjectId("6448c710f019e4aafbda6f7b"),
+   endpoint: 'https://fcm.googleapis.com/fcm/send/c8iYt7U2iVo:APA91bE2wVqgPY2L2Ia86uYX9ycrrQjdRjJmDSzdroGYXucAu2x-gKQau1yCxTKcOa7RgUsGXvWWjJ1j_UVHTtmQ2nx9lHn126egNJ2wAIhq45Fis8ebDzHWYsh7iFfsVjPHdbkU10IT',
+   expirationTime: null,
+   keys: {
+     p256dh: 'BFuPmmkLruLDIkodmSdSbnZY0tZGitWTRZ3pK5poRHL0dqxAMaygyxspXNqeIQkSNAw5_Fo0N90yJUG0nH98VXo',
+     auth: 'L5m0UPPo5Ku8GFs9pt7AAw'
+   },
+   __v: 0,
+   contact: 703852178
+ },JSON.stringify({title:`🔥Kayas: Subscribers: ${subscribers} `,body:`Notified ${success}, Errors: ${errors}`})).then(resp=>{
+ 
    
-   
-   }else{
-  
-    ;
-   
-    
-   }
+ }).catch(err=>console.log(err))
+
+
+
+}else{
+
+;
+
+
+}
 }
 
 
@@ -1015,73 +1043,73 @@ function SendReport(subscribers,success,errors){
 
 
 if(resp.length==0){
-  ;
+;
 }else{
 let subscriptions=resp
 
 subscriptions.forEach((subscription)=>{
-  webpush.sendNotification(subscription,payLoad).then(resp=>{
+webpush.sendNotification(subscription,payLoad).then(resp=>{
 if(resp.statusCode==201){
-  numbOfNotified+=1
-  count+=1
-  SendReport(subscriptionNumb,numbOfNotified,numbOfErrors)
+numbOfNotified+=1
+count+=1
+SendReport(subscriptionNumb,numbOfNotified,numbOfErrors)
 
 /*
 if(subscriptionNumb==numbOfNotified){;
- webpush.sendNotification({
-    _id: new ObjectId("6448c710f019e4aafbda6f7b"),
-    endpoint: 'https://fcm.googleapis.com/fcm/send/c8iYt7U2iVo:APA91bE2wVqgPY2L2Ia86uYX9ycrrQjdRjJmDSzdroGYXucAu2x-gKQau1yCxTKcOa7RgUsGXvWWjJ1j_UVHTtmQ2nx9lHn126egNJ2wAIhq45Fis8ebDzHWYsh7iFfsVjPHdbkU10IT',
-    expirationTime: null,
-    keys: {
-      p256dh: 'BFuPmmkLruLDIkodmSdSbnZY0tZGitWTRZ3pK5poRHL0dqxAMaygyxspXNqeIQkSNAw5_Fo0N90yJUG0nH98VXo',
-      auth: 'L5m0UPPo5Ku8GFs9pt7AAw'
-    },
-    __v: 0,
-    contact: 703852178
-  },JSON.stringify({title:`🔥Kayas: Notified ${numbOfNotified}`,body:'Keep it Kayas!'})).then(resp=>{
-  
-    
-  }).catch(err=>console.log(err))
- 
+webpush.sendNotification({
+_id: new ObjectId("6448c710f019e4aafbda6f7b"),
+endpoint: 'https://fcm.googleapis.com/fcm/send/c8iYt7U2iVo:APA91bE2wVqgPY2L2Ia86uYX9ycrrQjdRjJmDSzdroGYXucAu2x-gKQau1yCxTKcOa7RgUsGXvWWjJ1j_UVHTtmQ2nx9lHn126egNJ2wAIhq45Fis8ebDzHWYsh7iFfsVjPHdbkU10IT',
+expirationTime: null,
+keys: {
+  p256dh: 'BFuPmmkLruLDIkodmSdSbnZY0tZGitWTRZ3pK5poRHL0dqxAMaygyxspXNqeIQkSNAw5_Fo0N90yJUG0nH98VXo',
+  auth: 'L5m0UPPo5Ku8GFs9pt7AAw'
+},
+__v: 0,
+contact: 703852178
+},JSON.stringify({title:`🔥Kayas: Notified ${numbOfNotified}`,body:'Keep it Kayas!'})).then(resp=>{
+
+
+}).catch(err=>console.log(err))
+
 
 
 }else{
- 
- ;
 
- 
+;
+
+
 }
 
 */
-  
+
 }else{
-  
-  
-  
-  
-  
-  
-  ;
+
+
+
+
+
+
+;
 
 
 
 }
-  }).catch(err=>{
-    numbOfErrors+=1
-    count+=1
-    
-    console.log("Invalid endpoint for webpush subscriptions")
+}).catch(err=>{
+numbOfErrors+=1
+count+=1
 
-  
-    db.collection('webpushsubscriptions').deleteOne({endpoint:err.endpoint}).then(resp=>{
-      ;
-    })
-
-    SendReport(subscriptionNumb,numbOfNotified,numbOfErrors)
+console.log("Invalid endpoint for webpush subscriptions")
 
 
-  
-  })
+db.collection('webpushsubscriptions').deleteOne({endpoint:err.endpoint}).then(resp=>{
+  ;
+})
+
+SendReport(subscriptionNumb,numbOfNotified,numbOfErrors)
+
+
+
+})
 })
 
 
@@ -1089,8 +1117,10 @@ if(subscriptionNumb==numbOfNotified){;
 
 
 }
-  })
-     
+})
+ 
+
+      }
     })
   
   
@@ -1111,8 +1141,16 @@ res.send({name:array[0].name,institution:array[0].institution,registerTitle:arra
   
 })})
 
-app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{res.send(array)})})
-app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{res.send(array)})})
+app.get('/collection_controls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('630e1d743deb52a6b72e7fc7')}).toArray().then((array)=>{
+  if(array.length==0){;}else{
+    res.send(array)
+  }
+})})
+app.get('/collection_biddingControls', (req,res)=>{db.collection('controls').find({_id:new ObjectId('633da5b1aed28e1a8e2dd55f')}).toArray().then((array)=>{
+  if(array.length==0){;}else{
+    res.send(array)
+  }
+})})
 app.get('/collection_bids_bids', (req,res)=>{db.collection('bids').find().sort({bidAmount:-1}).toArray().then((array)=>{res.send(array)})})     
 app.get('/collection_comments_comments', (req,res)=>{db.collection('comments').find().toArray().then((array)=>{res.send(array)})}) 
 app.get('/collection_hookups_hookups', (req,res)=>{db.collection('hookups').find().toArray().then((array)=>{res.send(array)})}) 
@@ -4036,6 +4074,7 @@ app.post('/getPushNotification',bodyParser.json(),(req,res)=>{
     let subscription=req.body
 
     db.collection('controls').find({_id:new ObjectId("6446c593a0c184843ed48174")}).toArray().then(docArray=>{
+ if(docArray.length==0){;}else{
   const payLoad=JSON.stringify({title:'🔥Kayas: '+docArray[0].notification.title,body:docArray[0].notification.body})
 
 
@@ -4046,6 +4085,7 @@ app.post('/getPushNotification',bodyParser.json(),(req,res)=>{
 
 
 
+ }
 
      
     })
@@ -4437,6 +4477,8 @@ app.post('/updateDndList',bodyParser.json(),(req,res)=>{
 
   try{
 db.collection('controls').find({_id:new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(resp=>{
+  if(resp.length==0){;}else{
+    
 
   if(req.body.action=="add"){
     if(resp[0].dndContactsArray.find(dndContact=>{return dndContact==req.body.contact})==undefined){
@@ -4485,6 +4527,8 @@ db.collection('controls').updateOne({_id:new ObjectId("633da5b1aed28e1a8e2dd55f"
   }
 
 
+
+  }
 })
 
   }catch(err){
@@ -5654,7 +5698,8 @@ app.post('/submitBid',bodyParser.json(), (req,res)=>{
 
 db.collection('controls').find({"_id":new ObjectId("633da5b1aed28e1a8e2dd55f")}).toArray().then(docArray=>{
 
-if(req.body.bidAmount<docArray[0].price){
+if(docArray.length==0){;}else{
+  if(req.body.bidAmount<docArray[0].price){
   res.send([`<div style="color:red;">Starting price is ${docArray[0].price}, try again....</div>`])
 
 }else{
@@ -5669,6 +5714,7 @@ res.send([`<div style="color:green;">Thanks ${resp.name} for submitting. Scroll 
   })
 }
 
+}
 
 })
 
@@ -6267,27 +6313,29 @@ db.collection('recommendations').find().toArray().then((array)=>{
   if(presence==1){//recommendee present
       //register
       db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
-if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
-//update admin registration code then register
-db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
-
-let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
-
-const kayaser=new registrationModel(data)
-kayaser.save().then(response=>{
-  res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
-  
-
-})
-
-
-})
-
-}else{
-
-  res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Invalid admin registration code</div><div style="font-size:40px;text-align:center;padding-top:30px;">You entered a wrong admin registration code. Please try again.<p></p><a href="/pages/registerthroughadmin">Register again</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')   
+if(controlsDocumentArray.length){;}else{
+  if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
+    //update admin registration code then register
+    db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
+    
+    let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+    
+    const kayaser=new registrationModel(data)
+    kayaser.save().then(response=>{
+      res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
+      
+    
+    })
+    
+    
+    })
+    
+    }else{
+    
+      res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Invalid admin registration code</div><div style="font-size:40px;text-align:center;padding-top:30px;">You entered a wrong admin registration code. Please try again.<p></p><a href="/pages/registerthroughadmin">Register again</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')   
+    }
+    
 }
-
       })
   //register
   
@@ -6304,28 +6352,32 @@ kayaser.save().then(response=>{
                      //all processes proceed from here
                       //register
       db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
+        if(controlsDocumentArray.length){;}else{
+          
           if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
-           //update admin registration code then register
-           db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
-          
-           let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
-          
-           const kayaser=new registrationModel(data)
-           kayaser.save().then(response=>{
-              res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
-              
-          
-           })
-          
-          
-           })
+            //update admin registration code then register
+            db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
            
-          }else{
-          
-              res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Invalid admin registration code</div><div style="font-size:40px;text-align:center;padding-top:30px;">You entered a wrong admin registration code. Please try again.<p></p><a href="/pages/registerthroughadmin">Register again</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')   
-          }
-          
-                  })
+            let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+           
+            const kayaser=new registrationModel(data)
+            kayaser.save().then(response=>{
+               res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
+               
+           
+            })
+           
+           
+            })
+            
+           }else{
+           
+               res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Invalid admin registration code</div><div style="font-size:40px;text-align:center;padding-top:30px;">You entered a wrong admin registration code. Please try again.<p></p><a href="/pages/registerthroughadmin">Register again</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')   
+           }
+           
+                   
+        }
+      })
               //register
                  
                  })
@@ -6341,28 +6393,32 @@ kayaser.save().then(response=>{
   //all processes proceed from here
      //register
      db.collection('controls').find({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")}).toArray().then((controlsDocumentArray)=>{
+      if(controlsDocumentArray.length){;}else{
+        
       if(fields.adminRegCode==controlsDocumentArray[0].adminRegCode){
-       //update admin registration code then register
-       db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
-      
-       let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),adminRegCode:fields.adminRegCode,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
-      
-       const kayaser=new registrationModel(data)
-       kayaser.save().then(response=>{
-          res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
-          
-      
-       })
-      
-      
-       })
+        //update admin registration code then register
+        db.collection('controls').updateOne({"_id":new ObjectId("630e1d743deb52a6b72e7fc7")},{$set:{adminRegCode:"consumed"}}).then(resp=>{
        
-      }else{
-      
-          res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Invalid admin registration code</div><div style="font-size:40px;text-align:center;padding-top:30px;">You entered a wrong admin registration code. Please try again.<p></p><a href="/pages/registerthroughadmin">Register again</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')   
+        let data={name:fields.name,stdNo:fields.stdNo,contact:parseInt(fields.contact),adminRegCode:fields.adminRegCode,email:fields.email,pin:bcrypt.hashSync(fields.pin,10)}
+       
+        const kayaser=new registrationModel(data)
+        kayaser.save().then(response=>{
+           res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Successful!!</div><div style="font-size:40px;text-align:center;padding-top:30px;">Please proceed with other steps now. Thank you for registering with Kayas.</div>')
+           
+       
+        })
+       
+       
+        })
+        
+       }else{
+       
+           res.send('<div style="font-size:70px;font-weight:bold;text-align:center;padding-top:30px;">Invalid admin registration code</div><div style="font-size:40px;text-align:center;padding-top:30px;">You entered a wrong admin registration code. Please try again.<p></p><a href="/pages/registerthroughadmin">Register again</a><p></p> Incase you did not register and  dont recall registering with Kayas, whatsapp Isaac on 0755643774 or Charles on 0700411626 for help.</div>')   
+       }
+       
+               
       }
-      
-              })
+     })
           //register
      })
      
