@@ -4296,6 +4296,7 @@ db.collection('multidocs').find({description:'messagees'}).toArray().then(resp=>
     }) 
   
   
+    
   
   db.collection("registers").updateOne({contact:req.body.registrarContact,registerId:req.body.registerId},{$set:{attendees:registerAttendees}}).then(resp=>{
   
