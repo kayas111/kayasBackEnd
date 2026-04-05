@@ -52,7 +52,8 @@ const dbURI=backupDb
 
 try{
   mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,async ()=>{
-    //ReadExcelFile('working','Sheet1')  
+    
+   //ReadExcelFile('working','Sheet1')  
     //CreditNewKayasers(1413,150)  
     
         console.log(`Listening on port ${port}`)
@@ -121,10 +122,10 @@ try{
     
     
     
-    // db.collection('registers').find({contact:703852178,registerId:43}
+    // db.collection('registers').find({contact:787324508,registerId:0}
     //   ).toArray().then(resp=>{
        
-    //  let list=resp[0],attendanceRegister=resp,final=[],message=`Join this Makerere information group for authentic Campus updates: https://chat.whatsapp.com/BETxxyrBg5E2Z2qk3yUqQf?mode=hqctcla`,
+    //  let list=resp[0],attendanceRegister=resp,final=[],message="may this Easter meet you in a good place and leave you even better - MBASANI PAULINE PEACE (ASPIRING CHAIRLADY- AFRICA HALL 0787324508)",message3=`Hello dear, I, MBABAZI THERESA, humbly ask for your vote on 9th April as 92nd GUILD PRESIDENT. Please fill this form: https://forms.gle/MuGgPnWNpYePAGu68`,
     //  message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
     
     // console.log(list)
@@ -133,15 +134,15 @@ try{
     //  list.attendees.forEach(receip=>{
     //   receip.number='256'+receip.contact,
     //   receip.senderid='1234567890',
-    //   receip.message=message
+    //   receip.message=`${receip.name}, ${message}`
     // final.push(receip)
-    // })
+    // }) 
     
-    // final=final.slice(0,600)
+    // // final=final.slice(0,1)
     // console.log(final)
     // console.log(final.length)
     
-    // request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+    // request.post('http://www.egosms.co/api/v1/json/',{json:{
     //     method:"SendSms",
     //     userdata:{
     //        username:"kayas",
@@ -298,7 +299,7 @@ try{
     }
     })
     
-    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}})
+    db.collection('multidocs').updateOne({description:'messagees'},{$set:{messagees:final}})
     .then(resp=>{console.log("completed and pushed to messager")}) 
     */
     
@@ -469,85 +470,7 @@ let kayasersArray=resp, caseKayasers=kayasersArray.reverse().slice(0,(kayasersAr
 
 
 
-function ReadExcelFileDebug (fileName,sheetName){
-  console.log(`Reading in debug mode.................................`)
-  console.log('Ensure name field is filled with any information.')
-  console.log('Pass file name and sheet name as arguments in string format')
 
-  
-let file=excel.readFile(`../readExcel/${fileName}.xlsx`)
-
-let attendees=excel.utils.sheet_to_json(file.Sheets[`${sheetName}`]),final=[], position=1
-attendees.forEach(attendee=>{
-  position++;
- 
-if(parseInt(attendee.contact)>0){
-if(parseInt(attendee.contact)>799999999){
-  console.log(`Greater than 799999999 at position: ${position} - Error with:  ${attendee.contact}`)
-}else{
-
-let cont=attendee.contact, array=Array.from(String(cont)), length=array.length
-if(length<9 || length>10){
-//console.log(`Invalid length ${length} at position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact}`)
-cont=cont.replace(/\D/g, '')
-attendee.contact=parseInt(cont)
-//console.log(attendee)
-final.push(attendee)
-
-
-
-}else{
-  attendee.contact=parseInt(attendee.contact)
-  final.push(attendee)
-}
-}
- }else{
-   console.log(parseInt(attendee.contact))
-   console.log(position)
-  
-  //
-  
-// if(attendee.contact==undefined){
-
-// console.log(`undefined contact at ${attendee.name} **************************************`)
-
-// }else{
-//   let contat=attendee.contact.replace(/\D/g, '')
-//   attendee.contact=parseInt(contat)
-//   //console.log(attendee)
-//   final.push(attendee)
-// }
-
-
-
-
-
-// //console.log(`Position: ${position} - Name: ${attendee.name} - Contact: ${attendee.contact} is not greater than zero and has been ignored: PayLoad: ${array}`)
-// // let array1=Array.from(attendee.contact),array2=[]
-// // array1.forEach(character=>{
-// //   if(parseInt(character)==0 || parseInt(character)>0){
-// // array2.push(character)
-// //   }else{;}
-// // })
- 
-// // let joined = array2.join('');
-// // let cleaned = joined.replace(/\D/g, '');
-// // let contact= parseInt(cleaned);
-
-// // attendee.contact=contact
-// // console.log(`${attendee.name} : ${attendee.contact}`)
-// // final.push(attendee)
-
-}
-})
-
-
-db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:final}}).then(resp=>{
-  console.log(`Completed and replaced with ${final.length} contacts in messager`)}) 
-
-
-
-}
 
 
 
@@ -655,7 +578,7 @@ function mapContactsArrayFromMessageeToRegister(registrarContact,registerId){
     ;
    }else{ let registerContacts=resp[0].attendees
 
-     db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
+     db.collection('multidocs').find({description:'messagees'}).toArray().then(resp=>{
        resp[0].messagees.forEach(messagee=>{
 
         if( registerContacts.find(detail=>{return detail.contact==messagee})==undefined){
@@ -4223,7 +4146,7 @@ app.post('/categorizeMessagerContacts',bodyParser.json(),(req,res)=>{
   try{
     
     
-  db.collection('multidocs').find({desc:'messagees'}).toArray().then(resp=>{
+  db.collection('multidocs').find({description:'messagees'}).toArray().then(resp=>{
      
  let messagees=resp[0].messagees
  if(messagees.length==0){
@@ -4246,7 +4169,7 @@ if(attendeeDoc[req.body.property]==undefined){
 
 
 
-db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:messagees}}).then(resp=>{
+db.collection('multidocs').updateOne({description:'messagees'},{$set:{messagees:messagees}}).then(resp=>{
   if(resp.modifiedCount==1){
     res.send(['<div style="color:green;">Successful</div>'])
   }else{
@@ -4352,9 +4275,9 @@ db.collection('registers').find({contact:req.body.registerAdminContact,registerI
 if(resp.length==0){
   res.send(["Register does not exist"])
 }else{
-  db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:resp[0].attendees}}).then(resp=>{
+  db.collection('multidocs').updateOne({description:'messagees'},{$set:{messagees:resp[0].attendees}}).then(resp=>{
 if(resp.modifiedCount==1){
-  res.send(["successful"])
+  res.send(["successfully replaced what was in messager with new data"])
 
 }else{
   res.send(["Update was not successful because you are updating to what is uptodate!"])
@@ -4537,7 +4460,7 @@ db.collection('multidocs').find({desc:req.body.category}).toArray().then(resp=>{
   if(resp.length==0){
     res.send(["category does not exist"])
   }else{
-    db.collection('multidocs').updateOne({desc:'messagees'},{$set:{messagees:resp[0].messagees}}).then(resp=>{
+    db.collection('multidocs').updateOne({description:'messagees'},{$set:{messagees:resp[0].messagees}}).then(resp=>{
       if(resp.modifiedCount==1){res.send(["Successful"])}else if(resp.modifiedCount==0){
 res.send(["Messagees is already uptodate!!"])
       }else{
