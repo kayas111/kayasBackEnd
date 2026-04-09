@@ -52,16 +52,42 @@ const dbURI=backupDb
 
 try{
   mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,async ()=>{
+    console.log(`Listening on port ${port}`)
     
    //ReadExcelFile('working','Sheet1')  
     //CreditNewKayasers(1413,150)  
     
-        console.log(`Listening on port ${port}`)
+    
+//     db.collection('registers').find({contact:706828301,registerId:0})
+//       .toArray().then(resp=>{
+       
+//      let list=resp[0],attendanceRegister=resp,final=[],message="Gallant Makererean! Greetings from TUMUKUNDE HANNAH. Today is the day and I kindly request for your VOTE as 92nd Guild President. Let’s Reboot The Ivory Tower",
+//      message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
+    
+//     // console.log(list)
+    
+    
+//     //  list.attendees.slice(10000,15145)
+//     let newAttendees=list.attendees.slice(12000,18820)
+    
+// db.collection('registers').updateOne({contact:706828301,registerId:4},{$set:{attendees:newAttendees}}).then(resp=>{
+//   console.log(resp)
+// })
+    
+//     // final=final.slice(0,1)
+
+    
+   
+         
+//         })
+    
+
+      
        
     
         
     
-    // request.post('http://www.egosms.co/api/v1/json/',{json:{
+    // request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
     //     method:"SendSms",
     //     userdata:{
     //        username:"kayas",
@@ -108,7 +134,7 @@ try{
          
         
     
-        // db.collection('registers').find({contact:764639151,registerId:3}
+        // db.collection('registers').find({contact:706828301,registerId:0}
         //    ).toArray().then(resp=>{
         //     console.log(resp[0])
         //     AttendanceRegisterJsonToExcel(resp[0])
@@ -120,49 +146,55 @@ try{
     
     
     
+   
     
-    
-    // db.collection('registers').find({contact:787324508,registerId:0}
-    //   ).toArray().then(resp=>{
+//     db.collection('registers').find({contact:706828301,registerId:0})
+//       .toArray().then(resp=>{
        
-    //  let list=resp[0],attendanceRegister=resp,final=[],message="may this Easter meet you in a good place and leave you even better - MBASANI PAULINE PEACE (ASPIRING CHAIRLADY- AFRICA HALL 0787324508)",message3=`Hello dear, I, MBABAZI THERESA, humbly ask for your vote on 9th April as 92nd GUILD PRESIDENT. Please fill this form: https://forms.gle/MuGgPnWNpYePAGu68`,
-    //  message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
+//      let list=resp[0],attendanceRegister=resp,final=[],message="Gallant Makererean! Greetings from TUMUKUNDE HANNAH. Today is the day and I kindly request for your VOTE as 92nd Guild President. Let’s Reboot The Ivory Tower",
+//      message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
     
-    // console.log(list)
+//     console.log(list)
     
     
-    //  list.attendees.forEach(receip=>{
-    //   receip.number='256'+receip.contact,
-    //   receip.senderid='1234567890',
-    //   receip.message=`${receip.name}, ${message}`
-    // final.push(receip)
-    // }) 
+//     //  list.attendees.slice(10000,15145)
     
-    // // final=final.slice(0,1)
-    // console.log(final)
-    // console.log(final.length)
+//  let array= [{contact:'783733754'},{contact:'783733754'},{contact:'768579552'},{contact:'772303205'},{contact:'700579328'},{contact:'762015255'},{contact:'775176379'},{contact:'788744111'},{contact:'766174984'}]
+ 
+//  array.forEach(receip=>{
+  
+   
+//         receip.number='256'+receip.contact,
+//       receip.senderid='1234567890',
+//       receip.message=message
+//     final.push(receip)
+//     }) 
     
-    // request.post('http://www.egosms.co/api/v1/json/',{json:{
-    //     method:"SendSms",
-    //     userdata:{
-    //        username:"kayas",
-    //        password:"onongeopio"
-    //     },
-    //     msgdata:final
-    //   }}, function (error, response, body) {
-    //     if (!error && response.statusCode == 201) {
-    //         console.log(body);
-    //     }else{
-    //       console.log(body)
-    //      // console.log(attendanceRegister)
+//     // final=final.slice(0,1)
+//     console.log(final)
+//     console.log(final.length)
+    
+//     request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+//         method:"SendSms",
+//         userdata:{
+//            username:"kayas",
+//            password:"onongeopio"
+//         },
+//         msgdata:final
+//       }}, function (error, response, body) {
+//         if (!error && response.statusCode == 201) {
+//             console.log(body);
+//         }else{
+//           console.log(body)
+//          // console.log(attendanceRegister)
            
-    //     }
-    //   }
+//         }
+//       }
       
-    //   )
+//       )
     
          
-    //     })
+//         })
     
     
     
@@ -4773,7 +4805,7 @@ res.send({id:payLoad.articleId})
 app.get('/deleteMessageesList',(req,res)=>{
   
 db.collection('multidocs').updateOne({description:'messagees'},{$set:{messagees:[]}}).then(resp=>{
-  console.log(resp)
+  
   if(resp.modifiedCount==1){
     res.send({success:1}) 
   }else  if(resp.modifiedCount==0){
@@ -4993,6 +5025,122 @@ else{
 
 
 app.post('/addToMessagingQueueThroughAdmin',(req,res)=>{
+  try{
+    let errorMessagees=[], newMessagees=[],count=0,finalCopy=[]
+    let payLoad=req.body
+    
+    payLoad.forEach(contact=>{
+      if(contact[0]=="7"){
+        count++
+
+   if(parseInt(contact)<700000000||parseInt(contact)>799999999 ||Number.isNaN(parseInt(contact))==true){
+            
+            errorMessagees.push(contact)
+          }
+          
+        else{
+          
+             newMessagees.push(parseInt(contact))
+             
+          }
+
+
+
+      }else{
+       ;
+      }
+      
+       
+
+
+
+
+      })
+     
+
+if(errorMessagees.length==0){
+      
+        console.log('Processing...........')
+        
+        newMessagees.forEach(contact=>{
+          
+    if(finalCopy.find(Doc=>{
+      return Doc.contact==parseInt(contact)
+    })==undefined){
+      // console.log('absent push')
+     
+      finalCopy.push({name:'',contact:parseInt(contact)})
+          
+    
+    }else{
+     
+    // console.log('present dont push')
+      
+    
+    
+      
+    }
+       })
+      
+    console.log(`Captured ${newMessagees.length} contacts in total. Removed ${newMessagees.length-finalCopy.length} duplicates. ${finalCopy.length} contacts now available`)
+    
+     
+       console.log(`Comparing ${finalCopy.length} contacts with those existing in messager. Only new contacts will be added to the existing ones.......`)
+    
+    
+    db.collection("multidocs").find({description:'messagees'}).toArray().then(resp=>{
+      let finalMessagees=resp[0].messagees,presentCount=0,absentCount=0
+      finalCopy.forEach(finalCopyDoc=>{
+        if(finalMessagees.find(finalMessageeDoc=>{return finalMessageeDoc.contact==finalCopyDoc.contact})==undefined){
+          finalMessagees.push(finalCopyDoc)
+          absentCount++
+        }else{
+    presentCount++;
+        }
+    
+      })
+    
+    
+    db.collection('multidocs').updateOne({description:'messagees'},{$set:{messagees:finalMessagees}}).then(resp=>{
+      let message=`Successfull. ${absentCount} contacts added to messager. Out of the ${finalCopy.length} contacts, ${presentCount} were present in messager`
+      res.send({statusOk:1,message:message})
+      console.log(message)
+      console.log('#####################################################')
+      console.log('#####################################################')
+    
+    }) 
+    
+    
+    
+    
+    })
+    
+    
+    
+          
+    
+     
+     
+    
+      
+    }else{
+      
+     res.send({statusOk:0,messagees:errorMessagees})
+     console.log('Error with these contacts:')
+     errorMessagees.forEach(contact=>{
+      console.log(contact)
+     })
+    }
+      
+                  }catch(error){
+    console.log('error')
+  }
+})
+
+
+
+
+app.post('/addToMessagingQueueThroughAdminOriginal',(req,res)=>{
   try{
     let errorMessagees=[]
     let payLoad=req.body
