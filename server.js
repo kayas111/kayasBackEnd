@@ -1488,13 +1488,6 @@ if(traderDetailsObj.deliveryService.isAvailable==undefined){
    //check for createAttendanceRegisterTokens
 
 
-//check for permission to send SMS without tag
-if(traderDetailsObj.permissionTokensObj.sendSmsWithoutTag==undefined){
-  traderDetailsObj.permissionTokensObj.sendSmsWithoutTag=true
-  
-  }else{}
-
-//check for permission to send SMS without tag
 
 //check for permission to earn from Kayas
 if(traderDetailsObj.permissionTokensObj.allowedToEarnFromKayas==undefined){
@@ -3033,47 +3026,6 @@ break;
 
     switch(receivedObj.argsObj.fieldToUpdate){
    
-      case 'sendSmsWithoutTag':{
-
-        try {
-            
-          db.collection('traders').find({contact:receivedObj.argsObj.traderContact}).toArray().then(resp=>{
-            
-            if(resp.length==0){
-             
-              res.send({msg:'Trader details do not exist.'})
-            }else{
-            let traderDetailsObj=resp[0]
-          
-            db.collection('traders').updateOne({contact:traderDetailsObj.contact},[{$set:{'permissionTokensObj.sendSmsWithoutTag':{$not:"$permissionTokensObj.sendSmsWithoutTag"}}}]).
-            
-            then(resp=>{
-              if(resp.modifiedCount==1){
-  if(traderDetailsObj.permissionTokensObj.sendSmsWithoutTag==true){
-   res.send({msg:`SMS tag appended`})
-  }else{
-   res.send({msg:`SMS tag removed`})
-  }
-  
-  
-                
-              }else if(resp.modifiedCount==0){
-                res.send({msg:'Up to date'})
-              }else{
-                res.send({msg:'Unsuccessful'})
-              }
-            })
-            
-            
-            
-            }
-              })
-            
-                break;
-        } catch (error) {
-          console.log(error)
-        }
-               }
       case 'displayArticlesAtFreeCost':{
 
         try {
