@@ -54,57 +54,52 @@ try{
   mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,async ()=>{
     console.log(`Listening on port ${port}`)
     
-   //ReadExcelFile('working','Sheet1')  
+ // ReadExcelFile('working','Sheet1')  
     //CreditNewKayasers(1413,150)  
+  
     
-    
-//     db.collection('registers').find({contact:706828301,registerId:0})
+
+//     db.collection('registers').find({contact:747573648,registerId:0})
 //       .toArray().then(resp=>{
-       
-//      let list=resp[0],attendanceRegister=resp,final=[],message="Gallant Makererean! Greetings from TUMUKUNDE HANNAH. Today is the day and I kindly request for your VOTE as 92nd Guild President. Let’s Reboot The Ivory Tower",
+          
+//      let attendanceRegister=resp[0],payLoad=[],message="Boost your Guild campaigns with a bulk SMS system that sends one SMS message (like this one) to many contacts at once. Get the system at 5,000 shs 0703852178",
 //      message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
+       
     
-//     // console.log(list)
+//     let contacts= attendanceRegister.attendees.slice(201,401)
+//     contacts.forEach(obj=>{
+//       payLoad.push({number:`256${obj.contact}`,senderid:obj.contact,message:message})
+//     })
     
+// console.log(payLoad)
+// console.log(payLoad.length)
+
+// request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
+//         method:"SendSms",
+//         userdata:{
+//            username:"kayas",
+//            password:"onongeopio"
+//         },
+//         msgdata:payLoad
+//       }}, function (error, response, body) {
+//         if (!error && response.statusCode == 201) {
+//             console.log(body);
+//         }else{
+//           console.log(body)
+//          // console.log(attendanceRegister)
+           
+//         }
+//       }
+      
+//       )
+
+
     
-//     //  list.attendees.slice(10000,15145)
-//     let newAttendees=list.attendees.slice(12000,18820)
-    
-// db.collection('registers').updateOne({contact:706828301,registerId:4},{$set:{attendees:newAttendees}}).then(resp=>{
-//   console.log(resp)
 // })
     
-//     // final=final.slice(0,1)
 
-    
-   
-         
-//         })
-    
 
-      
-       
-    
-        
-    
-    // request.post('http://sandbox.egosms.co/api/v1/json/',{json:{
-    //     method:"SendSms",
-    //     userdata:{
-    //        username:"kayas",
-    //        password:"onongeopio"
-    //     },
-    //     msgdata:[{number:256772418739,senderid:1234567891,message:"Gain 1 out of 7 is: Peace. Let's protect it"}]
-    //   }}, function (error, response, body) {
-    //     if (!error && response.statusCode == 201) {
-    //         console.log(body);
-    //     }else{
-    //       console.log(body)
-    //      // console.log(attendanceRegister)
-           
-    //     }
-    //   }
-      
-    //   )
+
     
     // let count=1
     // setInterval(()=>{
@@ -133,6 +128,13 @@ try{
     // },5000)
          
         
+
+
+
+
+
+
+
     
         // db.collection('registers').find({contact:706828301,registerId:0}
         //    ).toArray().then(resp=>{
@@ -5010,6 +5012,9 @@ app.post('/addToMessagingQueueThroughAdmin',(req,res)=>{
       })
      
 
+newMessagees.sort((a, b) => a - b)
+
+
 if(errorMessagees.length==0){
       
         console.log('Processing...........')
@@ -5039,6 +5044,7 @@ if(errorMessagees.length==0){
      
        console.log(`Comparing ${finalCopy.length} contacts with those existing in messager. Only new contacts will be added to the existing ones.......`)
     
+       
     
     db.collection("multidocs").find({description:'messagees'}).toArray().then(resp=>{
       let finalMessagees=resp[0].messagees,presentCount=0,absentCount=0
@@ -5053,6 +5059,9 @@ if(errorMessagees.length==0){
       })
     
     
+
+
+
     db.collection('multidocs').updateOne({description:'messagees'},{$set:{messagees:finalMessagees}}).then(resp=>{
       let message=`Successfull. ${absentCount} contacts added to messager. Out of the ${finalCopy.length} contacts, ${presentCount} were present in messager`
       res.send({statusOk:1,message:message})
