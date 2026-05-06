@@ -59,14 +59,14 @@ try{
   
     
 
-//     db.collection('registers').find({contact:747573648,registerId:0})
+//     db.collection('registers').find({contact:783833540,registerId:0})
 //       .toArray().then(resp=>{
           
-//      let attendanceRegister=resp[0],payLoad=[],message="Boost your Guild campaigns with a bulk SMS system that sends one SMS message (like this one) to many contacts at once. Get the system at 5,000 shs 0703852178",
+//      let attendanceRegister=resp[0],payLoad=[],message="Students house party to happen on Sat. 9th May. See photos through the link below. Book a slot using the link to be part. https://forms.gle/FRNAsspEhhzuAE2T7",
 //      message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
        
     
-//     let contacts= attendanceRegister.attendees.slice(201,401)
+//     let contacts= attendanceRegister.attendees.slice(0,200)
 //     contacts.forEach(obj=>{
 //       payLoad.push({number:`256${obj.contact}`,senderid:obj.contact,message:message})
 //     })
