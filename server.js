@@ -4699,7 +4699,7 @@ app.post('/createArticle',bodyParser.json(),(req,res)=>{
 
 db.collection('pubarticles').find({contact:req.body.contact}).toArray().then(resp=>{
 
-if(resp.length>99){
+if(resp.length>2000){
   res.send({limitReached:1})
 }else{
 try{   
