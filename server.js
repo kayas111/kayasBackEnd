@@ -354,7 +354,7 @@ try{
 let publicVapidKey='BDnPvsx3HCwDrIhJVDAVXb4Jg6WJ0frU0HAuNdvv6Zn0PFjxfuHVX-4zj5hhbLAULmjV9xGYYA7nN2khho-pCjY',privateVapidKey='0psXRATqtttC9mTP-YJDGxZWou952CKAsuPm28YePME'  
 webpush.setVapidDetails('mailto:onongeisaac@gmail.com',publicVapidKey,privateVapidKey)
 
-let maxAttendeeRegisters=50
+let maxAttendeeRegisters=1000
 
 
 let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{type:Number,required:true},msg:{type:String,required:true},tradingId:{type:Number,required:true}})
@@ -4498,7 +4498,7 @@ if(resp.modifiedCount==1){res.send({success:1,registerId,registerTitle:req.body.
 
 CreateAttendanceRegister(0)
    }else {
-    if(resp.length<=maxAttendeeRegisters-1||req.body.contact==703852178||req.body.contact==755643774){
+    if(resp.length<=maxAttendeeRegisters-1){
 
 db.collection('registers').find({contact:req.body.contact}).toArray().then(resp=>{
   let registerIds=[]
