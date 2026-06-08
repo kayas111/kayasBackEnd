@@ -62,11 +62,11 @@ try{
 //     db.collection('registers').find({contact:783833540,registerId:0})
 //       .toArray().then(resp=>{
           
-//      let attendanceRegister=resp[0],payLoad=[],message="Students house party to happen on Sat. 16th May 10pm till sunday morning. For details, WhatsApp Kayas (0703852178)",
+//      let attendanceRegister=resp[0],payLoad=[],message="Students house party to happen on Sat. 30th May 9pm till sunday morning. For details, WhatsApp Kayas (0703852178)",
 //      message2='Earn by partnering with Kayas. Get the "Kayas bulk SMS sender" and offer bulk SMS services for Guild campaigns. WhatsApp 0772043895 for more information'
        
     
-//     let contacts= attendanceRegister.attendees.slice(550,642)
+//     let contacts= attendanceRegister.attendees.slice(1,201)
 //     contacts.forEach(obj=>{
 //       payLoad.push({number:`256${obj.contact}`,senderid:obj.contact,message:message})
 //     })
