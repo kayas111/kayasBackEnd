@@ -361,6 +361,7 @@ let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{typ
 const {db} = require('./models/model').comments;
 const quotesModel = require('./models/model').quotes;
 
+const productModel = require('./models/model').productModel;
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const pendingPaymentsModel = require('./models/model').pendingPaymentsModel;
 const ticketModel = require('./models/model').ticketModel;
@@ -1875,6 +1876,40 @@ app.get('/getDeliveryAgents',(req,res)=>{
   db.collection('deliveryagents').find().toArray().then(array=>{
     res.send(array)
   })
+})
+
+app.get('/getProducts',(req,res)=>{
+ try{
+db.collection('products').find().toArray().then(resp=>{
+  res.send(resp)
+})
+
+
+
+ }catch(error){
+  console.log(error)
+ }
+})
+app.get('/getProduct/:description',(req,res)=>{
+  
+ try{
+db.collection('products').find({
+  $or: req.params.description.split(/\s+/).map(word => ({
+    description: {
+      $regex: word,
+      $options: "i"
+    }
+  }))
+}).toArray().then(resp=>{
+  console.log(resp)
+  res.send(resp)
+})
+
+
+
+ }catch(error){
+  console.log(error)
+ }
 })
 
 //posts to the database
@@ -4748,6 +4783,24 @@ try {
 db.collection('pubarticles').updateOne({contact:payLoad.contact,id:payLoad.articleId},{$set:{imageDownLoadUrl:payLoad.imageDownLoadUrl}}).then(resp=>{
 res.send({id:payLoad.articleId})
 
+})
+
+
+}catch(error){
+  console.log(error)
+}
+})
+app.post('/addProduct',(req,res)=>{
+try {
+  let payLoad=req.body
+
+productModel(payLoad).save().then(resp=>{
+  
+  if(resp.description){
+    res.send({success:true})
+  }else{
+    res.send({success:false})
+  }
 })
 
 
