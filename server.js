@@ -1912,7 +1912,29 @@ db.collection('products').find({
  }
 })
 
+
 //posts to the database
+app.post('/deleteProduct',(req,res)=>{
+  
+  try{
+   let payLoad=req.body
+   
+ db.collection('products').deleteOne({_id:new ObjectId(payLoad.id)}).then(resp=>{
+   
+   if(resp.deletedCount==1){
+    res.send({success:true})
+   } else{
+    res.send({success:false})
+   }
+   
+ })
+ 
+ 
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
 app.post('/invite',(req,res)=>{
 try{
 let payLoad=req.body
