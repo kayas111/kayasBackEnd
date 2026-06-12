@@ -1881,6 +1881,7 @@ app.get('/getDeliveryAgents',(req,res)=>{
 app.get('/getProducts',(req,res)=>{
  try{
 db.collection('products').find().toArray().then(resp=>{
+  resp.reverse()
   res.send(resp)
 })
 
@@ -1893,16 +1894,43 @@ db.collection('products').find().toArray().then(resp=>{
 app.get('/getProduct/:description',(req,res)=>{
   
  try{
+  let description = req.params.description
+  const searchWords = req.params.description.split(/\s+/);
+  
+console.log(searchWords)
+  
+
 db.collection('products').find({
-  $or: req.params.description.split(/\s+/).map(word => ({
+  $and: searchWords.map(word => ({
     description: {
       $regex: word,
       $options: "i"
     }
   }))
 }).toArray().then(resp=>{
-  console.log(resp)
-  res.send(resp)
+  
+  if(resp.length==0){
+    
+    db.collection('products').find({
+      $or: searchWords.map(word => ({
+        description: {
+          $regex: word,
+          $options: "i"
+        }
+      }))
+    }).toArray().then(resp=>{
+      resp.reverse()
+      res.send(resp)
+
+    })
+  } else{
+    
+    
+    resp.reverse()
+    res.send(resp)
+  }
+  
+  
 })
 
 
