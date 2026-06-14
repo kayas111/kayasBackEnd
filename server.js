@@ -1897,8 +1897,6 @@ app.get('/getProduct/:description',(req,res)=>{
   let description = req.params.description
   const searchWords = req.params.description.split(/\s+/);
   
-console.log(searchWords)
-  
 
 db.collection('products').find({
   $and: searchWords.map(word => ({
