@@ -53,6 +53,7 @@ const dbURI=backupDb
 try{
   mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true}).then(res=>app.listen(port,async ()=>{
     console.log(`Listening on port ${port}`)
+  
     
 //ReadExcelFile('working','Sheet1')  
     //CreditNewKayasers(1413,150)  
@@ -361,6 +362,7 @@ let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{typ
 const {db} = require('./models/model').comments;
 const quotesModel = require('./models/model').quotes;
 
+const hostelModel = require('./models/model').hostelModel;
 const productModel = require('./models/model').productModel;
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
 const pendingPaymentsModel = require('./models/model').pendingPaymentsModel;
@@ -1878,6 +1880,20 @@ app.get('/getDeliveryAgents',(req,res)=>{
   })
 })
 
+app.get('/getHostels',(req,res)=>{
+ try{
+db.collection('hostels').find().toArray().then(resp=>{
+  
+  resp.reverse()
+  res.send(resp)
+})
+
+
+
+ }catch(error){
+  console.log(error)
+ }
+})
 app.get('/getProducts',(req,res)=>{
  try{
 db.collection('products').find().toArray().then(resp=>{
@@ -1961,6 +1977,29 @@ app.post('/deleteProduct',(req,res)=>{
    console.log(error)
   }
  })
+app.post('/deleteHostel',(req,res)=>{
+  
+  try{
+   let payLoad=req.body
+   
+ db.collection('hostels').deleteOne({_id:new ObjectId(payLoad.id)}).then(resp=>{
+   
+   if(resp.deletedCount==1){
+    res.send({success:true})
+   } else{
+    res.send({success:false})
+   }
+   
+ })
+ 
+ 
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
+
+
 app.post('/invite',(req,res)=>{
 try{
 let payLoad=req.body
@@ -4843,6 +4882,24 @@ try {
   let payLoad=req.body
 
 productModel(payLoad).save().then(resp=>{
+  
+  if(resp.description){
+    res.send({success:true})
+  }else{
+    res.send({success:false})
+  }
+})
+
+
+}catch(error){
+  console.log(error)
+}
+})
+app.post('/addHostel',(req,res)=>{
+try {
+  let payLoad=req.body
+
+hostelModel(payLoad).save().then(resp=>{
   
   if(resp.description){
     res.send({success:true})
