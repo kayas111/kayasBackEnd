@@ -362,6 +362,7 @@ let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{typ
 const {db} = require('./models/model').comments;
 const quotesModel = require('./models/model').quotes;
 
+const activitiesModel = require('./models/model').activitiesModel;
 const hostelModel = require('./models/model').hostelModel;
 const productModel = require('./models/model').productModel;
 const webPushSubscriptionModel = require('./models/model').webPushSubscriptionModel;
@@ -1954,8 +1955,35 @@ db.collection('products').find({
  }
 })
 
+app.get('/getActivityLogs',(req,res)=>{
+  
+  try{
+  db.collection('activitylogs').find().toArray().then(resp=>{
+    res.send(resp)
+  })
+ 
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
 
 //posts to the database
+app.post('/logActivity',(req,res)=>{
+  
+  try{
+   let payLoad=req.body
+   
+ activitiesModel(payLoad).save().then(resp=>{
+  ;
+ })
+ 
+ 
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
 app.post('/deleteProduct',(req,res)=>{
   
   try{

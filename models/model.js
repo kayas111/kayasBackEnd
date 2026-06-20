@@ -178,6 +178,7 @@ module.exports.deliveryAgentModel=mongoose.model('deliveryagents',new mongoose.S
 module.exports.donationModel=mongoose.model('donations',new mongoose.Schema({},{strict:false}))
 module.exports.ticketModel=mongoose.model('tickets',new mongoose.Schema({},{strict:false}))
 module.exports.hostelModel=mongoose.model('hostels',new mongoose.Schema({},{strict:false}))
+module.exports.activitiesModel=mongoose.model('activitylogs',new mongoose.Schema({},{strict:false}))
 module.exports.productModel=mongoose.model('products',new mongoose.Schema({},{strict:false}))
 module.exports.imageModel=mongoose.model('images',new mongoose.Schema({img:{data: Buffer,contentType: String}},{strict:false}))
 //module.exports.pubArticleModel=mongoose.model('pubarticles',new mongoose.Schema({dynamic:String},{strict:false}))
