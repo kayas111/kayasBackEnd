@@ -2421,6 +2421,7 @@ return (await pendingPaymentsModel(payLoad).save().then(resp=>{
           "network":"MTN",
           "amount":parseInt(payLoad.amount),
           "currency": 'UGX',
+          "redirect_url":payLoad.redirect_url,
           "email":`${payLoad.beneficiary.email}`,
          "tx_ref":'676555'
       })
