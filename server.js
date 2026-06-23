@@ -362,6 +362,7 @@ let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{typ
 const {db} = require('./models/model').comments;
 const quotesModel = require('./models/model').quotes;
 
+const controlVariablesModel = require('./models/model').controlVariablesModel;
 const activitiesModel = require('./models/model').activitiesModel;
 const hostelModel = require('./models/model').hostelModel;
 const productModel = require('./models/model').productModel;
@@ -1376,6 +1377,61 @@ if(resp.length==0){
               })
 
 
+
+
+
+
+app.get('/getControlVariables/:arrayOfVariables', (req,res)=>{
+  
+try{
+  let arrayOfVariables=req.params.arrayOfVariables
+
+  db.collection('controlvariables').find().toArray().then(async (resp)=>{
+    let controlVariablesObj 
+
+    if(resp.length==0){
+    
+      controlVariablesObj = await controlVariablesModel({}).save().then(resp=> {
+  
+       return resp
+     
+     }) 
+     if (controlVariablesObj instanceof mongoose.Document) {
+      controlVariablesObj=controlVariablesObj .toObject()
+      } else {
+          ;
+      }
+      
+ 
+ 
+    }else{
+     
+      controlVariablesObj=resp[0]
+ 
+      
+      
+    }
+
+
+    console.log(controlVariablesObj)
+
+
+
+  })
+
+}catch(err){
+  console.log(err)
+}
+
+
+})
+
+
+
+
+
+
+
 app.get('/getTradingDetails/:trader', (req,res)=>{
   
 try{
@@ -1395,8 +1451,10 @@ try{
     
      traderDetailsObj = await traderModel({name:kayaserDetailsObj.name,contact:parseInt(kayaserDetailsObj.contact)}).save().then(resp=> {
       
-      console.log(resp)
-      return resp}) 
+      
+      return resp
+    
+    }) 
     if (traderDetailsObj instanceof mongoose.Document) {
          traderDetailsObj=traderDetailsObj.toObject()
      } else {
