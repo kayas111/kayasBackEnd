@@ -1384,7 +1384,8 @@ if(resp.length==0){
 app.get('/getControlVariables/:arrayOfVariables', (req,res)=>{
   
 try{
-  let arrayOfVariables=req.params.arrayOfVariables
+  let arrayOfVariables=req.params.arrayOfVariables.split(",")
+
 
   db.collection('controlvariables').find().toArray().then(async (resp)=>{
     let controlVariablesObj 
@@ -1407,13 +1408,39 @@ try{
     }else{
      
       controlVariablesObj=resp[0]
- 
-      
-      
     }
 
+    
+    let controlVariablesObjId=controlVariablesObj._id
+   
 
-    console.log(controlVariablesObj)
+    if(controlVariablesObj.minimumDepositAmount==undefined || controlVariablesObj.minimumDepositAmount!=undefined ){
+      if(controlVariablesObj.minimumDepositAmount==undefined){
+        controlVariablesObj.minimumDepositAmount=2000
+      }else{}
+      }else{}
+
+      
+      db.collection('controlvariables').replaceOne({_id:new ObjectId(controlVariablesObjId)},controlVariablesObj,{upsert:true}).then(resp=>{
+    
+    
+   
+      
+
+
+        const properties = arrayOfVariables;
+
+const requiredControlVariables = properties.reduce((accumulator, property) => {
+  if (property in controlVariablesObj) {
+    accumulator[property] = controlVariablesObj[property];
+  }
+  return accumulator;
+}, {})
+
+res.send(requiredControlVariables)
+
+       })
+
 
 
 
