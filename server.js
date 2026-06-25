@@ -6853,7 +6853,7 @@ switch(paymentDetails.paymentReason){
           }else{
             let {recommenderContact} = resp[0]
             
-            db.collection('traders').updateOne({contact:recommenderContact},{$inc:{'accBal':200}}).then(resp=>{
+            db.collection('traders').updateOne({contact:recommenderContact},{$inc:{'accBal':500}}).then(resp=>{
               db.collection('recommendations').updateOne({recommendeeContact:parseInt(paymentDetails.beneficiary.contact)},{$set:{recommendeeName:paymentDetails.beneficiary.name}}).then(resp=>{
                 ;
               })
