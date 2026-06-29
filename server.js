@@ -5169,6 +5169,63 @@ app.post('/setAttendeeRegisterSms',bodyParser.json(),(req,res)=>{
  
 })
 
+
+
+app.post('/notifyNewHostelUpdatesClient',bodyParser.json(),(req,res)=>{
+  try{
+  let smsMessage=req.body.smsmessage,smsReceipients=[]
+  
+  req.body.receipient.forEach(attendee=>{
+    attendee.number='256'+attendee.contact,attendee.message=smsMessage,attendee.senderid=attendee.contact
+    smsReceipients.push(attendee)
+    
+    })
+      
+    
+      request.post('http://www.egosms.co/api/v1/json/',{json:{
+      method:"SendSms",
+      userdata:{
+         username:"kayas",
+         password:"onongeopio"
+      },
+      msgdata:smsReceipients
+    }}, function (error, response, body) {
+      if (!error && response.statusCode == 201) {
+          console.log(body);
+        
+      }else{
+        if(body.Status=='OK'){
+    ;
+      
+        }else{
+          
+          res.send(['Not sent. Contact Kayas!']) 
+    
+        }
+    
+    
+       
+      }
+    }
+    
+    )
+     
+  
+  
+  }catch(err){
+    console.log(err)
+  }
+   
+  
+  
+   
+  
+   
+  })
+  
+
+
+
 app.post('/sendAttendeeRegisterSms',bodyParser.json(),(req,res)=>{
 try{
 let smsCost=req.body.smsCost,smsMessage=req.body.smsmessage,smsReceipients=[]
