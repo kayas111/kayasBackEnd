@@ -55,6 +55,11 @@ try{
     console.log(`Listening on port ${port}`)
   
     
+
+
+
+
+    
 //ReadExcelFile('working','Sheet1')  
     //CreditNewKayasers(1413,150)  
   
@@ -6995,33 +7000,12 @@ break;
      try{
       let request=req.body
     
-      db.collection('kayasers').find({contact:parseInt(request.recommender)}).toArray().then(resp=>{
-        if(resp.length==0){
+    if(request.receipient==undefined){
+      request.receipient=703852178
+    }else{
+;
+    }
 
-        }else{
-          let recommender=resp[0]
-
-          if(recommender.contact==request.contact||recommender.contact==703852178||recommender.contact==755643774){
-           ;
-          }else{
-
-          db.collection('recommendations').find({recommenderContact:recommender.contact,recommendeeContact:request.contact}).toArray()
-          .then(resp=>{
-            if(resp.length==0){
-recommendationModel({recommenderName:recommender.name,recommenderContact:recommender.contact,recommenderInstitution:recommender.institution,recommendeeName:request.name,recommendeeContact:request.contact}).save().then(resp=>{;})
-            }else{
-         ;
-       
-            }
-          })
-        
-
-          }
-          
-        }
-      })
-
-   
   requestsModel(request).save().then(resp=>{res.send({success:1})})
 
 
