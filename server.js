@@ -5312,6 +5312,81 @@ else{
 
  
 })
+app.post('/sendAttendeeRegisterTestSms',bodyParser.json(),(req,res)=>{
+try{
+  
+let smsCost=req.body.smsCost,smsMessage=req.body.smsmessage,smsReceipients=[]
+
+ 
+
+  
+smsReceipients.push({number:`256${req.body.receipient}`,message:smsMessage,senderid:req.body.receipient})
+
+  request.post('http://www.egosms.co/api/v1/json/',{json:{
+  method:"SendSms",
+  userdata:{
+     username:"kayas",
+     password:"onongeopio"
+  },
+  msgdata:smsReceipients
+}}, function (error, response, body) {
+  if (!error && response.statusCode == 201) {
+      console.log(body);
+    
+  }else{
+    if(body.Status=='OK'){
+
+    db.collection('traders').find({contact:req.body.registrarContact}).toArray().then(resp=>{
+if(resp.length==0){
+  res.send(['<div style="color:red;">Message sent but trader details do not exist!</div>'])
+}
+else{
+  let traderDetailsObj=resp[0]
+  
+  traderDetailsObj.accBal=traderDetailsObj.accBal-smsCost
+  traderDetailsObj.permissionTokensObj.sendSmsTokens=traderDetailsObj.permissionTokensObj.sendSmsTokens-0
+  db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj).then(resp=>{
+    
+    res.send([`Message sent to ${smsReceipients.length} contact(s)`])
+  })
+  
+
+}
+
+
+   
+      
+
+
+    })
+    }else{
+      
+      res.send(['Not sent. Contact Kayas!']) 
+
+    }
+
+
+   
+  }
+}
+
+)
+
+
+
+
+
+
+}catch(err){
+  console.log(err)
+}
+ 
+
+
+ 
+
+ 
+})
 
 
 app.post('/addToMessagingQueueThroughAdmin',(req,res)=>{
