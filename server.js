@@ -5315,7 +5315,7 @@ else{
 app.post('/sendAttendeeRegisterTestSms',bodyParser.json(),(req,res)=>{
 try{
   
-let smsCost=30,smsMessage=req.body.smsmessage,smsReceipients=[]
+let smsCost=req.body.smsCost,smsMessage=req.body.smsmessage,smsReceipients=[]
 
  
 
