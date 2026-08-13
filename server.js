@@ -3832,6 +3832,62 @@ console.log(err)
 
 
 
+app.post('/sendNotificationSms',bodyParser.json(),(req,res)=>{
+  try{
+    
+  let smsMessage=req.body.message,smsReceipients=req.body.receipients,finalFormat=[]
+  
+  smsReceipients.forEach(receipient=>{
+    finalFormat.push({number:`256${receipient}`,message:smsMessage,senderid:receipient})
+  })
+
+    request.post('http://www.egosms.co/api/v1/json/',{json:{
+    method:"SendSms",
+    userdata:{
+       username:"kayas",
+       password:"onongeopio"
+    },
+    msgdata:finalFormat
+  }}, function (error, response, body) {
+    if (!error && response.statusCode == 201) {
+        console.log(body);
+      
+    }else{
+      if(body.Status=='OK'){
+ res.send({success:true})
+      }else{
+        
+        res.send({success:false})
+  
+      }
+  
+  
+     
+    }
+  }
+  
+  )
+  
+  
+  
+  
+  
+  
+  }catch(err){
+    console.log(err)
+  }
+   
+  
+  
+   
+  
+   
+  })
+
+
+
+
+
 app.post('/sendSmsMessage',(req,res)=>{
 try{
 
