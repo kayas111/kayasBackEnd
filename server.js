@@ -5003,7 +5003,7 @@ try {
 productModel(payLoad).save().then(resp=>{
   
   if(resp.description){
-    res.send({success:true})
+    res.send({success:true,product:resp})
   }else{
     res.send({success:false})
   }
