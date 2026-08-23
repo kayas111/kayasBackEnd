@@ -2455,7 +2455,7 @@ app.post('/initiateDelivery',(req,res)=>{
 
 app.post('/makePayment',(req,res)=>{
 try {
-
+console.log('accessed payment...')
   req.headers.authorization=`Bearer ${process.env.flwSecretKey}`
   
   async function CheckForExistingPendingPayment(payLoad){
