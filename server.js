@@ -367,6 +367,7 @@ let Order=mongoose.model('orders',{name:{type:String,required:true},contact:{typ
 const {db} = require('./models/model').comments;
 const quotesModel = require('./models/model').quotes;
 
+const hookupDesiresModel = require('./models/model').hookupDesiresModel;
 const controlVariablesModel = require('./models/model').controlVariablesModel;
 const activitiesModel = require('./models/model').activitiesModel;
 const hostelModel = require('./models/model').hostelModel;
@@ -743,6 +744,19 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(express.json())
 //access database by get
+
+app.get('/getHookupDesires',(req,res)=>{
+  try{
+    db.collection('hookupdesires').find().toArray().then(resp=>{
+      res.send(resp)
+      
+    })
+  }catch(err){
+console.log(err)
+  }
+})
+
+
 
 app.get('/getMarqueeNews',(req,res)=>{
   try{
@@ -7140,6 +7154,24 @@ break;
   requestsModel(request).save().then(resp=>{res.send({success:1})})
 
 
+
+     
+     }catch(err){
+      console.log(err)
+     }
+
+       
+      
+      })
+  app.post('/addHookupDesire', (req,res)=>{
+ 
+     try{
+      let payLoad=req.body
+    
+  
+    hookupDesiresModel(payLoad).save().then(resp=>{
+     res.send(resp)
+    })
 
      
      }catch(err){
