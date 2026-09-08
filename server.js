@@ -2078,7 +2078,7 @@ app.post('/deleteHookupDesire',(req,res)=>{
   try{
    let payLoad=req.body
    
-console.log(payLoad)
+
 db.collection('hookupdesires').deleteMany({contact:payLoad.contact}).then(resp=>{
 
   res.send(resp)
