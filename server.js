@@ -2073,6 +2073,22 @@ app.get('/getActivityLogs',(req,res)=>{
  })
 
 //posts to the database
+app.post('/deleteHookupDesire',(req,res)=>{
+  
+  try{
+   let payLoad=req.body
+   
+console.log(payLoad)
+db.collection('hookupdesires').deleteMany({contact:payLoad.contact}).then(resp=>{
+
+  res.send(resp)
+})
+ 
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
 app.post('/logActivity',(req,res)=>{
   
   try{
