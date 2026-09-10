@@ -1442,9 +1442,20 @@ try{
     if(controlVariablesObj.minimumDepositAmount==undefined || controlVariablesObj.minimumDepositAmount!=undefined ){
       if(controlVariablesObj.minimumDepositAmount==undefined){
         controlVariablesObj.minimumDepositAmount=2000
-      }else{}
-      }else{}
+      }
+      }
 
+      if(controlVariablesObj.milegeWhatsAppGroupLink==undefined || controlVariablesObj.milegeWhatsAppGroupLink!=undefined ){
+        if(controlVariablesObj.milegeWhatsAppGroupLink==undefined){
+          controlVariablesObj.milegeWhatsAppGroupLink=""
+        }
+        }
+
+      if(controlVariablesObj.makerereUpdatesWhatsAppGroupLink==undefined || controlVariablesObj.makerereUpdatesWhatsAppGroupLink!=undefined ){
+        if(controlVariablesObj.makerereUpdatesWhatsAppGroupLink==undefined){
+          controlVariablesObj.makerereUpdatesWhatsAppGroupLink=""
+        }
+        }
       
       db.collection('controlvariables').replaceOne({_id:new ObjectId(controlVariablesObjId)},controlVariablesObj,{upsert:true}).then(resp=>{
     
