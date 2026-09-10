@@ -747,10 +747,16 @@ app.use(express.json())
 
 app.get('/getHookupDesires',(req,res)=>{
   try{
-    db.collection('hookupdesires').find().toArray().then(resp=>{
-      res.send(resp)
+    db.collection('hookupdesires').deleteMany({contact:undefined}).then(resp=>{
+      db.collection('hookupdesires').find().toArray().then(resp=>{
+        res.send(resp)
+        
+      })
       
     })
+
+
+
   }catch(err){
 console.log(err)
   }
@@ -7185,10 +7191,16 @@ break;
       let payLoad=req.body
     
   
-    hookupDesiresModel(payLoad).save().then(resp=>{
-     res.send(resp)
-    })
 
+    db.collection('hookupdesires').find({contact:payLoad.contact}).toArray().then(resp=>{
+      if(resp.length!=0){
+res.send({hookupDesirePresent:true})
+      }else{
+        hookupDesiresModel(payLoad).save().then(resp=>{
+          res.send(resp)
+         })
+      }
+    })
      
      }catch(err){
       console.log(err)
