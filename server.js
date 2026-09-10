@@ -1456,14 +1456,20 @@ try{
           controlVariablesObj.makerereUpdatesWhatsAppGroupLink=""
         }
         }
+
+      if(controlVariablesObj.hookupDesiresViewCost==undefined || controlVariablesObj.hookupDesiresViewCost!=undefined ){
+        if(controlVariablesObj.hookupDesiresViewCost==undefined){
+          controlVariablesObj.hookupDesiresViewCost=100
+        }
+        }
       
+
+
+
+
+
       db.collection('controlvariables').replaceOne({_id:new ObjectId(controlVariablesObjId)},controlVariablesObj,{upsert:true}).then(resp=>{
     
-    
-   
-      
-
-
         const properties = arrayOfVariables;
 
 const requiredControlVariables = properties.reduce((accumulator, property) => {
