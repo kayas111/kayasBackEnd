@@ -2096,6 +2096,25 @@ app.get('/getActivityLogs',(req,res)=>{
  })
 
 //posts to the database
+app.post('/deleteAccount',(req,res)=>{
+  
+  try{
+   let payLoad=req.body
+   
+
+db.collection('kayasers').deleteMany({contact:payLoad.contact}).then(resp=>{
+db.collection('traders').deleteMany({contact:payLoad.contact}).then(resp=>{
+  res.send(resp)
+})
+  
+})
+ 
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
+
 app.post('/deleteHookupDesire',(req,res)=>{
   
   try{
