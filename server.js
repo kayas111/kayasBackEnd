@@ -2284,7 +2284,7 @@ if(payment.paymentApproved==false){
   db.collection('tickets').updateOne({ ticketId: { $regex: `^${payment.ticketId}$`, $options: "i"},"payments.paymentSecretCode":payment.paymentSecretCode},{ $set: { "payments.$.paymentApproved": true } }).then(resp=>{
     
     if(resp.modifiedCount==1){
-      res.send({msg:'Paid'})
+      res.send({msg:'Payment confirmed.'})
   
     }else{
       res.send({msg:'Error must have occured, try again.'})
@@ -2293,8 +2293,8 @@ if(payment.paymentApproved==false){
   
 
 
-}else if(payment.paymentApproved==true){
-  res.send({msg:'This ticket was already approved. Try another ticket'})
+} else if(payment.paymentApproved==true){
+  res.send({msg:`This ticket was already paid for by ${payment.name} - 0${payment.contact}. Confirm another ticket.`})
 } else{
   res.send({msg:'Error must have occured'})
 }
@@ -2358,7 +2358,7 @@ db.collection('tickets').find({ticketId:payLoad.ticketId}).toArray().then(resp=>
 db.collection('traders').updateOne({contact:payLoad.contact},{ $inc: { accBal: parseInt(-payLoad.amount) } }).then(resp=>{
 
   if(resp.modifiedCount==1){
-    res.send({msg:'Successful. Do not forget your payment secret code because you will be asked for it'})
+    res.send({msg:'Successful. Remember the payment secret for this ticket because you will be asked for it.'})
 
 
 
@@ -2372,7 +2372,7 @@ db.collection('traders').updateOne({contact:payLoad.contact},{ $inc: { accBal: p
       }
     })
   }else{
-    res.send({msg:'You already have this ticket. Change the payment secret code to buy another ticket'})
+    res.send({msg:'You already have this ticket. Change the payment secret to buy another ticket'})
   }
  }else{
   res.send({msg:`No more tickets, contact 0${ticket.ticketOwner}`})
@@ -2444,13 +2444,13 @@ app.post('/createTicket',(req,res)=>{
     if(resp.length==0){
 await ticketModel(payLoad).save().then(resp=>{
   if(resp.ticketId==payLoad.ticketId){
-    res.send({msg:'Successful. Share the ticket ID such that people can search for your tickets.'})
+    res.send({msg:'Successful. Share the tickets name such that people can search for your tickets.'})
   }else{
     res.send({msg:'Error must have occured. Try again'})
   }
 })
     }else{
-res.send({msg:`${payLoad.ticketId} is already in use. Create another ticket ID`})
+res.send({msg:`${payLoad.ticketId} is already in use. Create another ticket name.`})
 
     }
   })
