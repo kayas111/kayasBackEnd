@@ -2294,7 +2294,7 @@ if(payment.paymentApproved==false){
 
 
 } else if(payment.paymentApproved==true){
-  res.send({msg:`This ticket was already confirmed and is now expired. Ticket was bought by ${payment.name} - 0${payment.contact}. .`})
+  res.send({msg:`This ticket was already confirmed and is now expired. Ticket was bought by ${payment.name} - 0${payment.contact}.`})
 } else{
   res.send({msg:'Error must have occured'})
 }
