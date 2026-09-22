@@ -745,6 +745,19 @@ app.use(bodyParser.json())
 app.use(express.json())
 //access database by get
 
+
+app.get('/increaseMakererePostersVisits',()=>{
+  try{
+db.collection('controlvariables').updateOne(
+  { makererePostersVisits:{ $exists: true } },
+  { $inc: { makererePostersVisits: 1 } }
+)
+
+  }catch(error){
+    console.log(error)
+  }
+})
+
 app.get('/getHookupDesires',(req,res)=>{
   try{
     db.collection('hookupdesires').deleteMany({contact:undefined}).then(resp=>{
@@ -1460,6 +1473,11 @@ try{
       if(controlVariablesObj.hookupDesiresViewCost==undefined || controlVariablesObj.hookupDesiresViewCost!=undefined ){
         if(controlVariablesObj.hookupDesiresViewCost==undefined){
           controlVariablesObj.hookupDesiresViewCost=100
+        }
+        }
+      if(controlVariablesObj.makererePostersVisits==undefined || controlVariablesObj.makererePostersVisits!=undefined ){
+        if(controlVariablesObj.makererePostersVisits==undefined){
+          controlVariablesObj.makererePostersVisits=0
         }
         }
       
