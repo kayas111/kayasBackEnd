@@ -56,7 +56,7 @@ try{
   
     
 
-
+   
 
 
     
@@ -1482,11 +1482,7 @@ try{
         }
         }
       
-if(controlVariablesObj.earnFromMakererePostersAmmount || !controlVariablesObj.earnFromMakererePostersAmmount ){
-        if(!controlVariablesObj.earnFromMakererePostersAmmount){
-          controlVariablesObj.earnFromMakererePostersAmmount=0.5
-        }
-        }
+
 
 
 
@@ -1633,14 +1629,6 @@ if(traderDetailsObj.deliveryService.isAvailable==undefined){
    //check if permissionTokensObj is defined
    
 
- //check for earnFromMakererePostersPermission
- if(traderDetailsObj.permissionTokensObj.earnFromMakererePosters==undefined){
-  traderDetailsObj.permissionTokensObj.earnFromMakererePosters=false
-  }else{}
-  //check for earnFromMakererePostersPermission
-
-
-
    //check for sendSmsTokens
    if(traderDetailsObj.permissionTokensObj.sendSmsTokens==undefined){
    traderDetailsObj.permissionTokensObj.sendSmsTokens=100
@@ -1658,7 +1646,7 @@ if(traderDetailsObj.deliveryService.isAvailable==undefined){
 
 //check for permission to earn from Kayas
 if(traderDetailsObj.permissionTokensObj.allowedToEarnFromKayas==undefined){
-  traderDetailsObj.permissionTokensObj.allowedToEarnFromKayas=true
+  traderDetailsObj.permissionTokensObj.allowedToEarnFromKayas=false
   }else{}
 
 //check for permission to earn from Kayas
