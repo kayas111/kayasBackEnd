@@ -1475,13 +1475,18 @@ try{
           controlVariablesObj.hookupDesiresViewCost=100
         }
         }
+
       if(controlVariablesObj.makererePostersVisits==undefined || controlVariablesObj.makererePostersVisits!=undefined ){
         if(controlVariablesObj.makererePostersVisits==undefined){
           controlVariablesObj.makererePostersVisits=0
         }
         }
       
-
+if(controlVariablesObj.earnFromMakererePostersAmmount || !controlVariablesObj.earnFromMakererePostersAmmount ){
+        if(!controlVariablesObj.earnFromMakererePostersAmmount){
+          controlVariablesObj.earnFromMakererePostersAmmount=0.5
+        }
+        }
 
 
 
@@ -1563,6 +1568,8 @@ try{
    traderDetailsObj.institution=kayaserDetailsObj.institution
    
    
+ 
+
    //check for accBal
    if(traderDetailsObj.accBal==undefined || traderDetailsObj.accBal!=undefined ){
    if(traderDetailsObj.accBal==undefined){
@@ -1625,6 +1632,15 @@ if(traderDetailsObj.deliveryService.isAvailable==undefined){
    }
    //check if permissionTokensObj is defined
    
+
+ //check for earnFromMakererePostersPermission
+ if(traderDetailsObj.permissionTokensObj.earnFromMakererePosters==undefined){
+  traderDetailsObj.permissionTokensObj.earnFromMakererePosters=false
+  }else{}
+  //check for earnFromMakererePostersPermission
+
+
+
    //check for sendSmsTokens
    if(traderDetailsObj.permissionTokensObj.sendSmsTokens==undefined){
    traderDetailsObj.permissionTokensObj.sendSmsTokens=100
@@ -1701,8 +1717,6 @@ if(traderDetailsObj.permissionTokensObj.displayArticlesAtFreeCost==undefined){
       
    db.collection('traders').replaceOne({contact:traderDetailsObj.contact},traderDetailsObj,{upsert:true}).then(resp=>{
     
-    
-   
     res.send([traderDetailsObj])
    })
    
@@ -2687,12 +2701,29 @@ default:{
 })
 
 
+app.post('/creditTraderAccountBalance',(req,res)=>{
+  try {
+    let payLoad=req.body
+        
+    db.collection('traders').updateOne({contact:payLoad.contact},{$inc:{'accBal':parseInt(payLoad.amount)}}).then(resp=>{
+      res.send(resp);
+      
+      
+    })
+
+  } catch (error) {
+    console.log(error)
+  }
+ })
+
  app.post('/debitTraderAccountBalance',(req,res)=>{
   try {
     let payLoad=req.body
     
+    
     db.collection('traders').updateOne({contact:payLoad.contact},{$inc:{'accBal':-parseInt(payLoad.amount)}}).then(resp=>{
       res.send(resp);
+      
     })
 
   } catch (error) {
