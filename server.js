@@ -404,6 +404,7 @@ const requestsModel = require('./models/model').requestsModel;
 const messagerModel = require('./models/model').messagerModel;
 const CommentModel = require('./models/model').comments;
 const voterOpinionPollModel = require('./models/model').voterOpinionPollModel;
+const makererePostersHeadlinesModel = require('./models/model').makererePostersHeadlinesModel;
 
 
 const articleGrantModel = require('./models/model').articleGrantModel;
@@ -746,6 +747,18 @@ app.use(express.json())
 //access database by get
 
 
+app.get('/getMakererePostersHeadlines',(req,res)=>{
+  try{
+db.collection('makererepostersheadlines').find().toArray().then(resp=>{
+  res.send(resp)
+})
+
+
+
+  }catch(error){
+    console.log(error)
+  }
+})
 app.get('/increaseMakererePostersVisits',()=>{
   try{
 db.collection('controlvariables').updateOne(
@@ -2116,6 +2129,36 @@ app.get('/getActivityLogs',(req,res)=>{
  })
 
 //posts to the database
+app.post('/deleteMakererePostersHeadline',(req,res)=>{
+  
+  try{
+   let payLoad=req.body
+   
+
+db.collection('makererepostersheadlines').deleteOne({_id:new ObjectId(payLoad.id)}).then(resp=>{
+  res.send(resp)
+})
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
+app.post('/addMakererePostersHeadline',(req,res)=>{
+  
+  try{
+   let payLoad=req.body
+   
+
+makererePostersHeadlinesModel(payLoad).save().then(resp=>{
+ res.send(resp)
+})
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
+
+
 app.post('/deleteAccount',(req,res)=>{
   
   try{
