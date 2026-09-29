@@ -1471,6 +1471,12 @@ try{
       }
       }
 
+      if(controlVariablesObj.cheaperCampusItemsWhatsAppGroupLink || !controlVariablesObj.cheaperCampusItemsWhatsAppGroupLink ){
+        if(!controlVariablesObj.cheaperCampusItemsWhatsAppGroupLink){
+          controlVariablesObj.cheaperCampusItemsWhatsAppGroupLink=""
+        }
+        }
+
       if(controlVariablesObj.milegeWhatsAppGroupLink==undefined || controlVariablesObj.milegeWhatsAppGroupLink!=undefined ){
         if(controlVariablesObj.milegeWhatsAppGroupLink==undefined){
           controlVariablesObj.milegeWhatsAppGroupLink=""
