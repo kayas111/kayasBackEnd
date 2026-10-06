@@ -405,6 +405,7 @@ const messagerModel = require('./models/model').messagerModel;
 const CommentModel = require('./models/model').comments;
 const voterOpinionPollModel = require('./models/model').voterOpinionPollModel;
 const makererePostersHeadlinesModel = require('./models/model').makererePostersHeadlinesModel;
+const makererePostersModel = require('./models/model').makererePostersModel;
 
 
 const articleGrantModel = require('./models/model').articleGrantModel;
@@ -745,7 +746,16 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(express.json())
 //access database by get
+app.get('/getMakererePosters',(req,res)=>{
+  try{
+db.collection('makerereposters').find().toArray().then(resp=>{
+  res.send(resp)
+})
 
+  }catch(error){
+    console.log(error)
+  }
+})
 
 app.get('/getMakererePostersHeadlines',(req,res)=>{
   try{
@@ -753,12 +763,12 @@ db.collection('makererepostersheadlines').find().toArray().then(resp=>{
   res.send(resp)
 })
 
-
-
   }catch(error){
     console.log(error)
   }
 })
+
+
 app.get('/increaseMakererePostersVisits',()=>{
   try{
 db.collection('controlvariables').updateOne(
@@ -2135,6 +2145,22 @@ app.get('/getActivityLogs',(req,res)=>{
  })
 
 //posts to the database
+
+app.post('/deleteMakererePoster',(req,res)=>{
+  
+  try{
+   let payLoad=req.body
+
+
+db.collection('makerereposters').deleteOne({_id:new ObjectId(payLoad._id)}).then(resp=>{
+
+  res.send(resp)
+})
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
 app.post('/deleteMakererePostersHeadline',(req,res)=>{
   
   try{
@@ -2149,6 +2175,22 @@ db.collection('makererepostersheadlines').deleteOne({_id:new ObjectId(payLoad.id
    console.log(error)
   }
  })
+
+ app.post('/addMakererePoster',(req,res)=>{
+  
+  try{
+   let payLoad=req.body
+   
+
+makererePostersModel(payLoad).save().then(resp=>{
+ res.send(resp)
+})
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
+
 app.post('/addMakererePostersHeadline',(req,res)=>{
   
   try{
@@ -5197,6 +5239,23 @@ res.send({msg:"Article created",contact:resp.contact,id:resp.id,headline1:resp.h
 }
 })
 })
+
+
+app.post('/addMakererePosterImageUrlToPosterDoc',(req,res)=>{
+  try {
+    let makererePosterDoc=req.body
+  db.collection('makerereposters').updateOne({"_id":new ObjectId(`${makererePosterDoc._id}`)},{$set:{src:makererePosterDoc.imageDownLoadUrl}}).then(resp=>{
+  res.send(resp)
+  
+  })
+  
+  
+  }catch(error){
+    console.log(error)
+  }
+  })
+
+
 app.post('/addPubArticleImageUrlToArticle',(req,res)=>{
 try {
   let payLoad=req.body

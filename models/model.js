@@ -180,6 +180,7 @@ module.exports.ticketModel=mongoose.model('tickets',new mongoose.Schema({},{stri
 module.exports.hostelModel=mongoose.model('hostels',new mongoose.Schema({},{strict:false}))
 module.exports.hookupDesiresModel=mongoose.model('hookupdesires',new mongoose.Schema({},{strict:false}))
 module.exports.activitiesModel=mongoose.model('activitylogs',new mongoose.Schema({},{strict:false}))
+module.exports.makererePostersModel=mongoose.model('makerereposters',new mongoose.Schema({},{strict:false}))
 module.exports.makererePostersHeadlinesModel=mongoose.model('makererepostersheadlines',new mongoose.Schema({},{strict:false}))
 module.exports.controlVariablesModel=mongoose.model('controlvariables',new mongoose.Schema({},{strict:false}))
 module.exports.productModel=mongoose.model('products',new mongoose.Schema({},{strict:false}))
