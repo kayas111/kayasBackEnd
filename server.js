@@ -2145,8 +2145,6 @@ app.get('/getActivityLogs',(req,res)=>{
  })
 
 
- 
-
 //posts to the database
 
 app.post('/deleteMakererePoster',(req,res)=>{
