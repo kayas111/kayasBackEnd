@@ -2143,6 +2143,8 @@ app.get('/getActivityLogs',(req,res)=>{
    console.log(error)
   }
  })
+
+
  
 
 //posts to the database
