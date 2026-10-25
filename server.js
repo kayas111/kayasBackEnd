@@ -2147,6 +2147,23 @@ app.get('/getActivityLogs',(req,res)=>{
 
 //posts to the database
 
+app.post('/deleteDatabaseDocument',(req,res)=>{
+  
+  try{
+   let payLoad=req.body
+
+
+db.collection(`${payLoad.collection}`).deleteOne({_id:new ObjectId(payLoad.id)}).then(resp=>{
+
+  res.send(resp)
+})
+ 
+  }catch(error){
+   console.log(error)
+  }
+ })
+
+
 app.post('/deleteMakererePoster',(req,res)=>{
   
   try{
