@@ -768,6 +768,17 @@ db.collection('makererepostersheadlines').find().toArray().then(resp=>{
   }
 })
 
+app.get('/incrementMakererePostersHeadlinesVisits',()=>{
+  try{
+db.collection('controlvariables').updateOne(
+  { makererePostersHeadlinesVisits:{ $exists: true } },
+  { $inc: { makererePostersHeadlinesVisits: 1 } }
+)
+
+  }catch(error){
+    console.log(error)
+  }
+})
 
 app.get('/increaseMakererePostersVisits',()=>{
   try{
@@ -1511,7 +1522,11 @@ try{
         }
         }
       
-
+        if(controlVariablesObj.makererePostersHeadlinesVisits || !controlVariablesObj.makererePostersHeadlinesVisits ){
+          if(!controlVariablesObj.makererePostersHeadlinesVisits){
+            controlVariablesObj.makererePostersHeadlinesVisits=0
+          }
+          }
 
 
 
