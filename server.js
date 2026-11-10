@@ -775,7 +775,6 @@ db.collection('controlvariables').updateOne(
   { $inc: { makererePostersHeadlinesVisits: 1 } }
 )
 
-
   }catch(error){
     console.log(error)
   }
