@@ -1420,6 +1420,7 @@ if(resp.length==0){
 
                 
             })
+            
  app.get('/admin_getTradingDetails/:contact', (req,res)=>{
 
    
